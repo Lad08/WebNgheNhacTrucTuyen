@@ -1,0 +1,75 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Songs>
+@{
+    ViewData["Title"] = "LibraryPage";
+
+    Layout = "~/Views/Shared/_LibraryLayout.cshtml";
+}
+
+
+<h1>Your Library</h1>
+
+<ul class="item-container">
+    @foreach (var song in Model.Take(5)) // Lấy 5 bài hát đầu tiên
+    {
+        <li class="music-card">
+            <div>
+                <img class="item-img" src="~/images/Hoshimachi_Suisei.png" />
+                <div>
+                    <a class="music-name">@song.Title</a>
+                </div>
+
+                <div>
+                    <a class="artist">@song.Artist</a>
+                </div>
+                <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title">Phát nhạc</button>
+                <a asp-action="Details" asp-route-id="@song.Id">View Details</a>
+            </div>
+        </li>
+    }
+</ul>
+<audio id="audioPlayer" preload="auto"></audio>
+
+<!-- Play Control Section -->
+
+<div class="play-controll">
+    <section role="contentinfo" class="control-inner">
+
+        <div class="playControls_elements">
+
+            <button class="skipControl_previous">
+            </button>
+
+            <button id="playPauseButton" class="skipControl_play">
+            </button>
+
+
+            <button class="skipControl_next">
+            </button>
+
+            <div class="playControl_shuffle">
+                <button class="control_shuffle">
+                </button>
+            </div>
+
+            <div class="playControl_repeat">
+                <button class="control_repeat">
+                </button>
+            </div>
+
+            <div class="time-container">
+                <span id="currentTime">00:00</span>
+
+                <div class="progress-bar" id="progressBar">
+                    
+                    <div class="progress-filled"></div>
+
+                </div>
+                <span id="duration">00:00</span>
+            </div>
+
+            <div id="currentSongTitle" class="current-song-title">Bài hát hiện tại: </div>
+
+        </div>
+
+    </section>
+</div>

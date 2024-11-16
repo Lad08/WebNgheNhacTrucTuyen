@@ -1,0 +1,420 @@
+﻿/* Google Fonts 'Poppins' */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Start of Header */
+.header {
+    position: fixed;
+    width: 100%;
+    height: 46px;
+    background: #333;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* inner header */
+.inner-header {
+    width: 100%;
+    height: 46px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+/* Icon styles */
+.header-icon {
+    margin-left: 240px;
+    display: flex;
+    width: 60px;
+    height: 46px;
+    margin-right: 10px; /* Khoảng cách giữa icon và các mục điều hướng */
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-img {
+    height: 32px; /* Kích thước của icon */
+    width: 48px;
+}
+
+/* Navigation styles */
+.ul-header {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.a-style {
+    text-decoration: none;
+    color: #f0e8e8;
+    font-size: 14px;
+}
+
+.li-border {
+    display: flex;
+    border: 1px solid #111;
+    width: 90px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+}
+
+.none-borderleft {
+    border-left: none;
+}
+
+.g-dark {
+    color: #999;
+}
+
+/* Search Section */
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    width: 480px;
+    margin-left: 24px;
+}
+
+.search-form {
+    display: flex; /* Add flex display to align elements horizontally */
+    width: 440px;
+    height: 32px;
+    margin-right: 14px;
+    border-radius: 3px;
+}
+
+.search-input {
+    flex: 1; /* Make the input field take up most of the space */
+    padding: 0 16px;
+    height: 32px;
+    border: none;
+    background-color: #E5E5E5;
+}
+
+input:focus {
+    outline: none;
+}
+
+.search-icon {
+    width: 32px; /* Match the height of the input field */
+    height: 32px;
+    border: none;
+    padding: 0;
+    background-color: #E5E5E5; /* Make the background transparent */
+    cursor: pointer;
+}
+
+/* Button sign in */
+
+.sign-in {
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-signin {
+    border: 1px solid #999;
+    font-size: 14px;
+    background-color: #00000000;
+    color: #ffffff;
+    border-radius: 6px;
+    width: 96px;
+    height: 30px;
+    line-height: 24px;
+    margin-right: 8px;
+}
+
+.button-signup {
+    border: 1px solid #f50;
+    font-size: 14px;
+    background-color: #FF5500;
+    color: #ffffff;
+    border-radius: 6px;
+    width: 110px;
+    height: 30px;
+    line-height: 24px;
+    margin: 8px;
+    padding: 2px 16px;
+}
+
+.upload {
+    font-size: 15px;
+    color: #999;
+    text-decoration: none;
+    margin: 8px;
+}
+
+.login-a {
+    font-size: 14px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+    .login-a:hover {
+        background-color: #00000000;
+        color: #fff;
+    }
+
+.logout {
+    margin-left: 12px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    // ... các style khác tùy chỉnh
+}
+
+.user-name:hover .dropdown-menu {
+    display: block;
+}
+
+/* End of Header */
+
+
+/* Start of main content */
+
+.main-content {
+    padding-top: 64px;
+    width: 100%;
+}
+
+.heading-title {
+    display: flex;
+    font-size: 32px;
+    width: 75%;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.trending-selection {
+    margin-bottom: 24px;
+}
+
+.show-all {
+    display: flex;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+}
+
+.seclection-title1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.ul-main {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Music Section */
+
+.trendingtrack-title {
+    font-size: 24px;
+    text-align: center;
+    padding-top: 20px;
+    margin-bottom: 30px;
+}
+
+.item-img {
+    width: 156px;
+    height: 156px;
+}
+
+
+.music-name {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+    text-decoration: none;
+}
+
+.artist {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #999999;
+    text-decoration: none;
+}
+
+.padding-row {
+    padding-left: 12px;
+}
+
+/* Item Section */
+
+.item-container {
+    list-style-type: none; /* Bỏ dấu đầu dòng */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Khoảng cách giữa các danh sách */
+}
+
+.music-card {
+    width: 156px;
+    height: auto;
+    margin-right: 32px;
+    border: 1px solid #333;
+
+}
+
+/* play control section */
+
+.play-controll {
+    display: block;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+
+.control-inner {
+    background-color: #f2f2f2;
+    border-top: 1px solid #cecece;
+    height: 48px;
+    
+}
+
+.playControls_elements {
+    display: flex;
+    position: relative;
+    height: 100%;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.skipControl_previous {
+    background-image: url('/images/play_control/previous.png');
+    background-position: 40%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.skipControl_play {
+    background-image: url('/images/play_control/play-button-arrowhead.png');
+    background-position: 55%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.skipControl_pause {
+    background-image: url('/images/play_control/pause.png');
+    background-position: 55%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.skipControl_next {
+    background-image: url('/images/play_control/next.png');
+    background-position: 60%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.playControl_shuffle {
+    background-image: url('/images/play_control/arrow.png');
+    background-repeat: no-repeat;
+    background-position: 40%;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.control_shuffle {
+    position: relative;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    outline: none;
+    background: transparent;
+}
+
+.playControl_repeat {
+    margin-left: 12px;
+    margin-right: 20px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.control_repeat {
+    background-image: url('/images/play_control/repeat.png');
+    background-repeat: no-repeat;
+    background-position: 40%;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.time-container {
+    display: flex;
+    align-items: center;
+}
+
+.progress-bar {
+    flex: 1; /* Cho phép thanh tiến trình chiếm phần còn lại của không gian */
+    height: 5px;
+    width: 400px;
+    background-color: #ddd;
+    margin: 0 10px;
+    z-index: 1;
+    position: relative;
+}
+
+.progress-filled {
+    position: absolute;
+    height: 5px;
+    background-color: #333;
+    width: 0%;
+}
+
+
+.current-song-title {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+    margin-left: 8px;
+}

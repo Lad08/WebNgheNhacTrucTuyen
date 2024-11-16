@@ -1,0 +1,122 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Songs>
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="container">
+
+    <h1 class="heading-title">
+        Discover track and playlist
+    </h1>
+    <div>
+        <div class="music-section">
+            <div>
+                <h2 class="seclection-title1">
+                    Lastest music on WebsiteNgheNhac
+
+                </h2>
+            </div>
+            <ul class="item-container songList">
+                @foreach (var song in Model.Take(5)) // Lấy 5 bài hát đầu tiên
+                {
+                    <li class="music-card">
+                        <div>
+                            <div class="img-container">
+                                <img class="item-img" src="~/images/song_img/hq720.png" />
+                                <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title"><i class="fas fa-play"></i></button>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@song.Id" class="music-name">@song.Title</a>
+                            </div>
+
+                            <div>
+                                <a class="artist">@song.Artist</a>
+                            </div>
+                            
+                           
+                        </div>
+                    </li>
+                }
+            </ul>
+            <audio id="audioPlayer" preload="auto"></audio>
+        </div>
+
+        <div class="music-section">
+            <div>
+                <h2 class="seclection-title1">
+                    Trending music on WebsiteNgheNhac
+
+                </h2>
+            </div>
+            <ul class="item-container songList">
+                @foreach (var song in Model.Take(5)) // Lấy 5 bài hát đầu tiên
+                {
+                    <li class="music-card">
+                        <div>
+                            <div class="img-container">
+                                <img class="item-img" src="~/images/song_img/hq720.png" />
+                                <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title"><i class="fas fa-play"></i></button>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@song.Id" class="music-name">@song.Title</a>
+                            </div>
+
+                            <div>
+                                <a class="artist">@song.Artist</a>
+                            </div>
+                            
+                         
+                        </div>
+                    </li>
+                }
+            </ul>
+            <audio id="audioPlayer" preload="auto"></audio>
+        </div>
+    </div>
+</div>
+
+<!-- Play Control Section -->
+
+<div class="play-controll">
+    <section role="contentinfo" class="control-inner">
+
+        <div class="playControls_elements">
+
+            <button class="skipControl_previous">
+            </button>
+
+            <button id="playPauseButton" class="skipControl_play" >
+            </button>
+
+
+            <button class="skipControl_next">
+            </button>
+
+            <div class="playControl_shuffle">
+                <button class="control_shuffle">
+                </button>
+            </div>
+
+            <div class="playControl_repeat">
+                <button class="control_repeat">
+                </button>
+            </div>
+
+            <div class="time-container">
+                <span id="currentTime">00:00</span>
+
+                <div class="progress-bar" id="progressBar">
+                    
+                    <div class="progress-filled"></div>
+
+                </div>
+                <span id="duration">00:00</span>
+            </div>
+
+            <div id="currentSongTitle" class="current-song-title">Bài hát hiện tại: </div>
+        </div>
+
+    </section>
+</div>
+

@@ -1,0 +1,25 @@
+﻿<div class="sign-in">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- User is logged in, display their username and logout option -->
+
+        <span>Hello, </span>
+
+
+        <a class="upload" asp-controller="songs" asp-action="upload">Upload</a>
+        <a class="logout" asp-controller="account" asp-action="logout">Logout</a>
+
+    }
+    else
+    {
+        <!-- User is not logged in, show login and register buttons -->
+        <button class="button-signin">
+            <a class="login-a" asp-controller="account" asp-action="login">Đăng nhập</a>
+        </button>
+
+        <button class="button-signup">
+            <a class="login-a" asp-controller="account" asp-action="register">Đăng ký</a>
+        </button>
+    }
+
+</div>
