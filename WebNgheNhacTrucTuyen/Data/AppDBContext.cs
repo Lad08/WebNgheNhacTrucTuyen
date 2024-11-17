@@ -11,10 +11,13 @@ namespace WebNgheNhacTrucTuyen.Data
         {
 
         }
+
         
         public DbSet<Songs> Songs { get; set; }
 
         public DbSet<Genres> Genres { get; set; }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +29,8 @@ namespace WebNgheNhacTrucTuyen.Data
                 .HasOne(s => s.Genre)
                 .WithMany(g => g.Songs)
                 .HasForeignKey(s => s.GenreId);
+
+
         }
     }
 }

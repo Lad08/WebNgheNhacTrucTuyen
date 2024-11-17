@@ -12,7 +12,7 @@ using WebNgheNhacTrucTuyen.Data;
 namespace WebNgheNhacTrucTuyen.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20241117075506_InitialCreate")]
+    [Migration("20241117165020_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -197,6 +197,9 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()

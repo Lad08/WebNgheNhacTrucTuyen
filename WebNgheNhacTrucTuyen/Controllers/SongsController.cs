@@ -89,11 +89,31 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return RedirectToAction("Index", "Home"); // Chuyển hướng về danh sách bài hát
         }
 
-        public async Task<IActionResult> Library()
+        public async Task<IActionResult> Library(string genre)
         {
-            // Lấy 5 bài hát mới nhất
-            var latestSongs = await _context.Songs.OrderByDescending(s => s.UploadDate).Take(5).ToListAsync();
-            return View(latestSongs);
+            // Lấy tất cả thể loại
+            var genres = await _context.Genres.ToListAsync();
+            ViewBag.Genres = genres;
+
+            // Tạo truy vấn bài hát
+            IQueryable<Songs> songsQuery = _context.Songs.Include(s => s.Genre);
+
+            // Nếu genre không null, lọc theo thể loại
+            if (!string.IsNullOrEmpty(genre))
+            {
+                songsQuery = songsQuery.Where(s => s.Genre.G_Name == genre);
+            }
+
+            // Lấy danh sách bài hát yêu thích
+            var favoriteSongs = await songsQuery.ToListAsync();
+
+            // Lấy danh sách bài hát yêu thích
+            var favoriteSongsList = favoriteSongs.Where(s => s.IsFavorite).ToList();
+
+            // Kết hợp danh sách bài hát yêu thích và bài hát theo thể loại
+            var allSongs = favoriteSongsList.Concat(favoriteSongs).Distinct().ToList();
+
+            return View(allSongs);
         }
 
         public async Task<IActionResult> Play(int id)
@@ -127,6 +147,18 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 return NotFound();
             }
             return View(song);
+        }
+
+        // Chức năng bài hát yêu thích
+        public IActionResult ToggleFavorite(int id)
+        {
+            var song = _context.Songs.Find(id);
+            if (song != null)
+            {
+                song.IsFavorite = !song.IsFavorite;
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Library");
         }
     }
 }

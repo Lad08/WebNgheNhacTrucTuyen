@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebNgheNhacTrucTuyen.Data;
 using WebNgheNhacTrucTuyen.Models;
 
 namespace WebNgheNhacTrucTuyen.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class GenresController : Controller
     {
 

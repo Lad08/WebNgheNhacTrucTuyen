@@ -19,11 +19,14 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Lấy 5 bài hát mới nhất
-            var latestSongs = await _context.Songs.OrderByDescending(s => s.UploadDate).Take(5).ToListAsync();
 
-            // Truyền dữ liệu vào view
-            return View(latestSongs);
+            // Lấy tất cả bài hát và nhóm theo thể loại
+            var songsByGenre = await _context.Songs
+                .Include(s => s.Genre) // Bao gồm thông tin thể loại
+                .ToListAsync();
+
+            return View(songsByGenre);
+
         }
 
         public async Task<IActionResult> Details(int id)

@@ -23,7 +23,7 @@
                     <li class="music-card">
                         <div>
                             <div class="img-container">
-                                <img class="item-img" src="~/images/song_img/hq720.png" />
+                                <img class="item-img" src="@Url.Content(song.CoverImagePath)" />
                                 <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title"><i class="fas fa-play"></i></button>
                             </div>
                             <div>
@@ -34,6 +34,11 @@
                                 <a class="artist">@song.Artist</a>
                             </div>
                             
+                            <div>
+                                <button type="button" onclick="toggleFavorite(@song.Id)">
+                                    @(song.IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
+                                </button>
+                            </div>
                            
                         </div>
                     </li>

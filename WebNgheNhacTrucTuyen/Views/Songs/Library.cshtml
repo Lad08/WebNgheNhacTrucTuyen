@@ -1,33 +1,84 @@
 ﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Songs>
-@{
-    ViewData["Title"] = "LibraryPage";
 
-    Layout = "~/Views/Shared/_LibraryLayout.cshtml";
+@{
+    ViewData["Title"] = "Thư viện";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
 
+<div class="container">
+    <h1 class="heading-title">Thư viện Bài hát</h1>
 
-<h1>Your Library</h1>
+    <div class="music-section">
+        <h2 class="seclection-title1">Bài hát yêu thích</h2>
+        <ul class="item-container songList">
+            @if (Model != null && Model.Any(s => s.IsFavorite))
+            {
+                foreach (var song in Model.Where(s => s.IsFavorite))
+                {
+                    <li class="music-card">
+                        <div>
+                            <div class="img-container">
+                                <img class="item-img" src="@Url.Content(song.CoverImagePath)" />
+                                <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@song.Id" class="music-name">@song.Title</a>
+                            </div>
+                            <div>
+                                <a class="artist">@song.Artist</a>
+                            </div>
+                            <div>
+                                <form asp-action="ToggleFavorite" asp-route-id="@song.Id" method="post">
+                                    <button type="submit">Bỏ yêu thích</button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+            else
+            {
+                <li>Không có bài hát yêu thích nào.</li>
+            }
+        </ul>
+        <audio id="audioPlayer" preload="auto"></audio>
+    </div>
 
-<ul class="item-container">
-    @foreach (var song in Model.Take(5)) // Lấy 5 bài hát đầu tiên
-    {
-        <li class="music-card">
-            <div>
-                <img class="item-img" src="~/images/Hoshimachi_Suisei.png" />
-                <div>
-                    <a class="music-name">@song.Title</a>
-                </div>
-
-                <div>
-                    <a class="artist">@song.Artist</a>
-                </div>
-                <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title">Phát nhạc</button>
-                <a asp-action="Details" asp-route-id="@song.Id">View Details</a>
-            </div>
-        </li>
-    }
-</ul>
-<audio id="audioPlayer" preload="auto"></audio>
+    <div class="music-section">
+        <h2 class="seclection-title1">Tất cả Bài hát</h2>
+        <ul class="item-container songList">
+            @foreach (var song in Model)
+            {
+                <li class="music-card">
+                    <div>
+                        <div class="img-container">
+                            <img class="item-img" src="@Url.Content(song.CoverImagePath)" />
+                            <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <a asp-action="Details" asp-route-id="@song.Id" class="music-name">@song.Title</a>
+                        </div>
+                        <div>
+                            <a class="artist">@song.Artist</a>
+                        </div>
+                        <div>
+                            <form asp-action="ToggleFavorite" asp-route-id="@song.Id" method="post">
+                                <button type="submit">
+                                    @(song.IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <audio id="audioPlayer" preload="auto"></audio>
+    </div>
+</div>
 
 <!-- Play Control Section -->
 
@@ -60,7 +111,7 @@
                 <span id="currentTime">00:00</span>
 
                 <div class="progress-bar" id="progressBar">
-                    
+
                     <div class="progress-filled"></div>
 
                 </div>
@@ -68,7 +119,6 @@
             </div>
 
             <div id="currentSongTitle" class="current-song-title">Bài hát hiện tại: </div>
-
         </div>
 
     </section>

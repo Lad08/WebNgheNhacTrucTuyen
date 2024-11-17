@@ -181,6 +181,7 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsFavorite = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GenreId = table.Column<int>(type: "int", nullable: false)
                 },

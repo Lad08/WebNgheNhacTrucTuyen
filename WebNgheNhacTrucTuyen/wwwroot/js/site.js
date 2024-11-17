@@ -82,3 +82,20 @@ searchInput.addEventListener('input', function () {
         });
     });
 });
+
+function toggleFavorite(songId) {
+    fetch(`/Songs/ToggleFavorite/${songId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                // Cập nhật giao diện người dùng nếu cần
+                location.reload(); // Tải lại trang để cập nhật trạng thái
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}

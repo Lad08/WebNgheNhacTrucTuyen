@@ -279,7 +279,7 @@ input:focus {
 /* play control section */
 
 .play-controll {
-    display: block;
+    display: none;
     width: 100%;
     position: fixed;
     bottom: 0;

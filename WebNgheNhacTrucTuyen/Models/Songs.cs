@@ -14,6 +14,7 @@ namespace WebNgheNhacTrucTuyen.Models
         public string CoverImagePath { get; set; }
         public string FilePath { get; set; }
         public DateTime UploadDate { get; set; }
+        public bool IsFavorite { get; set; }
 
         // Foreign key đến User
         public string UserId { get; set; } // Thêm thuộc tính UserId
@@ -23,5 +24,8 @@ namespace WebNgheNhacTrucTuyen.Models
         public int GenreId { get; set; } // Thêm thuộc tính GenreId
         [ForeignKey("GenreId")] // Đánh dấu thuộc tính GenreId là khóa ngoại
         public virtual Genres Genre { get; set; } // Thêm navigation property đến Genres
+
+       
+
     }
 }
