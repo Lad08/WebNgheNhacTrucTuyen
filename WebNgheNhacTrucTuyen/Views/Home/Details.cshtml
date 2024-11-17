@@ -6,9 +6,9 @@
 
 <h1>@Model.Title</h1>
 <p><strong>Nghệ sĩ:</strong> @Model.Artist</p>
-<p><strong>Thể loại:</strong> @Model.Genre</p>
-<p><strong>Ngày đăng tải phát hành:</strong>@Model.UploadDate </p>
 
+<p><strong>Ngày đăng tải phát hành:</strong>@Model.UploadDate </p>
+<p>Uploaded by: @Model.User.FullName</p>
 
 <audio controls>
     <source src="@Url.Content(Model.FilePath)" type="audio/mpeg">

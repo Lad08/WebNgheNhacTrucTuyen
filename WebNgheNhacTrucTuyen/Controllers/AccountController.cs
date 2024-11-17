@@ -55,7 +55,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
 			{
 				Users users = new Users
 				{
-					
+					FullName = model.Name,
 					Email = model.Email,
 					UserName = model.Email,
 				};
@@ -64,20 +64,30 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
 				if (result.Succeeded)
 				{
-					return RedirectToAction("Login", "Account");
-				}
-				else
-				{
-					foreach (var error in result.Errors)
-					{
-						ModelState.AddModelError("", error.Description);
-					}
+                    var hasAdmin = await usersManager.GetUsersInRoleAsync("Admin");
+                    if (hasAdmin == null || hasAdmin.Count == 0)
+                    {
+                        // Nếu chưa có Admin, gán quyền Admin cho tài khoản đầu tiên
+                        await usersManager.AddToRoleAsync(users, "Admin");
+                    }
+                    else
+                    {
+                        // Nếu đã có Admin, gán quyền User mặc định
+                        await usersManager.AddToRoleAsync(users, "User");
+                    }
 
-					return View(model);
-				}
-			}
-			return View(model);
-		}
+                    await signInManager.SignInAsync(users, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
+        }
+				
 
 		public IActionResult VerifyEmail()
 		{
@@ -162,6 +172,9 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View(users);
         }
 
-
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

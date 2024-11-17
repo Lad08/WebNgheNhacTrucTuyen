@@ -25,16 +25,23 @@ namespace WebNgheNhacTrucTuyen.Controllers
         [HttpGet]
         public IActionResult Upload()
         {
-            return View("Upload");
+            ViewBag.Genres = _context.Genres.ToList(); // Lấy danh sách thể loại
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(IFormFile file, string title, string artist, string Genre)
+        public async Task<IActionResult> Upload(IFormFile file, IFormFile coverImage, string title, string artist, int genreId)
         {
             if (file == null || file.Length == 0)
             {
                 ModelState.AddModelError("", "Chọn một file để upload.");
+                return View();
+            }
+
+            if (coverImage == null || coverImage.Length == 0)
+            {
+                ModelState.AddModelError("", "Chọn một ảnh bìa để upload.");
                 return View();
             }
 
@@ -53,14 +60,27 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 await file.CopyToAsync(stream);
             }
 
+            // Tạo thư mục lưu trữ ảnh bìa
+            var coverImagePath = Path.Combine(_environment.WebRootPath, "images/song_img", coverImage.FileName);
+            var coverImageDirectory = Path.GetDirectoryName(coverImagePath);
+            if (!Directory.Exists(coverImageDirectory)) Directory.CreateDirectory(coverImageDirectory);
+
+            // Lưu ảnh bìa vào thư mục "wwwroot/images/song_img"
+            using (var stream = new FileStream(coverImagePath, FileMode.Create))
+            {
+                await coverImage.CopyToAsync(stream);
+            }
+
             // Lưu thông tin bài hát vào database
             var song = new Songs
             {
                 Title = title,
                 Artist = artist,
-                Genre = Genre,
                 FilePath = "/music/" + file.FileName,
-                UploadDate = DateTime.Now
+                CoverImagePath = "/images/song_img/" + coverImage.FileName, // Lưu đường dẫn ảnh bìa
+                UserId = user.Id,
+                UploadDate = DateTime.Now,
+                GenreId = genreId // Lưu GenreId
             };
 
             _context.Songs.Add(song);
@@ -97,9 +117,11 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return File(stream, "audio/mpeg", enableRangeProcessing: true);
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var song = _context.Songs.Find(id);
+            var song = await _context.Songs
+        .Include(s => s.User) // Bao gồm thông tin người dùng
+        .FirstOrDefaultAsync(s => s.Id == id);
             if (song == null)
             {
                 return NotFound();

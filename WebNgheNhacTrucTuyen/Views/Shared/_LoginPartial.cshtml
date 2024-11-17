@@ -3,7 +3,7 @@
     {
         <!-- User is logged in, display their username and logout option -->
 
-        <span>Hello, </span>
+        <span>Hello, @User.Identity.Name</span>
 
 
         <a class="upload" asp-controller="songs" asp-action="upload">Upload</a>

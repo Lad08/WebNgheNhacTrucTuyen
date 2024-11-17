@@ -6,13 +6,14 @@
 
 <h1>@Model.Title</h1>
 <p><strong>Nghệ sĩ:</strong> @Model.Artist</p>
-<p><strong>Thể loại:</strong> @Model.Genre</p>
+
 <p><strong>Ngày đăng tải phát hành:</strong>@Model.UploadDate </p>
-
-
+<p>Uploaded by: @Model.User.FullName</p>
+<a href="@Model.FilePath" download>Download Song</a>
+<p>Thể loại: @Model.Genre.G_Name</p>
 <audio controls>
     <source src="@Url.Content(Model.FilePath)" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
-<a href="@Url.Action("Index", "Songs")">Quay lại danh sách bài hát</a>
+<a href="@Url.Action("Index", "Home")">Quay lại trang chủ</a>

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Genres>
+
+<h2>Genres List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Genre ID</th>
+            <th>Genre Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var genre in Model)
+        {
+            <tr>
+                <td>@genre.G_Id</td>
+                <td>@genre.G_Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create">Add New Genre</a>

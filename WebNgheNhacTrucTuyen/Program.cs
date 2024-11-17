@@ -1,7 +1,9 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebNgheNhacTrucTuyen.Data;
 using WebNgheNhacTrucTuyen.Models;
+using Microsoft.Extensions.DependencyInjection;
+using WebNgheNhacTrucTuyen.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,8 @@ builder.Services.AddIdentity<Users, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,10 +43,20 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+
+    // Gọi SeedRolesAsync để tạo vai trò
+    await RoleSeeder.SeedRolesAsync(serviceProvider);
+}
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();

@@ -26,9 +26,11 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View(latestSongs);
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var song = _context.Songs.Find(id);
+            var song = await _context.Songs
+        .Include(s => s.User) // Bao gồm thông tin người dùng
+        .FirstOrDefaultAsync(s => s.Id == id);
             if (song == null)
             {
                 return NotFound();
