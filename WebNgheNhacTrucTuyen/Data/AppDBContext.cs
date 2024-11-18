@@ -17,7 +17,7 @@ namespace WebNgheNhacTrucTuyen.Data
 
         public DbSet<Genres> Genres { get; set; }
 
-        
+        public DbSet<Lyrics> Lyrics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

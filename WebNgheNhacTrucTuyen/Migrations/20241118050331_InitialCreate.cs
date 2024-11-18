@@ -202,6 +202,26 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Lyrics",
+                columns: table => new
+                {
+                    L_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SongId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lyrics", x => x.L_Id);
+                    table.ForeignKey(
+                        name: "FK_Lyrics_Songs_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Songs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -242,6 +262,12 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Lyrics_SongId",
+                table: "Lyrics",
+                column: "SongId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_GenreId",
                 table: "Songs",
                 column: "GenreId");
@@ -271,10 +297,13 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Songs");
+                name: "Lyrics");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Songs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

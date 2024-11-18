@@ -16,6 +16,9 @@ namespace WebNgheNhacTrucTuyen.Models
         public DateTime UploadDate { get; set; }
         public bool IsFavorite { get; set; }
 
+        // Đường dẫn tới file lyrics được lưu trên server
+        public Lyrics Lyrics { get; set; }
+
         // Foreign key đến User
         public string UserId { get; set; } // Thêm thuộc tính UserId
         public virtual Users User { get; set; } // Thêm navigation property

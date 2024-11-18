@@ -12,7 +12,7 @@ using WebNgheNhacTrucTuyen.Data;
 namespace WebNgheNhacTrucTuyen.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20241117165020_InitialCreate")]
+    [Migration("20241118050331_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -173,6 +173,29 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.HasKey("G_Id");
 
                     b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Lyrics", b =>
+                {
+                    b.Property<int>("L_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("L_Id"));
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.HasKey("L_Id");
+
+                    b.HasIndex("SongId")
+                        .IsUnique();
+
+                    b.ToTable("Lyrics");
                 });
 
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
@@ -341,6 +364,17 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Lyrics", b =>
+                {
+                    b.HasOne("WebNgheNhacTrucTuyen.Models.Songs", "Song")
+                        .WithOne("Lyrics")
+                        .HasForeignKey("WebNgheNhacTrucTuyen.Models.Lyrics", "SongId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Song");
+                });
+
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
                 {
                     b.HasOne("WebNgheNhacTrucTuyen.Models.Genres", "Genre")
@@ -363,6 +397,12 @@ namespace WebNgheNhacTrucTuyen.Migrations
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Genres", b =>
                 {
                     b.Navigation("Songs");
+                });
+
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
+                {
+                    b.Navigation("Lyrics")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
