@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 using WebNgheNhacTrucTuyen.Models;
 using WebNgheNhacTrucTuyen.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -32,8 +33,19 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
 				if(result.Succeeded)
 				{
-					return RedirectToAction("Index", "Home");
-				}
+                    // Kiểm tra xem người dùng có phải là admin không
+                    var user = await signInManager.UserManager.FindByEmailAsync(model.Email);
+                    var isAdmin = await signInManager.UserManager.IsInRoleAsync(user, "Admin");
+
+                    if (isAdmin)
+                    {
+                        return RedirectToAction("Index", "Admin"); // Chuyển hướng đến Admin/Index
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home"); // Chuyển hướng đến trang chính
+                    }
+                }
 				else
 				{
 					ModelState.AddModelError("", "Email or password is incorrect.");
@@ -176,5 +188,59 @@ namespace WebNgheNhacTrucTuyen.Controllers
         {
             return View();
         }
+
+        public async Task<Users> GetCurrentUserAsync()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await usersManager.FindByIdAsync(userId);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+            var currentUser = await GetCurrentUserAsync();
+            if (currentUser == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var model = new EditProfileViewModel
+            {
+                FullName = currentUser.FullName,
+                Email = currentUser.Email
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var currentUser = await GetCurrentUserAsync();
+                if (currentUser == null)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                currentUser.FullName = model.FullName;
+
+                // Email không được phép chỉnh sửa nếu bạn muốn giữ nguyên logic của Identity Framework
+                var result = await usersManager.UpdateAsync(currentUser);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
+        }
+
     }
 }

@@ -25,6 +25,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             // Lấy tất cả bài hát và nhóm theo thể loại
             var songsByGenre = await _context.Songs
                 .Include(s => s.Genre) // Bao gồm thông tin thể loại
+                .Include(s => s.Artist)
                 .ToListAsync();
 
             return View(songsByGenre);
@@ -37,6 +38,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                                .Include(s => s.User) // Bao gồm User
                                .Include(s => s.Genre) // Bao gồm thể loại
                                .Include(s => s.Lyrics) // Bao gồm lyrics
+                               .Include(s => s.Artist)
                                .FirstOrDefaultAsync(s => s.Id == id);
 
             if (song == null)

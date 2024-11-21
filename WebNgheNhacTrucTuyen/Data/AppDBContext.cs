@@ -12,7 +12,9 @@ namespace WebNgheNhacTrucTuyen.Data
 
         }
 
-        
+        public DbSet<Album> Albums { get; set; }
+
+        public DbSet<Artists> Artists { get; set; }
         public DbSet<Songs> Songs { get; set; }
 
         public DbSet<Genres> Genres { get; set; }
@@ -30,7 +32,12 @@ namespace WebNgheNhacTrucTuyen.Data
                 .WithMany(g => g.Songs)
                 .HasForeignKey(s => s.GenreId);
 
-
+            // Thiết lập quan hệ 1-N giữa Album và Songs
+            modelBuilder.Entity<Songs>()
+                .HasOne(s => s.Album)
+                .WithMany(a => a.Songs)
+                .HasForeignKey(s => s.AlbumId)
+                .OnDelete(DeleteBehavior.SetNull); // Xóa album không xóa bài hát
         }
     }
 }

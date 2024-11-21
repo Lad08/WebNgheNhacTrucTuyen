@@ -5,6 +5,8 @@ using WebNgheNhacTrucTuyen.Models;
 using WebNgheNhacTrucTuyen.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using WebNgheNhacTrucTuyen.ViewModels;
 
 
 namespace WebNgheNhacTrucTuyen.Controllers
@@ -34,62 +36,70 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(IFormFile file, IFormFile coverImage, string title, string artist, int genreId)
+        public async Task<IActionResult> Upload(IFormFile file, IFormFile coverImage, string title, string artistName, int genreId)
         {
-            if (file == null || file.Length == 0)
+            if (file == null || file.Length == 0 || coverImage == null || coverImage.Length == 0)
             {
-                ModelState.AddModelError("", "Chọn một file để upload.");
+                ModelState.AddModelError("", "Vui lòng chọn file nhạc và ảnh bìa hợp lệ.");
                 return View();
             }
 
-            if (coverImage == null || coverImage.Length == 0)
-            {
-                ModelState.AddModelError("", "Chọn một ảnh bìa để upload.");
-                return View();
-            }
-
-            // Lấy UserId của người đang đăng nhập
+            // Lấy thông tin người dùng đăng nhập
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login", "Account");
 
-            // Tạo thư mục lưu trữ file
-            var filePath = Path.Combine(_environment.WebRootPath, "music", file.FileName);
-            var directory = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            // Kiểm tra và thêm nghệ sĩ nếu chưa tồn tại
+            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.Name == artistName);
+            if (artist == null)
+            {
+                artist = new Artists { Name = artistName };
+                _context.Artists.Add(artist);
+                await _context.SaveChangesAsync(); // Lưu vào DB để lấy Id
+            }
 
-            // Lưu file vào thư mục "wwwroot/music"
+            // Tạo thư mục lưu file nhạc nếu chưa tồn tại
+            var filePath = Path.Combine(_environment.WebRootPath, "music", file.FileName);
+            if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            }
+
+            // Lưu file nhạc
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            // Tạo thư mục lưu trữ ảnh bìa
+            // Tạo thư mục lưu ảnh bìa nếu chưa tồn tại
             var coverImagePath = Path.Combine(_environment.WebRootPath, "images/song_img", coverImage.FileName);
-            var coverImageDirectory = Path.GetDirectoryName(coverImagePath);
-            if (!Directory.Exists(coverImageDirectory)) Directory.CreateDirectory(coverImageDirectory);
+            if (!Directory.Exists(Path.GetDirectoryName(coverImagePath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(coverImagePath));
+            }
 
-            // Lưu ảnh bìa vào thư mục "wwwroot/images/song_img"
+            // Lưu ảnh bìa
             using (var stream = new FileStream(coverImagePath, FileMode.Create))
             {
                 await coverImage.CopyToAsync(stream);
             }
 
-            // Lưu thông tin bài hát vào database
+            // Lưu thông tin bài hát vào cơ sở dữ liệu
             var song = new Songs
             {
                 Title = title,
-                Artist = artist,
                 FilePath = "/music/" + file.FileName,
-                CoverImagePath = "/images/song_img/" + coverImage.FileName, // Lưu đường dẫn ảnh bìa
+                CoverImagePath = "/images/song_img/" + coverImage.FileName,
                 UserId = user.Id,
                 UploadDate = DateTime.Now,
-                GenreId = genreId // Lưu GenreId
+                GenreId = genreId,
+                ArtistId = artist.Id // Liên kết với nghệ sĩ
             };
 
             _context.Songs.Add(song);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Home"); // Chuyển hướng về danh sách bài hát
+            TempData["Message"] = "Bài hát đã được tải lên thành công.";
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Library(string genre)
@@ -99,7 +109,9 @@ namespace WebNgheNhacTrucTuyen.Controllers
             ViewBag.Genres = genres;
 
             // Tạo truy vấn bài hát
-            IQueryable<Songs> songsQuery = _context.Songs.Include(s => s.Genre);
+            IQueryable<Songs> songsQuery = _context.Songs
+                .Include(s => s.Genre)
+                .Include(s => s.Artist); // Bao gồm thông tin nghệ sĩ (nếu cần)
 
             // Nếu genre không null, lọc theo thể loại
             if (!string.IsNullOrEmpty(genre))
@@ -107,16 +119,13 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 songsQuery = songsQuery.Where(s => s.Genre.G_Name == genre);
             }
 
-            // Lấy danh sách bài hát yêu thích
-            var favoriteSongs = await songsQuery.ToListAsync();
+            // Lấy danh sách bài hát từ truy vấn
+            var songs = await songsQuery.ToListAsync();
 
-            // Lấy danh sách bài hát yêu thích
-            var favoriteSongsList = favoriteSongs.Where(s => s.IsFavorite).ToList();
+            // Lọc bài hát yêu thích
+            var favoriteSongs = songs.Where(s => s.IsFavorite).ToList();
 
-            // Kết hợp danh sách bài hát yêu thích và bài hát theo thể loại
-            var allSongs = favoriteSongsList.Concat(favoriteSongs).Distinct().ToList();
-
-            return View(allSongs);
+            return View(favoriteSongs);
         }
 
         public async Task<IActionResult> Play(int id)
@@ -234,5 +243,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             TempData["Message"] = "Lyrics đã được tải lên thành công.";
             return RedirectToAction("Details", new { id });
         }
+
+
     }
 }

@@ -27,7 +27,7 @@
                                 <a asp-action="Details" asp-route-id="@song.Id" class="music-name">@song.Title</a>
                             </div>
                             <div>
-                                <a class="artist">@song.Artist</a>
+                                <a class="artist">@song.Artist.Name</a>
                             </div>
                             <div>
                                 <form asp-action="ToggleFavorite" asp-route-id="@song.Id" method="post">
@@ -43,7 +43,7 @@
                 <li>Không có bài hát yêu thích nào.</li>
             }
         </ul>
-        <audio id="audioPlayer" preload="auto"></audio>
+        <audio id="audioPlayer" preload="auto" loop></audio>
     </div>
 
     <div class="music-section">
@@ -63,7 +63,7 @@
                             <a asp-action="Details" asp-route-id="@song.Id" class="music-name">@song.Title</a>
                         </div>
                         <div>
-                            <a class="artist">@song.Artist</a>
+                            <a class="artist">@song.Artist.Name</a>
                         </div>
                         <div>
                             <form asp-action="ToggleFavorite" asp-route-id="@song.Id" method="post">
@@ -76,7 +76,7 @@
                 </li>
             }
         </ul>
-        <audio id="audioPlayer" preload="auto"></audio>
+        <audio id="audioPlayer" preload="auto" loop></audio>
     </div>
 </div>
 
@@ -103,7 +103,8 @@
             </div>
 
             <div class="playControl_repeat">
-                <button class="control_repeat">
+                <button id="repeatButton" class="control_repeat">
+                    <i class="fa-solid fa-repeat"></i>
                 </button>
             </div>
 

@@ -3,22 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebNgheNhacTrucTuyen.Models
 {
-    public class Album
+    public class Artists
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int A_Id { get; set; }
-
-        [Required]
-        public string A_Name { get; set; }
-
-        public string A_Description { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } // Tên nghệ sĩ
         
-        public string? CoverImagePath { get; set; }
 
-        public DateTime CreatedDate { get; set; }
 
-        // Liên kết với bảng Songs
+        // Danh sách bài hát của nghệ sĩ
         public virtual ICollection<Songs> Songs { get; set; } = new List<Songs>();
     }
 }

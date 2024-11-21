@@ -1,24 +1,26 @@
 ﻿<div class="sign-in">
     @if (User.Identity.IsAuthenticated)
     {
-        <!-- User is logged in, display their username and logout option -->
-
-        <span>Hello, @User.Identity.Name</span>
-
+        <div class="dropdown">
+            <span class="dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Hello, @User.Identity.Name
+            </span>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" asp-controller="Account" asp-action="EditProfile">Edit Profile</a></li>
+                <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
+            </ul>
+        </div>
 
         <a class="upload" asp-controller="songs" asp-action="upload">Upload</a>
-        <a class="logout" asp-controller="account" asp-action="logout">Logout</a>
-
     }
     else
     {
-        <!-- User is not logged in, show login and register buttons -->
         <button class="button-signin">
-            <a class="login-a" asp-controller="account" asp-action="login">Đăng nhập</a>
+            <a class="login-a" asp-controller="Account" asp-action="Login">Đăng nhập</a>
         </button>
 
         <button class="button-signup">
-            <a class="login-a" asp-controller="account" asp-action="register">Đăng ký</a>
+            <a class="login-a" asp-controller="Account" asp-action="Register">Đăng ký</a>
         </button>
     }
 

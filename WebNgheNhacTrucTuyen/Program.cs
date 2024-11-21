@@ -26,7 +26,15 @@ builder.Services.AddIdentity<Users, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
 
-
+// Thêm session vào service
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".WebNgheNhacTrucTuyen.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -58,5 +66,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.UseSession();
 
 app.Run();

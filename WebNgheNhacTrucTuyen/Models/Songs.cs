@@ -10,11 +10,15 @@ namespace WebNgheNhacTrucTuyen.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Artist { get; set; }
         public string CoverImagePath { get; set; }
         public string FilePath { get; set; }
         public DateTime UploadDate { get; set; }
         public bool IsFavorite { get; set; }
+
+        // Foreign key đến Artist
+        public int ArtistId { get; set; } // Khóa ngoại
+        [ForeignKey("ArtistId")]
+        public virtual Artists Artist { get; set; }
 
         // Đường dẫn tới file lyrics được lưu trên server
         public Lyrics Lyrics { get; set; }
@@ -28,7 +32,10 @@ namespace WebNgheNhacTrucTuyen.Models
         [ForeignKey("GenreId")] // Đánh dấu thuộc tính GenreId là khóa ngoại
         public virtual Genres Genre { get; set; } // Thêm navigation property đến Genres
 
-       
+        // Foreign key đến Album
+        public int? AlbumId { get; set; } // AlbumId có thể null nếu bài hát không thuộc album nào
+        [ForeignKey("AlbumId")]
+        public virtual Album Album { get; set; }
 
     }
 }

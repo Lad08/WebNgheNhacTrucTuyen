@@ -1,0 +1,44 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Album>
+
+<h1>Albums</h1>
+
+<a asp-action="Create" class="btn btn-primary">Create New Album</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cover</th>
+            <th>Album Name</th>
+            <th>Description</th>
+            <th>Songs Count</th>
+            <th>Actions</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var album in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(album.CoverImagePath))
+                    {
+                        <img src="@album.CoverImagePath" alt="@album.A_Name" width="100" />
+                    }
+                    else
+                    {
+                        <span>No Cover</span>
+                    }
+                </td>
+                <td>@album.A_Name</td>
+                <td>@album.A_Description</td>
+                <td>@album.Songs.Count</td>
+                <td>
+                    <a asp-action="AddSong" asp-route-albumId="@album.A_Id" class="btn btn-success">Add Songs</a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@album.A_Id" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

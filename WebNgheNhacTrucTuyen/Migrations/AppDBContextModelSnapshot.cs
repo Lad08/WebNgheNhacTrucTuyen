@@ -155,6 +155,50 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Album", b =>
+                {
+                    b.Property<int>("A_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("A_Id"));
+
+                    b.Property<string>("A_Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("A_Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoverImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("A_Id");
+
+                    b.ToTable("Albums");
+                });
+
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Artists", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Artists");
+                });
+
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Genres", b =>
                 {
                     b.Property<int>("G_Id")
@@ -203,9 +247,11 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Artist")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("AlbumId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CoverImagePath")
                         .IsRequired()
@@ -233,6 +279,10 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("ArtistId");
 
                     b.HasIndex("GenreId");
 
@@ -374,6 +424,16 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
                 {
+                    b.HasOne("WebNgheNhacTrucTuyen.Models.Album", "Album")
+                        .WithMany("Songs")
+                        .HasForeignKey("AlbumId");
+
+                    b.HasOne("WebNgheNhacTrucTuyen.Models.Artists", "Artist")
+                        .WithMany("Songs")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WebNgheNhacTrucTuyen.Models.Genres", "Genre")
                         .WithMany("Songs")
                         .HasForeignKey("GenreId")
@@ -386,9 +446,23 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Album");
+
+                    b.Navigation("Artist");
+
                     b.Navigation("Genre");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Album", b =>
+                {
+                    b.Navigation("Songs");
+                });
+
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Artists", b =>
+                {
+                    b.Navigation("Songs");
                 });
 
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Genres", b =>

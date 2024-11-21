@@ -1,0 +1,28 @@
+﻿@model WebNgheNhacTrucTuyen.ViewModels.AddSongViewModel
+
+<h1>Add Songs to Album</h1>
+
+<form asp-action="AddSong" asp-controller="Albums" method="post">
+    <input type="hidden" name="albumId" value="@Model.AlbumId" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var song in Model.Songs)
+            {
+                <tr>
+                    <td>@song.Title</td>
+                    <td>@song.Artist.Name</td>
+                    <td>
+                        <button type="submit" name="songId" value="@song.Id" class="btn btn-success">Add</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

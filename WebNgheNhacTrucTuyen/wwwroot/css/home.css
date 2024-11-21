@@ -401,14 +401,17 @@ input:focus {
 }
 
 .control_repeat {
-    background-image: url('/images/play_control/repeat.png');
-    background-repeat: no-repeat;
-    background-position: 40%;
     width: 24px;
     height: 100%;
     border: none;
     padding: 0;
 }
+.control_repeat.active {
+    color: blue; /* Màu nền khi nút được nhấn */
+}
+
+
+
 
 .time-container {
     display: flex;

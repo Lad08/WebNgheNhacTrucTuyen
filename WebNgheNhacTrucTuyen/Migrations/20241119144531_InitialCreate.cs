@@ -12,6 +12,35 @@ namespace WebNgheNhacTrucTuyen.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Albums",
+                columns: table => new
+                {
+                    A_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    A_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    A_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Albums", x => x.A_Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Artists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Artists", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -177,17 +206,29 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Artist = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsFavorite = table.Column<bool>(type: "bit", nullable: false),
+                    ArtistId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    GenreId = table.Column<int>(type: "int", nullable: false)
+                    GenreId = table.Column<int>(type: "int", nullable: false),
+                    AlbumId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Songs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Songs_Albums_AlbumId",
+                        column: x => x.AlbumId,
+                        principalTable: "Albums",
+                        principalColumn: "A_Id");
+                    table.ForeignKey(
+                        name: "FK_Songs_Artists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "Artists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Songs_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -268,6 +309,16 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Songs_AlbumId",
+                table: "Songs",
+                column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Songs_ArtistId",
+                table: "Songs",
+                column: "ArtistId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_GenreId",
                 table: "Songs",
                 column: "GenreId");
@@ -304,6 +355,12 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
             migrationBuilder.DropTable(
                 name: "Songs");
+
+            migrationBuilder.DropTable(
+                name: "Albums");
+
+            migrationBuilder.DropTable(
+                name: "Artists");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -6,17 +6,25 @@ const durationDisplay = document.getElementById('duration');
 const currentSongTitle = document.getElementById('currentSongTitle'); // Thêm dòng này
 const searchInput = document.getElementById('searchInput');
 const songLists = document.querySelectorAll('.songList'); // Lấy tất cả các danh sách bài hát
+const playPauseButton = document.getElementById('playPauseButton');
+let isRepeating = false; // Trạng thái lập lại của bài hát
+const repeatButton = document.getElementById('repeatButton');
+const volumeSlider = document.getElementById('volumeSlider');
 
 // Thêm sự kiện cho các nút phát nhạc
 document.querySelectorAll('.play-button').forEach(button => {
     button.addEventListener('click', function () {
-        const songTitle = this.getAttribute('data-title'); // Lấy tên bài hát từ thuộc tính data-title
+        const songTitle = this.getAttribute('data-title');
         audioPlayer.src = this.getAttribute('data-file-path');
         audioPlayer.play();
-        currentSongTitle.textContent = "Bài hát hiện tại: " + songTitle; // Cập nhật tên bài hát
+        currentSongTitle.textContent = "Bài hát hiện tại: " + songTitle;
 
         // Hiện thanh điều khiển phát nhạc
-        document.querySelector('.play-controll').style.display = 'block'; // Hiện thanh điều khiển
+        document.querySelector('.play-controll').style.display = 'block';
+
+        // Cập nhật trạng thái nút play/pause
+        playPauseButton.classList.remove('skipControl_play');
+        playPauseButton.classList.add('skipControl_pause');
     });
 });
 
@@ -99,3 +107,41 @@ function toggleFavorite(songId) {
         })
         .catch(error => console.error('Error:', error));
 }
+
+// Sự kiện cho nút play/pause
+playPauseButton.addEventListener('click', function () {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playPauseButton.classList.remove('skipControl_play');
+        playPauseButton.classList.add('skipControl_pause');
+    } else {
+        audioPlayer.pause();
+        playPauseButton.classList.remove('skipControl_pause');
+        playPauseButton.classList.add('skipControl_play');
+    }
+});
+
+
+// Thêm sự kiện cho nút Repeat
+repeatButton.addEventListener('click', function () {
+    isRepeating = !isRepeating; // Đảo ngược trạng thái lặp
+    this.classList.toggle('active', isRepeating); // Thay đổi lớp CSS
+});
+
+// Cập nhật trạng thái nút Play/Pause khi bài hát kết thúc
+audioPlayer.addEventListener('ended', function () {
+    if (isRepeating) {
+        audioPlayer.currentTime = 0; // Reset về ban đầu
+        audioPlayer.play(); // Phát lại bài hát
+    }
+    playPauseButton.classList.remove('skipControl_pause');
+    playPauseButton.classList.add('skipControl_play'); // Đặt lại trạng thái nút
+});
+
+// Đặt âm lượng ban đầu
+audioPlayer.volume = 1; // Mặc định là âm lượng tối đa
+
+// Thêm sự kiện cho thanh trượt âm lượng
+volumeSlider.addEventListener('input', function () {
+    audioPlayer.volume = this.value; // Cập nhật âm lượng của audioPlayer
+});
