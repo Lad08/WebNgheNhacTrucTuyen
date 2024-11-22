@@ -63,8 +63,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 {
                     A_Name = model.Name,
                     A_Description = model.Description,
-                    CoverImagePath = coverImagePath,
-                    CreatedDate = DateTime.Now
+                    A_CoverImagePath = coverImagePath,
+                    A_CreatedDate = DateTime.Now
                 };
 
                 _context.Add(album);

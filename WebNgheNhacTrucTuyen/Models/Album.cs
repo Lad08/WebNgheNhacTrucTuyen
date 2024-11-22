@@ -14,11 +14,12 @@ namespace WebNgheNhacTrucTuyen.Models
 
         public string A_Description { get; set; }
         
-        public string? CoverImagePath { get; set; }
+        public string? A_CoverImagePath { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime A_CreatedDate { get; set; }
 
         // Liên kết với bảng Songs
         public virtual ICollection<Songs> Songs { get; set; } = new List<Songs>();
+        public string? UserId { get; set; }
     }
 }

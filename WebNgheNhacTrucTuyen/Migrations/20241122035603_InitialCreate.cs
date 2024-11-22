@@ -19,8 +19,9 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     A_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     A_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    A_CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    A_CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,13 +32,13 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 name: "Artists",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ART_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ART_Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Artists", x => x.Id);
+                    table.PrimaryKey("PK_Artists", x => x.ART_Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +60,10 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    U_FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    U_Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    U_DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsBlocked = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -203,13 +207,13 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 name: "Songs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    S_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsFavorite = table.Column<bool>(type: "bit", nullable: false),
+                    S_Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    S_CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    S_FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    S_UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    S_IsFavorite = table.Column<bool>(type: "bit", nullable: false),
                     ArtistId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GenreId = table.Column<int>(type: "int", nullable: false),
@@ -217,17 +221,18 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Songs", x => x.Id);
+                    table.PrimaryKey("PK_Songs", x => x.S_Id);
                     table.ForeignKey(
                         name: "FK_Songs_Albums_AlbumId",
                         column: x => x.AlbumId,
                         principalTable: "Albums",
-                        principalColumn: "A_Id");
+                        principalColumn: "A_Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Songs_Artists_ArtistId",
                         column: x => x.ArtistId,
                         principalTable: "Artists",
-                        principalColumn: "Id",
+                        principalColumn: "ART_Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Songs_AspNetUsers_UserId",
@@ -249,7 +254,7 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 {
                     L_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    L_FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SongId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -259,7 +264,7 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         name: "FK_Lyrics_Songs_SongId",
                         column: x => x.SongId,
                         principalTable: "Songs",
-                        principalColumn: "Id",
+                        principalColumn: "S_Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 

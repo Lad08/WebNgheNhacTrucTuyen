@@ -7,8 +7,8 @@ namespace WebNgheNhacTrucTuyen.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Name { get; set; } // Tên nghệ sĩ
+        public int ART_Id { get; set; }
+        public string ART_Name { get; set; } // Tên nghệ sĩ
         
 
 

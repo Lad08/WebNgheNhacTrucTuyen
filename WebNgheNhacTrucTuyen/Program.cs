@@ -4,6 +4,7 @@ using WebNgheNhacTrucTuyen.Data;
 using WebNgheNhacTrucTuyen.Models;
 using Microsoft.Extensions.DependencyInjection;
 using WebNgheNhacTrucTuyen.Seeders;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,24 @@ builder.Services.AddIdentity<Users, IdentityRole>(options =>
 })
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
+
+// Thêm xác thực Cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnValidatePrincipal = async context =>
+    {
+        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<Users>>();
+        var user = await userManager.GetUserAsync(context.Principal);
+
+        // Kiểm tra trạng thái IsBlocked
+        if (user != null && user.IsBlocked)
+        {
+            context.RejectPrincipal(); // Từ chối quyền truy cập
+            await context.HttpContext.SignOutAsync(); // Đăng xuất
+
+        }
+    };
+});
 
 // Thêm session vào service
 builder.Services.AddDistributedMemoryCache();

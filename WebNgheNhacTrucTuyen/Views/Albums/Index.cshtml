@@ -2,7 +2,7 @@
 
 <h1>Albums</h1>
 
-<a asp-action="Create" class="btn btn-primary">Create New Album</a>
+<a asp-action="A_Create" class="btn btn-primary">Create New Album</a>
 
 <table class="table">
     <thead>
@@ -20,9 +20,9 @@
         {
             <tr>
                 <td>
-                    @if (!string.IsNullOrEmpty(album.CoverImagePath))
+                    @if (!string.IsNullOrEmpty(album.A_CoverImagePath))
                     {
-                        <img src="@album.CoverImagePath" alt="@album.A_Name" width="100" />
+                        <img src="@album.A_CoverImagePath" alt="@album.A_Name" width="100" />
                     }
                     else
                     {

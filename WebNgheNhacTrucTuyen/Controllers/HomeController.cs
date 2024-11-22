@@ -26,6 +26,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             var songsByGenre = await _context.Songs
                 .Include(s => s.Genre) // Bao gồm thông tin thể loại
                 .Include(s => s.Artist)
+                .Include(s => s.Album)
                 .ToListAsync();
 
             return View(songsByGenre);
@@ -39,7 +40,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
                                .Include(s => s.Genre) // Bao gồm thể loại
                                .Include(s => s.Lyrics) // Bao gồm lyrics
                                .Include(s => s.Artist)
-                               .FirstOrDefaultAsync(s => s.Id == id);
+                               .Include(s => s.Album)
+                               .FirstOrDefaultAsync(s => s.S_Id == id);
 
             if (song == null)
             {
@@ -47,9 +49,9 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
 
             // Đọc nội dung file lyrics nếu tồn tại
-            if (song.Lyrics != null && !string.IsNullOrEmpty(song.Lyrics.FilePath))
+            if (song.Lyrics != null && !string.IsNullOrEmpty(song.Lyrics.L_FilePath))
             {
-                string fullPath = Path.Combine(_environment.WebRootPath, song.Lyrics.FilePath.TrimStart('/'));
+                string fullPath = Path.Combine(_environment.WebRootPath, song.Lyrics.L_FilePath.TrimStart('/'));
                 if (System.IO.File.Exists(fullPath))
                 {
                     ViewBag.LyricsContent = System.IO.File.ReadAllText(fullPath);
@@ -70,7 +72,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
 
             // Tìm bài hát theo Id
-            var song = await _context.Songs.Include(s => s.Lyrics).FirstOrDefaultAsync(s => s.Id == id);
+            var song = await _context.Songs.Include(s => s.Lyrics).FirstOrDefaultAsync(s => s.S_Id == id);
             if (song == null)
             {
                 return NotFound("Bài hát không tồn tại.");
@@ -96,7 +98,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             // Nếu bài hát đã có lyrics, cập nhật đường dẫn
             if (song.Lyrics != null)
             {
-                song.Lyrics.FilePath = $"/Lyrics/{fileName}";
+                song.Lyrics.L_FilePath = $"/Lyrics/{fileName}";
                 _context.Lyrics.Update(song.Lyrics);
             }
             else
@@ -104,8 +106,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 // Nếu chưa có lyrics, thêm mới
                 var lyrics = new Lyrics
                 {
-                    FilePath = $"/Lyrics/{fileName}",
-                    SongId = song.Id
+                    L_FilePath = $"/Lyrics/{fileName}",
+                    SongId = song.S_Id
                 };
                 _context.Lyrics.Add(lyrics);
             }

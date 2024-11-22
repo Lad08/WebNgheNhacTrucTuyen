@@ -20,18 +20,18 @@
         @foreach (var song in Model)
         {
             <tr>
-                <td>@song.Id</td>
-                <td>@song.Title</td>
-                <td>@song.Artist?.Name</td>
+                <td>@song.S_Id</td>
+                <td>@song.S_Title</td>
+                <td>@song.Artist?.ART_Name</td>
                 <td>@song.Genre?.G_Name</td>
                 <td>@song.Album?.A_Name </td>
-                <td>@song.User?.FullName</td>
-                <td>@song.UploadDate.ToString("dd/MM/yyyy")</td>
-                <td>@(song.IsFavorite ? "Có" : "Không")</td>
+                <td>@song.User?.U_FullName</td>
+                <td>@song.S_UploadDate.ToString("dd/MM/yyyy")</td>
+                <td>@(song.S_IsFavorite ? "Có" : "Không")</td>
                 <td>
-                    <a asp-action="EditSong" asp-route-id="@song.Id" class="btn btn-warning">Sửa</a>
+                    <a asp-action="EditSong" asp-route-id="@song.S_Id" class="btn btn-warning">Sửa</a>
                     <form asp-action="DeleteSong" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="@song.Id" />
+                        <input type="hidden" name="id" value="@song.S_Id" />
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this song?');">Delete</button>
                     </form>
                 </td>

@@ -49,10 +49,10 @@ namespace WebNgheNhacTrucTuyen.Controllers
             if (user == null) return RedirectToAction("Login", "Account");
 
             // Kiểm tra và thêm nghệ sĩ nếu chưa tồn tại
-            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.Name == artistName);
+            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ART_Name == artistName);
             if (artist == null)
             {
-                artist = new Artists { Name = artistName };
+                artist = new Artists { ART_Name = artistName };
                 _context.Artists.Add(artist);
                 await _context.SaveChangesAsync(); // Lưu vào DB để lấy Id
             }
@@ -86,13 +86,13 @@ namespace WebNgheNhacTrucTuyen.Controllers
             // Lưu thông tin bài hát vào cơ sở dữ liệu
             var song = new Songs
             {
-                Title = title,
-                FilePath = "/music/" + file.FileName,
-                CoverImagePath = "/images/song_img/" + coverImage.FileName,
+                S_Title = title,
+                S_FilePath = "/music/" + file.FileName,
+                S_CoverImagePath = "/images/song_img/" + coverImage.FileName,
                 UserId = user.Id,
-                UploadDate = DateTime.Now,
+                S_UploadDate = DateTime.Now,
                 GenreId = genreId,
-                ArtistId = artist.Id // Liên kết với nghệ sĩ
+                ArtistId = artist.ART_Id // Liên kết với nghệ sĩ
             };
 
             _context.Songs.Add(song);
@@ -104,28 +104,48 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
         public async Task<IActionResult> Library(string genre)
         {
+            // Lấy thông tin người dùng hiện tại
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             // Lấy tất cả thể loại
             var genres = await _context.Genres.ToListAsync();
             ViewBag.Genres = genres;
 
-            // Tạo truy vấn bài hát
-            IQueryable<Songs> songsQuery = _context.Songs
+            // Lấy bài hát yêu thích
+            var favoriteSongsQuery = _context.Songs
                 .Include(s => s.Genre)
-                .Include(s => s.Artist); // Bao gồm thông tin nghệ sĩ (nếu cần)
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .Where(s => s.S_IsFavorite && s.UserId == user.Id);
 
-            // Nếu genre không null, lọc theo thể loại
+            // Lấy bài hát người dùng tải lên
+            var uploadedSongsQuery = _context.Songs
+                .Include(s => s.Genre)
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .Where(s => s.UserId == user.Id);
+
+            // Nếu genre không null, lọc thêm theo thể loại
             if (!string.IsNullOrEmpty(genre))
             {
-                songsQuery = songsQuery.Where(s => s.Genre.G_Name == genre);
+                favoriteSongsQuery = favoriteSongsQuery.Where(s => s.Genre.G_Name == genre);
+                uploadedSongsQuery = uploadedSongsQuery.Where(s => s.Genre.G_Name == genre);
             }
 
-            // Lấy danh sách bài hát từ truy vấn
-            var songs = await songsQuery.ToListAsync();
+            // Kết hợp cả hai danh sách
+            var favoriteSongs = await favoriteSongsQuery.ToListAsync();
+            var uploadedSongs = await uploadedSongsQuery.ToListAsync();
 
-            // Lọc bài hát yêu thích
-            var favoriteSongs = songs.Where(s => s.IsFavorite).ToList();
+            // Truyền hai danh sách vào ViewBag để sử dụng trong View
+            ViewBag.FavoriteSongs = favoriteSongs;
+            ViewBag.UploadedSongs = uploadedSongs;
 
-            return View(favoriteSongs);
+            // Trả về danh sách bài hát tải lên để hiển thị mặc định
+            return View(uploadedSongs);
         }
 
         public async Task<IActionResult> Play(int id)
@@ -138,7 +158,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
 
             // Kiểm tra đường dẫn file nhạc
-            var filePath = Path.Combine(_environment.WebRootPath, song.FilePath.TrimStart('/'));
+            var filePath = Path.Combine(_environment.WebRootPath, song.S_FilePath.TrimStart('/'));
             if (!System.IO.File.Exists(filePath))
             {
                 return NotFound("File nhạc không tồn tại.");
@@ -152,20 +172,21 @@ namespace WebNgheNhacTrucTuyen.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var song = await _context.Songs
-                    .Include(s => s.User) // Bao gồm User
-                    .Include(s => s.Genre) // Bao gồm thể loại
-                    .Include(s => s.Lyrics) // Bao gồm lyrics
-                    .FirstOrDefaultAsync(s => s.Id == id);
+                   .Include(s => s.User)      // Bao gồm User
+                   .Include(s => s.Genre)     // Bao gồm thể loại
+                   .Include(s => s.Lyrics)    // Bao gồm lyrics
+                   .Include(s => s.Album)     // Bao gồm Album
+                   .Include(s => s.Artist)    // Bao gồm Nghệ sĩ
+                   .FirstOrDefaultAsync(s => s.S_Id == id);
 
             if (song == null)
             {
                 return NotFound("Bài hát không tồn tại.");
             }
 
-            // Đọc nội dung file lyrics nếu tồn tại
-            if (song.Lyrics != null && !string.IsNullOrEmpty(song.Lyrics.FilePath))
+            if (song.Lyrics != null && !string.IsNullOrEmpty(song.Lyrics.L_FilePath))
             {
-                string fullPath = Path.Combine(_environment.WebRootPath, song.Lyrics.FilePath.TrimStart('/'));
+                string fullPath = Path.Combine(_environment.WebRootPath, song.Lyrics.L_FilePath.TrimStart('/'));
                 if (System.IO.File.Exists(fullPath))
                 {
                     ViewBag.LyricsContent = System.IO.File.ReadAllText(fullPath);
@@ -181,7 +202,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             var song = _context.Songs.Find(id);
             if (song != null)
             {
-                song.IsFavorite = !song.IsFavorite;
+                song.S_IsFavorite = !song.S_IsFavorite;
                 _context.SaveChanges();
             }
             return RedirectToAction("Library");
@@ -198,7 +219,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
 
             // Tìm bài hát theo Id
-            var song = await _context.Songs.Include(s => s.Lyrics).FirstOrDefaultAsync(s => s.Id == id);
+            var song = await _context.Songs.Include(s => s.Lyrics).FirstOrDefaultAsync(s => s.S_Id == id);
             if (song == null)
             {
                 return NotFound("Bài hát không tồn tại.");
@@ -224,7 +245,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             // Nếu bài hát đã có lyrics, cập nhật đường dẫn
             if (song.Lyrics != null)
             {
-                song.Lyrics.FilePath = $"/Lyrics/{fileName}";
+                song.Lyrics.L_FilePath = $"/Lyrics/{fileName}";
                 _context.Lyrics.Update(song.Lyrics);
             }
             else
@@ -232,8 +253,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 // Nếu chưa có lyrics, thêm mới
                 var lyrics = new Lyrics
                 {
-                    FilePath = $"/Lyrics/{fileName}",
-                    SongId = song.Id
+                    L_FilePath = $"/Lyrics/{fileName}",
+                    SongId = song.S_Id
                 };
                 _context.Lyrics.Add(lyrics);
             }

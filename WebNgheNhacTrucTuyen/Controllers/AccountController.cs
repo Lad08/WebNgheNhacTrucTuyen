@@ -67,7 +67,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
 			{
 				Users users = new Users
 				{
-					FullName = model.Name,
+					U_FullName = model.Name,
 					Email = model.Email,
 					UserName = model.Email,
 				};
@@ -89,7 +89,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                     }
 
                     await signInManager.SignInAsync(users, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Login", "Account");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -196,6 +196,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
         }
 
         [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> EditProfile()
         {
             var currentUser = await GetCurrentUserAsync();
@@ -206,8 +207,11 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             var model = new EditProfileViewModel
             {
-                FullName = currentUser.FullName,
-                Email = currentUser.Email
+                FullName = currentUser.U_FullName,
+                Email = currentUser.Email,
+                PhoneNumber = currentUser.PhoneNumber,
+                Address = currentUser.U_Address,
+                DateOfBirth = currentUser.U_DateOfBirth
             };
 
             return View(model);
@@ -224,9 +228,11 @@ namespace WebNgheNhacTrucTuyen.Controllers
                     return RedirectToAction("Login");
                 }
 
-                currentUser.FullName = model.FullName;
+                currentUser.U_FullName = model.FullName;
+                currentUser.PhoneNumber = model.PhoneNumber;
+                currentUser.U_Address = model.Address;
+                currentUser.U_DateOfBirth = model.DateOfBirth;
 
-                // Email không được phép chỉnh sửa nếu bạn muốn giữ nguyên logic của Identity Framework
                 var result = await usersManager.UpdateAsync(currentUser);
                 if (result.Succeeded)
                 {
@@ -241,6 +247,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             return View(model);
         }
+
+
 
     }
 }

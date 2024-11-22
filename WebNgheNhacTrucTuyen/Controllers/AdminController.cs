@@ -36,67 +36,14 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 {
                     UserId = user.Id,
                     UserName = user.UserName,
-                    Roles = rolesForUser
+                    Roles = rolesForUser,
+                    IsBlocked = user.IsBlocked
                 });
             }
 
             return View(userRoles);
         }
 
-
-
-
-
-        // Hiển thị trang chỉnh sửa người dùng
-        [HttpGet]
-        public async Task<IActionResult> EditUser(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
-
-            var rolesForUser = await _userManager.GetRolesAsync(user);
-            var model = new UserManageViewModel
-            {
-                UserId = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                Roles = rolesForUser.ToList(),
-                AllRoles = _roleManager.Roles.Select(r => r.Name).ToList()
-            };
-
-            return View(model);
-        }
-
-        // Xử lý yêu cầu chỉnh sửa người dùng
-        [HttpPost]
-        public async Task<IActionResult> EditUser(UserManageViewModel model)
-        {
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            user.UserName = model.UserName;
-            user.Email = model.Email;
-
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError("", "Error updating user.");
-                return View(model);
-            }
-
-            // Cập nhật vai trò
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var rolesToAdd = model.Roles.Except(userRoles).ToList();
-            var rolesToRemove = userRoles.Except(model.Roles).ToList();
-
-            await _userManager.AddToRolesAsync(user, rolesToAdd);
-            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
-
-            return RedirectToAction(nameof(Index));
-        }
 
         // Xóa người dùng
         [HttpPost]
@@ -153,7 +100,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 .Include(s => s.Artist)
                 .Include(s => s.Genre)
                 .Include(s => s.Album)
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.S_Id == id);
 
             if (song == null)
             {
@@ -162,11 +109,10 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             var model = new EditSongViewModel
             {
-                Id = song.Id,
-                Title = song.Title,
-                UploadDate = song.UploadDate,
-                IsFavorite = song.IsFavorite,
-                ArtistName = song.Artist.Name, // Nhập tên nghệ sĩ
+                Id = song.S_Id,
+                Title = song.S_Title,
+                UploadDate = song.S_UploadDate,
+                ArtistName = song.Artist.ART_Name, // Nhập tên nghệ sĩ
                 GenreId = song.GenreId,
                 AlbumId = song.AlbumId
             };
@@ -195,26 +141,26 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 return View(model);
             }
 
-            var song = await _context.Songs.Include(s => s.Artist).FirstOrDefaultAsync(s => s.Id == model.Id);
+            var song = await _context.Songs.Include(s => s.Artist).FirstOrDefaultAsync(s => s.S_Id == model.Id);
 
             if (song == null)
             {
                 return NotFound();
             }
 
-            song.Title = model.Title;
-            song.UploadDate = model.UploadDate;
-            song.IsFavorite = model.IsFavorite;
+            song.S_Title = model.Title;
+            song.S_UploadDate = model.UploadDate;
+            song.S_IsFavorite = model.IsFavorite;
 
             // Tìm hoặc tạo nghệ sĩ mới
-            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.Name == model.ArtistName);
+            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ART_Name == model.ArtistName);
             if (artist == null)
             {
-                artist = new Artists { Name = model.ArtistName };
+                artist = new Artists { ART_Name = model.ArtistName };
                 _context.Artists.Add(artist);
                 await _context.SaveChangesAsync();
             }
-            song.ArtistId = artist.Id;
+            song.ArtistId = artist.ART_Id;
 
 
             song.GenreId = model.GenreId;
@@ -226,5 +172,27 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return RedirectToAction("Index", "Admin");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BlockUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            user.IsBlocked = !user.IsBlocked; // Đổi trạng thái Block/Unblock
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -23,20 +23,20 @@
                     <li class="music-card">
                         <div>
                             <div class="img-container">
-                                <img class="item-img" src="@Url.Content(song.CoverImagePath)" />
-                                <button class="play-button" data-file-path="@Url.Content(song.FilePath)" data-title="@song.Title"><i class="fas fa-play"></i></button>
+                                <img class="item-img" src="@Url.Content(song.S_CoverImagePath)" />
+                                <button class="play-button" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title"><i class="fas fa-play"></i></button>
                             </div>
                             <div>
-                                <a asp-action="SongDetails" asp-route-id="@song.Id" class="music-name">@song.Title</a>
+                                <a asp-action="SongDetails" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
                             </div>
 
                             <div>
-                                <a class="artist">@song.Artist.Name</a>
+                                <a class="artist">@song.Artist.ART_Name</a>
                             </div>
                             
                             <div>
-                                <button type="button" onclick="toggleFavorite(@song.Id)">
-                                    @(song.IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
+                                <button type="button" onclick="toggleFavorite(@song.S_Id)">
+                                    @(song.S_IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
                                 </button>
                             </div>
                            

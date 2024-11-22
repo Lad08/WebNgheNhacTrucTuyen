@@ -8,12 +8,12 @@ namespace WebNgheNhacTrucTuyen.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string CoverImagePath { get; set; }
-        public string FilePath { get; set; }
-        public DateTime UploadDate { get; set; }
-        public bool IsFavorite { get; set; }
+        public int S_Id { get; set; }
+        public string S_Title { get; set; }
+        public string S_CoverImagePath { get; set; }
+        public string S_FilePath { get; set; }
+        public DateTime S_UploadDate { get; set; }
+        public bool S_IsFavorite { get; set; }
 
         // Foreign key đến Artist
         public int ArtistId { get; set; } // Khóa ngoại

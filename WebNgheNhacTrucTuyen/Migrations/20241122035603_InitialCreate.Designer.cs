@@ -12,7 +12,7 @@ using WebNgheNhacTrucTuyen.Data;
 namespace WebNgheNhacTrucTuyen.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20241119144531_InitialCreate")]
+    [Migration("20241122035603_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -166,6 +166,12 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("A_Id"));
 
+                    b.Property<string>("A_CoverImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("A_CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("A_Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -174,11 +180,8 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CoverImagePath")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("A_Id");
 
@@ -187,17 +190,17 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Artists", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ART_Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ART_Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ART_Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ART_Id");
 
                     b.ToTable("Artists");
                 });
@@ -227,7 +230,7 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("L_Id"));
 
-                    b.Property<string>("FilePath")
+                    b.Property<string>("L_FilePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -244,11 +247,11 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("S_Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("S_Id"));
 
                     b.Property<int?>("AlbumId")
                         .HasColumnType("int");
@@ -256,32 +259,32 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.Property<int>("ArtistId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CoverImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsFavorite")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("S_CoverImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UploadDate")
+                    b.Property<string>("S_FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("S_IsFavorite")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("S_Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("S_UploadDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("S_Id");
 
                     b.HasIndex("AlbumId");
 
@@ -313,9 +316,8 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -345,6 +347,16 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<string>("U_Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("U_DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("U_FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -429,7 +441,8 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 {
                     b.HasOne("WebNgheNhacTrucTuyen.Models.Album", "Album")
                         .WithMany("Songs")
-                        .HasForeignKey("AlbumId");
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("WebNgheNhacTrucTuyen.Models.Artists", "Artist")
                         .WithMany("Songs")

@@ -16,10 +16,10 @@
             @foreach (var song in Model.Songs)
             {
                 <tr>
-                    <td>@song.Title</td>
-                    <td>@song.Artist.Name</td>
+                    <td>@song.S_Title</td>
+                    <td>@song.Artist.ART_Name</td>
                     <td>
-                        <button type="submit" name="songId" value="@song.Id" class="btn btn-success">Add</button>
+                        <button type="submit" name="songId" value="@song.S_Id" class="btn btn-success">Add</button>
                     </td>
                 </tr>
             }

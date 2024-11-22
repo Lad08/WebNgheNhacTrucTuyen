@@ -4,16 +4,35 @@
     ViewData["Title"] = "Chi tiết bài hát";
 }
 
-<h1>@Model.Title</h1>
-<p><strong>Nghệ sĩ:</strong> @Model.Artist</p>
+<h1>@Model.S_Title</h1>
+<p>Thể loại: @Model.Genre?.G_Name</p>
+<p><strong>Nghệ sĩ:</strong> @Model.Artist.ART_Name</p>
+<p><strong>Ngày đăng tải phát hành:</strong>@Model.S_UploadDate </p>
+<p>Uploaded by: @Model.User.U_FullName</p>
+<a href="@Model.S_FilePath" download>Download Song</a>
 
-<p><strong>Ngày đăng tải phát hành:</strong>@Model.UploadDate </p>
-<p>Uploaded by: @Model.User.FullName</p>
-<a href="@Model.FilePath" download>Download Song</a>
-<p>Thể loại: @Model.Genre.G_Name</p>
+
 <audio controls>
-    <source src="@Url.Content(Model.FilePath)" type="audio/mpeg">
+    <source src="@Url.Content(Model.S_FilePath)" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
-<a href="@Url.Action("Index", "Home")">Quay lại trang chủ</a>
+<h3>Lyrics:</h3>
+@if (ViewBag.LyricsContent != null)
+{
+    <pre>@ViewBag.LyricsContent</pre>
+}
+else
+{
+    <p><em>Chưa có lyrics nào được tải lên.</em></p>
+}
+
+<h3>Tải lên Lyrics:</h3>
+<form asp-action="UploadLyrics" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="@Model.S_Id" />
+    <div>
+        <input type="file" name="file" accept=".txt" />
+    </div>
+    <button type="submit">Tải lên</button>
+</form>
+
