@@ -204,6 +204,26 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Playlists",
+                columns: table => new
+                {
+                    P_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    P_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Playlists", x => x.P_Id);
+                    table.ForeignKey(
+                        name: "FK_Playlists_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Songs",
                 columns: table => new
                 {
@@ -268,6 +288,30 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PlaylistSongs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlaylistId = table.Column<int>(type: "int", nullable: false),
+                    SongId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlaylistSongs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlaylistSongs_Playlists_PlaylistId",
+                        column: x => x.PlaylistId,
+                        principalTable: "Playlists",
+                        principalColumn: "P_Id");
+                    table.ForeignKey(
+                        name: "FK_PlaylistSongs_Songs_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Songs",
+                        principalColumn: "S_Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -314,6 +358,21 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Playlists_UserId",
+                table: "Playlists",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlaylistSongs_PlaylistId",
+                table: "PlaylistSongs",
+                column: "PlaylistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlaylistSongs_SongId",
+                table: "PlaylistSongs",
+                column: "SongId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_AlbumId",
                 table: "Songs",
                 column: "AlbumId");
@@ -356,7 +415,13 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 name: "Lyrics");
 
             migrationBuilder.DropTable(
+                name: "PlaylistSongs");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Playlists");
 
             migrationBuilder.DropTable(
                 name: "Songs");

@@ -37,5 +37,7 @@ namespace WebNgheNhacTrucTuyen.Models
         [ForeignKey("AlbumId")]
         public virtual Album Album { get; set; }
 
+        public virtual ICollection<PlaylistSong> PlaylistSongs { get; set; }
+
     }
 }

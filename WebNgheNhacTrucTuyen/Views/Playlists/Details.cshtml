@@ -1,0 +1,48 @@
+﻿@model WebNgheNhacTrucTuyen.Models.Playlist
+
+<h2>Chi tiết Playlist: @Model.P_Name</h2>
+
+<p>Người tạo: @Model.User.UserName</p>
+
+<h3>Danh sách bài hát</h3>
+
+@if (Model.PlaylistSongs.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên bài hát</th>
+                <th>Ca sĩ</th>
+                <th>Thể loại</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.PlaylistSongs.Count; i++)
+            {
+                var song = Model.PlaylistSongs.ElementAt(i).Song;
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@song.S_Title</td>
+                    <td>@song.Artist.ART_Name</td>
+                    <td>@song.Genre.G_Name</td>
+                    <td>
+                        <!-- Nút xóa bài hát khỏi playlist -->
+                        <form asp-action="RemoveSongFromPlaylist" method="post" style="display:inline;">
+                            <input type="hidden" name="playlistId" value="@Model.P_Id" />
+                            <input type="hidden" name="songId" value="@song.S_Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Playlist này chưa có bài hát nào.</p>
+}
+
+<a asp-action="Index" class="btn btn-primary">Quay lại danh sách Playlist</a>

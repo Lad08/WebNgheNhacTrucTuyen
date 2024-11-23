@@ -242,6 +242,52 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.ToTable("Lyrics");
                 });
 
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Playlist", b =>
+                {
+                    b.Property<int>("P_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("P_Id"));
+
+                    b.Property<string>("P_Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("P_Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Playlists");
+                });
+
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.PlaylistSong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PlaylistId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaylistId");
+
+                    b.HasIndex("SongId");
+
+                    b.ToTable("PlaylistSongs");
+                });
+
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
                 {
                     b.Property<int>("S_Id")
@@ -434,6 +480,36 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.Navigation("Song");
                 });
 
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Playlist", b =>
+                {
+                    b.HasOne("WebNgheNhacTrucTuyen.Models.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.PlaylistSong", b =>
+                {
+                    b.HasOne("WebNgheNhacTrucTuyen.Models.Playlist", "Playlist")
+                        .WithMany("PlaylistSongs")
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("WebNgheNhacTrucTuyen.Models.Songs", "Song")
+                        .WithMany("PlaylistSongs")
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Playlist");
+
+                    b.Navigation("Song");
+                });
+
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
                 {
                     b.HasOne("WebNgheNhacTrucTuyen.Models.Album", "Album")
@@ -483,10 +559,17 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.Navigation("Songs");
                 });
 
+            modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Playlist", b =>
+                {
+                    b.Navigation("PlaylistSongs");
+                });
+
             modelBuilder.Entity("WebNgheNhacTrucTuyen.Models.Songs", b =>
                 {
                     b.Navigation("Lyrics")
                         .IsRequired();
+
+                    b.Navigation("PlaylistSongs");
                 });
 #pragma warning restore 612, 618
         }

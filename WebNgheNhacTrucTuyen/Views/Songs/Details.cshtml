@@ -11,11 +11,14 @@
 <p>Uploaded by: @Model.User.U_FullName</p>
 <a href="@Model.S_FilePath" download>Download Song</a>
 <a asp-action="EditSong" asp-route-id="@Model.S_Id" class="btn btn-warning">Sửa</a>
+<a asp-controller="Playlists" asp-action="AddSongToPlaylist" class="btn btn-success">Thêm bài hát vào Playlist</a>
 
 <audio controls>
     <source src="@Url.Content(Model.S_FilePath)" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
+
+
 
 <h3>Lyrics:</h3>
 @if (ViewBag.LyricsContent != null)

@@ -21,7 +21,8 @@ namespace WebNgheNhacTrucTuyen.Data
 
         public DbSet<Lyrics> Lyrics { get; set; }
 
-        
+        public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<PlaylistSong> PlaylistSongs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +41,22 @@ namespace WebNgheNhacTrucTuyen.Data
                 .WithMany(a => a.Songs)
                 .HasForeignKey(s => s.AlbumId)
                 .OnDelete(DeleteBehavior.SetNull); // Xóa album không xóa bài hát
+
+            // Cấu hình quan hệ nhiều-nhiều giữa Playlist và Songs thông qua PlaylistSong
+            modelBuilder.Entity<PlaylistSong>()
+                .HasKey(ps => ps.Id); // Khóa chính của bảng trung gian
+
+            modelBuilder.Entity<PlaylistSong>()
+                .HasOne(ps => ps.Playlist)
+                .WithMany(p => p.PlaylistSongs) // Một Playlist có nhiều PlaylistSong
+                .HasForeignKey(ps => ps.PlaylistId)
+                .OnDelete(DeleteBehavior.NoAction); // Khi Playlist bị xóa, các PlaylistSong liên quan cũng bị xóa
+
+            modelBuilder.Entity<PlaylistSong>()
+                .HasOne(ps => ps.Song)
+                .WithMany(s => s.PlaylistSongs) // Một Song có thể nằm trong nhiều PlaylistSong
+                .HasForeignKey(ps => ps.SongId)
+                .OnDelete(DeleteBehavior.NoAction); // Khi Song bị xóa, các PlaylistSong liên quan cũng bị xóa
         }
     }
 }

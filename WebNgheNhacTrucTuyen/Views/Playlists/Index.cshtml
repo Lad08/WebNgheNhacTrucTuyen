@@ -1,0 +1,42 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Playlist>
+
+@{
+    ViewData["Title"] = "Danh sách Playlist";
+}
+
+<div class="container mt-4">
+    <h2>Danh sách Playlist</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="Create" method="post" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="playlistName" class="form-control" placeholder="Nhập tên playlist..." required>
+            <button type="submit" class="btn btn-primary">Tạo Playlist</button>
+        </div>
+    </form>
+
+    @if (Model.Any())
+    {
+        <ul class="list-group">
+            @foreach (var playlist in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>@playlist.P_Name</span>
+                    <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.P_Id" class="btn btn-outline-secondary btn-sm">Xem chi tiết</a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted">Chưa có playlist nào. Hãy tạo một playlist mới!</p>
+    }
+</div>
