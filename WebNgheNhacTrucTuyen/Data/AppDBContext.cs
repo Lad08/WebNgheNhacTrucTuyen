@@ -21,6 +21,8 @@ namespace WebNgheNhacTrucTuyen.Data
 
         public DbSet<Lyrics> Lyrics { get; set; }
 
+        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

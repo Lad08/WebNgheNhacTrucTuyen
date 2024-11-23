@@ -8,9 +8,18 @@ namespace WebNgheNhacTrucTuyen.ViewModels
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime UploadDate { get; set; }
+        
         public bool IsFavorite { get; set; }
         public string ArtistName { get; set; } // Nhập nghệ sĩ
         public int GenreId { get; set; }
         public int? AlbumId { get; set; }
+
+
+
+        public string? ExistingCoverImagePath { get; set; }
+
+        // Ảnh bìa mới (nếu có)
+        [DataType(DataType.Upload)]
+        public IFormFile? CoverImage { get; set; }
     }
 }

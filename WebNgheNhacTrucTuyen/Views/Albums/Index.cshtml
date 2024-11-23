@@ -38,6 +38,11 @@
                 <td>
                     <a asp-action="Details" asp-route-id="@album.A_Id" class="btn btn-info">Details</a>
                 </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@album.A_Id" class="btn btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@album.A_Id" class="btn btn-danger">Xóa</a>
+                </td>
+
             </tr>
         }
     </tbody>

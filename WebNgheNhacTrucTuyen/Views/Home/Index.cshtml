@@ -27,7 +27,7 @@
                                 <button class="play-button" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title"><i class="fas fa-play"></i></button>
                             </div>
                             <div>
-                                <a asp-action="SongDetails" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
                             </div>
 
                             <div>

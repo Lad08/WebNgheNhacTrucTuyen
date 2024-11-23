@@ -1,0 +1,16 @@
+﻿@model WebNgheNhacTrucTuyen.Models.Album
+
+<h2>Xác nhận xóa Album</h2>
+<p>Bạn có chắc chắn muốn xóa album này không?</p>
+
+<div>
+    <h4>@Model.A_Name</h4>
+    <p>@Model.A_Description</p>
+    <p><strong>Số bài hát:</strong> @Model.Songs.Count</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="A_Id" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>

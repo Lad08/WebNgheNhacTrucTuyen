@@ -1,0 +1,36 @@
+﻿@model WebNgheNhacTrucTuyen.ViewModels.AlbumEditViewModel
+
+<h2>Chỉnh sửa Album</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Ảnh bìa hiện tại:</label>
+        @if (!string.IsNullOrEmpty(Model.ExistingCoverImagePath))
+        {
+            <div>
+                <img src="@Model.ExistingCoverImagePath" alt="Cover Image" style="max-width: 200px;" />
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <label asp-for="CoverImage" class="control-label">Ảnh bìa mới (nếu có):</label>
+        <input asp-for="CoverImage" type="file" class="form-control" />
+        <span asp-validation-for="CoverImage" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

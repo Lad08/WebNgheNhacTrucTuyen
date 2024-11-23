@@ -93,7 +93,6 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View(songs);
         }
 
-        [HttpGet]
         public async Task<IActionResult> EditSong(int id)
         {
             var song = await _context.Songs
@@ -111,6 +110,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             {
                 Id = song.S_Id,
                 Title = song.S_Title,
+                ExistingCoverImagePath = song.S_CoverImagePath,
                 UploadDate = song.S_UploadDate,
                 ArtistName = song.Artist.ART_Name, // Nhập tên nghệ sĩ
                 GenreId = song.GenreId,
@@ -132,8 +132,13 @@ namespace WebNgheNhacTrucTuyen.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditSong(EditSongViewModel model)
+        public async Task<IActionResult> EditSong(EditSongViewModel model, int id)
         {
+            if (id != model.Id)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Genres = new SelectList(_context.Genres, "G_Id", "G_Name");
@@ -152,6 +157,37 @@ namespace WebNgheNhacTrucTuyen.Controllers
             song.S_UploadDate = model.UploadDate;
             song.S_IsFavorite = model.IsFavorite;
 
+            // Xử lý cập nhật ảnh bìa
+            if (model.CoverImage != null)
+            {
+                // Xóa ảnh bìa cũ nếu tồn tại
+                if (!string.IsNullOrEmpty(song.S_CoverImagePath))
+                {
+                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", song.S_CoverImagePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // Lưu ảnh bìa mới
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/song_img");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(model.CoverImage.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.CoverImage.CopyToAsync(stream);
+                }
+
+                song.S_CoverImagePath = $"/images/song_img/{uniqueFileName}";
+            }
+
+
             // Tìm hoặc tạo nghệ sĩ mới
             var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ART_Name == model.ArtistName);
             if (artist == null)
@@ -163,36 +199,16 @@ namespace WebNgheNhacTrucTuyen.Controllers
             song.ArtistId = artist.ART_Id;
 
 
+
             song.GenreId = model.GenreId;
             song.AlbumId = model.AlbumId;
+
+
 
             _context.Songs.Update(song);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Admin");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BlockUser(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
-
-            user.IsBlocked = !user.IsBlocked; // Đổi trạng thái Block/Unblock
-            var result = await _userManager.UpdateAsync(user);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Songs", "Admin");
         }
     }
 }

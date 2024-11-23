@@ -10,7 +10,7 @@
 <p><strong>Ngày đăng tải phát hành:</strong>@Model.S_UploadDate </p>
 <p>Uploaded by: @Model.User.U_FullName</p>
 <a href="@Model.S_FilePath" download>Download Song</a>
-
+<a asp-action="EditSong" asp-route-id="@Model.S_Id" class="btn btn-warning">Sửa</a>
 
 <audio controls>
     <source src="@Url.Content(Model.S_FilePath)" type="audio/mpeg">
