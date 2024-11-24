@@ -31,11 +31,11 @@
                             </div>
 
                             <div>
-                                <a class="artist">@song.Artist.ART_Name</a>
+                                    <a a asp-controller="Artists" asp-action="Details" asp-route-id="@song.Artist.ART_Id" class="artist">@song.Artist.ART_Name</a>
                             </div>
-                            
+
                             <div>
-                                <button type="button" onclick="toggleFavorite(@song.S_Id)">
+                                <button type="button" onclick="toggleFavorite(@song.S_Id, this)">
                                     @(song.S_IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
                                 </button>
                             </div>
@@ -44,7 +44,7 @@
                     </li>
                 }
             </ul>
-            <audio id="audioPlayer" preload="auto"></audio>
+            
         </div>
 
             <audio id="audioPlayer" preload="auto" loop></audio>

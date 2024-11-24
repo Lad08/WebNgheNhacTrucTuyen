@@ -1,0 +1,28 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Artists>
+
+<h1>Danh sách nghệ sĩ</h1>
+
+<a asp-action="Create" class="btn btn-primary">Thêm mới</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên nghệ sĩ</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var artist in Model)
+        {
+            <tr>
+                <td>@artist.ART_Name</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@artist.ART_Id" class="btn btn-info">Chi tiết</a>
+
+                    <a asp-action="Edit" asp-route-id="@artist.ART_Id" class="btn btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@artist.ART_Id" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -30,9 +30,9 @@
                                 <a class="artist">@song.Artist.ART_Name</a>
                             </div>
                             <div>
-                                <form asp-action="ToggleFavorite" asp-route-id="@song.S_Id" method="post">
-                                    <button type="submit">Bỏ yêu thích</button>
-                                </form>
+                                <button type="button" onclick="toggleFavorite(@song.S_Id)">
+                                    @(song.S_IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
+                                </button>
                             </div>
                         </div>
                     </li>
@@ -49,31 +49,38 @@
     <div class="music-section">
         <h2 class="seclection-title1">Bài hát đã Upload</h2>
         <ul class="item-container songList">
-            @foreach (var song in Model)
+            @if (Model != null && Model.Any())
             {
-                <li class="music-card">
-                    <div>
-                        <div class="img-container">
-                            <img class="item-img" src="@Url.Content(song.S_CoverImagePath)" />
-                            <button class="play-button" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
-                                <i class="fas fa-play"></i>
-                            </button>
-                        </div>
+                foreach (var song in Model)
+                {
+                    <li class="music-card">
                         <div>
-                            <a asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
-                        </div>
-                        <div>
-                            <a class="artist">@song.Artist.ART_Name</a>
-                        </div>
-                        <div>
-                            <form asp-action="ToggleFavorite" asp-route-id="@song.S_Id" method="post">
-                                <button type="submit">
-                                    @(song.S_IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
+                            <div class="img-container">
+                                <img class="item-img" src="@Url.Content(song.S_CoverImagePath)" />
+                                <button class="play-button" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
+                                    <i class="fas fa-play"></i>
                                 </button>
-                            </form>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                            </div>
+                            <div>
+                                <a class="artist">@song.Artist.ART_Name</a>
+                            </div>
+                            <div>
+                                <form asp-action="ToggleFavorite" asp-route-id="@song.S_Id" method="post">
+                                    <button type="submit">
+                                        @(song.S_IsFavorite ? "Bỏ yêu thích" : "Yêu thích")
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
+                }
+            }
+            else
+            {
+                <li>Không có bài hát nào bạn đã tải lên.</li>
             }
         </ul>
         

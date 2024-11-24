@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebNgheNhacTrucTuyen.Data;
 using WebNgheNhacTrucTuyen.Models;
@@ -18,14 +19,31 @@ namespace WebNgheNhacTrucTuyen.Controllers
         // Hiển thị danh sách album
         public async Task<IActionResult> Index()
         {
-            var albums = await _context.Albums.Include(a => a.Songs).ToListAsync();
+            var albums = await _context.Albums
+                    .Include(a => a.Songs)
+                    .Include(a => a.Artist) // Bao gồm thông tin nghệ sĩ
+                    .Include(a => a.User)  // Bao gồm thông tin người dùng
+                    .ToListAsync();
+
             return View(albums);
         }
 
         // Tạo album mới
-        public IActionResult A_Create()
+        [HttpGet]
+        public async Task<IActionResult> A_Create()
         {
-            return View();
+            var artists = await _context.Artists.ToListAsync();
+
+            var viewModel = new AlbumCreateViewModel
+            {
+                Artists = artists.Select(a => new SelectListItem
+                {
+                    Value = a.ART_Id.ToString(),
+                    Text = a.ART_Name
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -36,17 +54,15 @@ namespace WebNgheNhacTrucTuyen.Controllers
             {
                 string? coverImagePath = null;
 
-                // Nếu có ảnh bìa được tải lên
+                // Xử lý ảnh bìa nếu có
                 if (model.CoverImage != null)
                 {
-                    // Đường dẫn tới thư mục lưu ảnh bìa
                     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/album_img");
                     if (!Directory.Exists(uploadsFolder))
                     {
                         Directory.CreateDirectory(uploadsFolder);
                     }
 
-                    // Tạo tên file duy nhất và lưu file
                     var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(model.CoverImage.FileName)}";
                     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -54,17 +70,46 @@ namespace WebNgheNhacTrucTuyen.Controllers
                         await model.CoverImage.CopyToAsync(stream);
                     }
 
-                    // Lưu đường dẫn ảnh bìa (tương đối với wwwroot)
                     coverImagePath = $"/images/album_img/{uniqueFileName}";
                 }
 
-                // Tạo đối tượng Album và lưu vào cơ sở dữ liệu
+                // Xác định nghệ sĩ hoặc người dùng là chủ sở hữu
+                string? userId = null;
+                int? artistId = null;
+
+                if (model.ArtistId.HasValue && model.ArtistId.Value > 0)
+                {
+                    artistId = model.ArtistId; // Gắn nghệ sĩ nếu được chọn
+                }
+                else
+                {
+                    // Lấy ID của người dùng đang đăng nhập
+                    userId = User.Identity.IsAuthenticated ? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value : null;
+
+                    if (string.IsNullOrEmpty(userId))
+                    {
+                        ModelState.AddModelError("", "Bạn cần đăng nhập để tạo album hoặc chọn một nghệ sĩ.");
+                        // Truyền lại danh sách nghệ sĩ nếu có lỗi
+                        var artists = await _context.Artists.ToListAsync();
+                        model.Artists = artists.Select(a => new SelectListItem
+                        {
+                            Value = a.ART_Id.ToString(),
+                            Text = a.ART_Name
+                        }).ToList();
+
+                        return View(model);
+                    }
+                }
+
+                // Tạo đối tượng Album
                 var album = new Album
                 {
                     A_Name = model.Name,
                     A_Description = model.Description,
                     A_CoverImagePath = coverImagePath,
-                    A_CreatedDate = DateTime.Now
+                    A_CreatedDate = DateTime.Now,
+                    ArtistId = artistId,
+                    UserId = userId
                 };
 
                 _context.Add(album);
@@ -72,8 +117,17 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Truyền lại danh sách nghệ sĩ nếu có lỗi
+            var artistsList = await _context.Artists.ToListAsync();
+            model.Artists = artistsList.Select(a => new SelectListItem
+            {
+                Value = a.ART_Id.ToString(),
+                Text = a.ART_Name
+            }).ToList();
+
             return View(model);
         }
+
 
         // Thêm bài hát vào album
         [HttpPost]
@@ -235,6 +289,47 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
 
             return View(model);
+        }
+
+        // Hiển thị thông tin chi tiết của album
+        public async Task<IActionResult> Details(int id)
+        {
+            var album = await _context.Albums
+                .Include(a => a.Songs)
+                .ThenInclude(s => s.Artist) // Bao gồm cả thông tin nghệ sĩ
+                .FirstOrDefaultAsync(a => a.A_Id == id);
+
+            if (album == null)
+            {
+                return NotFound();
+            }
+
+            // Chuyển Songs sang List
+            album.Songs = album.Songs.ToList();
+
+            return View(album);
+        }
+
+        // Xóa bài hát khỏi album
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveSong(int albumId, int songId)
+        {
+            var album = await _context.Albums.Include(a => a.Songs)
+                                             .FirstOrDefaultAsync(a => a.A_Id == albumId);
+            if (album == null)
+            {
+                return NotFound();
+            }
+
+            var song = album.Songs.FirstOrDefault(s => s.S_Id == songId);
+            if (song != null)
+            {
+                album.Songs.Remove(song);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Details), new { id = albumId });
         }
     }
 }

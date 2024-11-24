@@ -15,6 +15,8 @@ namespace WebNgheNhacTrucTuyen.Models
         public DateTime S_UploadDate { get; set; }
         public bool S_IsFavorite { get; set; }
 
+        public string? S_Description { get; set; }
+
         // Foreign key đến Artist
         public int ArtistId { get; set; } // Khóa ngoại
         [ForeignKey("ArtistId")]

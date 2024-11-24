@@ -1,0 +1,23 @@
+﻿@model WebNgheNhacTrucTuyen.Models.Artists
+
+<h1>Chi tiết nghệ sĩ</h1>
+
+<div>
+    <h3>@Model.ART_Name</h3>
+    <h4>Danh sách bài hát:</h4>
+    @if (Model.Songs.Any())
+    {
+        <ul>
+            @foreach (var song in Model.Songs)
+            {
+                <li>@song.S_Title</li> <!-- Thay "Title" bằng thuộc tính thực tế của bài hát -->
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Nghệ sĩ này chưa có bài hát nào.</p>
+    }
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>

@@ -1,20 +1,26 @@
 ﻿@model WebNgheNhacTrucTuyen.ViewModels.AlbumCreateViewModel
 
-<h1>Create Album</h1>
-
 <form asp-action="A_Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label for="Name">Album Name</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label for="Description">Description</label>
         <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CoverImage">Cover Image</label>
-        <input asp-for="CoverImage" type="file" class="form-control-file" />
+        <label for="CoverImage">Cover Image</label>
+        <input asp-for="CoverImage" type="file" class="form-control" />
+        <span asp-validation-for="CoverImage" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <div class="form-group">
+        <label for="ArtistId">Artist (Optional)</label>
+        <select asp-for="ArtistId" asp-items="Model.Artists" class="form-control">
+            <option value="">-- Select an Artist --</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Album</button>
 </form>

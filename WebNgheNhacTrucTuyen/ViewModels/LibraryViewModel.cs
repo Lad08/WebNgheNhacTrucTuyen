@@ -6,6 +6,7 @@ namespace WebNgheNhacTrucTuyen.ViewModels
     {
         public List<Songs> FavoriteSongs { get; set; }
         public List<Songs> UploadedSongs { get; set; }
-        public List<Album> UserAlbums { get; set; }
+
+
     }
 }

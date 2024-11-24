@@ -1,12 +1,9 @@
-﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Genres>
-
-<h2>Genres List</h2>
-
-<table class="table">
+﻿<table class="table">
     <thead>
         <tr>
             <th>Genre ID</th>
             <th>Genre Name</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -15,9 +12,12 @@
             <tr>
                 <td>@genre.G_Id</td>
                 <td>@genre.G_Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@genre.G_Id" class="btn btn-primary btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@genre.G_Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-
 <a asp-action="Create">Add New Genre</a>

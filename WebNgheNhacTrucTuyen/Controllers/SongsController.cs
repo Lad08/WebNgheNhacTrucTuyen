@@ -31,12 +31,13 @@ namespace WebNgheNhacTrucTuyen.Controllers
         public IActionResult Upload()
         {
             ViewBag.Genres = _context.Genres.ToList(); // Lấy danh sách thể loại
+            ViewBag.Artists = _context.Artists.ToList(); // Lấy danh sách nghệ sĩ
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(IFormFile file, IFormFile coverImage, string title, string artistName, int genreId)
+        public async Task<IActionResult> Upload(IFormFile file, IFormFile coverImage, string title, int artistId, int genreId)
         {
             if (file == null || file.Length == 0 || coverImage == null || coverImage.Length == 0)
             {
@@ -48,13 +49,12 @@ namespace WebNgheNhacTrucTuyen.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login", "Account");
 
-            // Kiểm tra và thêm nghệ sĩ nếu chưa tồn tại
-            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ART_Name == artistName);
+            // Kiểm tra nghệ sĩ
+            var artist = await _context.Artists.FindAsync(artistId);
             if (artist == null)
             {
-                artist = new Artists { ART_Name = artistName };
-                _context.Artists.Add(artist);
-                await _context.SaveChangesAsync(); // Lưu vào DB để lấy Id
+                ModelState.AddModelError("", "Nghệ sĩ không tồn tại.");
+                return View();
             }
 
             // Tạo thư mục lưu file nhạc nếu chưa tồn tại
@@ -92,7 +92,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 UserId = user.Id,
                 S_UploadDate = DateTime.Now,
                 GenreId = genreId,
-                ArtistId = artist.ART_Id // Liên kết với nghệ sĩ
+                ArtistId = artistId // Liên kết với nghệ sĩ
             };
 
             _context.Songs.Add(song);
@@ -120,7 +120,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 .Include(s => s.Genre)
                 .Include(s => s.Artist)
                 .Include(s => s.Album)
-                .Where(s => s.S_IsFavorite && s.UserId == user.Id);
+                .Where(s => s.S_IsFavorite);
 
             // Lấy bài hát người dùng tải lên
             var uploadedSongsQuery = _context.Songs
@@ -139,13 +139,14 @@ namespace WebNgheNhacTrucTuyen.Controllers
             // Kết hợp cả hai danh sách
             var favoriteSongs = await favoriteSongsQuery.ToListAsync();
             var uploadedSongs = await uploadedSongsQuery.ToListAsync();
+            var combinedSongs = favoriteSongs.Union(uploadedSongs).ToList();
 
             // Truyền hai danh sách vào ViewBag để sử dụng trong View
             ViewBag.FavoriteSongs = favoriteSongs;
             ViewBag.UploadedSongs = uploadedSongs;
 
             // Trả về danh sách bài hát tải lên để hiển thị mặc định
-            return View(uploadedSongs);
+            return View(combinedSongs);
         }
 
         public async Task<IActionResult> Play(int id)
@@ -184,12 +185,20 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 return NotFound("Bài hát không tồn tại.");
             }
 
-            if (song.Lyrics != null && !string.IsNullOrEmpty(song.Lyrics.L_FilePath))
+            // Xử lý lyrics (từ file hoặc nội dung trực tiếp)
+            if (song.Lyrics != null)
             {
-                string fullPath = Path.Combine(_environment.WebRootPath, song.Lyrics.L_FilePath.TrimStart('/'));
-                if (System.IO.File.Exists(fullPath))
+                if (!string.IsNullOrEmpty(song.Lyrics.L_FilePath))
                 {
-                    ViewBag.LyricsContent = System.IO.File.ReadAllText(fullPath);
+                    string fullPath = Path.Combine(_environment.WebRootPath, song.Lyrics.L_FilePath.TrimStart('/'));
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        ViewBag.LyricsContent = System.IO.File.ReadAllText(fullPath);
+                    }
+                }
+                else if (!string.IsNullOrEmpty(song.Lyrics.L_Content))
+                {
+                    ViewBag.LyricsContent = song.Lyrics.L_Content; // Lấy nội dung trực tiếp từ DB
                 }
             }
 
@@ -208,62 +217,6 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return RedirectToAction("Library");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadLyrics(int id, IFormFile file)
-        {
-            if (file == null || file.Length == 0 || file.ContentType != "text/plain")
-            {
-                ModelState.AddModelError("", "Vui lòng tải lên một file .txt hợp lệ.");
-                return RedirectToAction("Details", new { id });
-            }
-
-            // Tìm bài hát theo Id
-            var song = await _context.Songs.Include(s => s.Lyrics).FirstOrDefaultAsync(s => s.S_Id == id);
-            if (song == null)
-            {
-                return NotFound("Bài hát không tồn tại.");
-            }
-
-            // Tạo thư mục lưu file lyrics nếu chưa tồn tại
-            string uploadsFolder = Path.Combine(_environment.WebRootPath, "Lyrics");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            // Tạo đường dẫn file lyrics
-            string fileName = $"lyrics_{id}.txt";
-            string filePath = Path.Combine(uploadsFolder, fileName);
-
-            // Lưu file lyrics
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
-
-            // Nếu bài hát đã có lyrics, cập nhật đường dẫn
-            if (song.Lyrics != null)
-            {
-                song.Lyrics.L_FilePath = $"/Lyrics/{fileName}";
-                _context.Lyrics.Update(song.Lyrics);
-            }
-            else
-            {
-                // Nếu chưa có lyrics, thêm mới
-                var lyrics = new Lyrics
-                {
-                    L_FilePath = $"/Lyrics/{fileName}",
-                    SongId = song.S_Id
-                };
-                _context.Lyrics.Add(lyrics);
-            }
-
-            await _context.SaveChangesAsync();
-
-            TempData["Message"] = "Lyrics đã được tải lên thành công.";
-            return RedirectToAction("Details", new { id });
-        }
 
         public async Task<IActionResult> EditSong(int id)
         {
@@ -381,6 +334,163 @@ namespace WebNgheNhacTrucTuyen.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Library", "Songs");
+        }
+
+        [HttpGet]
+        public IActionResult UploadLyrics(int songId)
+        {
+            var model = new UploadLyricsViewModel
+            {
+                SongId = songId
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadLyrics(UploadLyricsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var song = await _context.Songs.Include(s => s.Lyrics).FirstOrDefaultAsync(s => s.S_Id == model.SongId);
+            if (song == null)
+            {
+                return NotFound("Bài hát không tồn tại.");
+            }
+
+            var lyrics = new Lyrics { SongId = model.SongId };
+
+            if (model.File != null)
+            {
+                var filePath = Path.Combine(_environment.WebRootPath, "lyrics", model.File.FileName);
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.File.CopyToAsync(stream);
+                }
+
+                lyrics.L_FilePath = "/lyrics/" + model.File.FileName;
+            }
+            else if (!string.IsNullOrEmpty(model.Content))
+            {
+                var fileName = $"{Guid.NewGuid()}.txt";
+                var filePath = Path.Combine(_environment.WebRootPath, "lyrics", fileName);
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                await System.IO.File.WriteAllTextAsync(filePath, model.Content);
+
+                lyrics.L_FilePath = "/lyrics/" + fileName;
+            }
+
+            _context.Lyrics.Add(lyrics);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Lyrics đã được tải lên thành công.";
+            return RedirectToAction("Details", new { id = model.SongId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditLyrics(int id)
+        {
+            var lyrics = await _context.Lyrics.Include(l => l.Song).FirstOrDefaultAsync(l => l.L_Id == id);
+            if (lyrics == null)
+            {
+                return NotFound("Lyrics không tồn tại.");
+            }
+
+            var model = new UploadLyricsViewModel
+            {
+                SongId = lyrics.SongId,
+                ExistingFilePath = lyrics.L_FilePath
+            };
+
+            if (!string.IsNullOrEmpty(lyrics.L_FilePath))
+            {
+                var fullPath = Path.Combine(_environment.WebRootPath, lyrics.L_FilePath.TrimStart('/'));
+                if (System.IO.File.Exists(fullPath))
+                {
+                    model.Content = await System.IO.File.ReadAllTextAsync(fullPath);
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditLyrics(UploadLyricsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var lyrics = await _context.Lyrics.Include(l => l.Song).FirstOrDefaultAsync(l => l.SongId == model.SongId);
+            if (lyrics == null)
+            {
+                return NotFound("Lyrics không tồn tại.");
+            }
+
+            if (model.File != null)
+            {
+                var filePath = Path.Combine(_environment.WebRootPath, "lyrics", model.File.FileName);
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.File.CopyToAsync(stream);
+                }
+
+                if (!string.IsNullOrEmpty(lyrics.L_FilePath))
+                {
+                    var oldFilePath = Path.Combine(_environment.WebRootPath, lyrics.L_FilePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                lyrics.L_FilePath = "/lyrics/" + model.File.FileName;
+            }
+            else if (!string.IsNullOrEmpty(model.Content))
+            {
+                var filePath = Path.Combine(_environment.WebRootPath, lyrics.L_FilePath.TrimStart('/'));
+                await System.IO.File.WriteAllTextAsync(filePath, model.Content);
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Lyrics đã được cập nhật.";
+            return RedirectToAction("Details", new { id = model.SongId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteLyrics(int id)
+        {
+            var lyrics = await _context.Lyrics.FirstOrDefaultAsync(l => l.L_Id == id);
+            if (lyrics == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(lyrics.L_FilePath))
+            {
+                var filePath = Path.Combine(_environment.WebRootPath, lyrics.L_FilePath.TrimStart('/'));
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            _context.Lyrics.Remove(lyrics);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Lyrics đã được xóa.";
+            return RedirectToAction("Details", new { id = lyrics.SongId });
         }
 
     }

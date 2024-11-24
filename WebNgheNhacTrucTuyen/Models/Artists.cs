@@ -14,5 +14,7 @@ namespace WebNgheNhacTrucTuyen.Models
 
         // Danh sách bài hát của nghệ sĩ
         public virtual ICollection<Songs> Songs { get; set; } = new List<Songs>();
+
+        public virtual ICollection<Album> Albums { get; set; } = new List<Album>();
     }
 }

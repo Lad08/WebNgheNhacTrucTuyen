@@ -21,5 +21,11 @@ namespace WebNgheNhacTrucTuyen.Models
         // Liên kết với bảng Songs
         public virtual ICollection<Songs> Songs { get; set; } = new List<Songs>();
         public string? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual Users User { get; set; } // Navigation property tới User
+
+        public int? ArtistId { get; set; } // ID của nghệ sĩ
+        [ForeignKey("ArtistId")]
+        public virtual Artists Artist { get; set; } // Nghệ sĩ liên kết
     }
 }

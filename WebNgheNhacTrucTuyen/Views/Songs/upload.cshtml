@@ -10,12 +10,18 @@
         <label>Title:</label>
         <input type="text" name="title" required />
     </div>
-    <div>
+    <div class="form-group">
         <label>Nghệ sĩ:</label>
-        <input name="artistName" type="text" required />
+        <select name="artistId" class="form-control" required>
+            <option value="">-- Chọn Nghệ Sĩ --</option>
+            @foreach (var artist in (List<WebNgheNhacTrucTuyen.Models.Artists>)ViewBag.Artists)
+            {
+                <option value="@artist.ART_Id">@artist.ART_Name</option>
+            }
+        </select>
     </div>
     <div class="form-group">
-        <label asp-for="GenreId" class="control-label"></label>
+        <label asp-for="GenreId" class="control-label">Chọn thể loại</label>
         <select asp-for="GenreId" class="form-control" asp-items="@(new SelectList(ViewBag.Genres, "G_Id", "G_Name"))"></select>
         <span asp-validation-for="GenreId" class="text-danger"></span>
     </div>

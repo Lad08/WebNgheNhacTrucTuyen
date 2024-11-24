@@ -12,23 +12,6 @@ namespace WebNgheNhacTrucTuyen.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Albums",
-                columns: table => new
-                {
-                    A_Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    A_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    A_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    A_CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    A_CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Albums", x => x.A_Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Artists",
                 columns: table => new
                 {
@@ -116,6 +99,35 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Albums",
+                columns: table => new
+                {
+                    A_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    A_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    A_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    A_CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    A_CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ArtistId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Albums", x => x.A_Id);
+                    table.ForeignKey(
+                        name: "FK_Albums_Artists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "Artists",
+                        principalColumn: "ART_Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Albums_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -234,6 +246,7 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     S_FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     S_UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     S_IsFavorite = table.Column<bool>(type: "bit", nullable: false),
+                    S_Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ArtistId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GenreId = table.Column<int>(type: "int", nullable: false),
@@ -274,7 +287,8 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 {
                     L_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    L_FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    L_FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    L_Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SongId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -311,6 +325,16 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         principalTable: "Songs",
                         principalColumn: "S_Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Albums_ArtistId",
+                table: "Albums",
+                column: "ArtistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Albums_UserId",
+                table: "Albums",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -430,13 +454,13 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 name: "Albums");
 
             migrationBuilder.DropTable(
+                name: "Genres");
+
+            migrationBuilder.DropTable(
                 name: "Artists");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Genres");
         }
     }
 }

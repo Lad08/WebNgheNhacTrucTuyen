@@ -10,8 +10,8 @@
             <th>Cover</th>
             <th>Album Name</th>
             <th>Description</th>
+            <th>Owner</th>
             <th>Songs Count</th>
-            <th>Actions</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -19,6 +19,7 @@
         @foreach (var album in Model)
         {
             <tr>
+                <!-- Hiển thị ảnh bìa -->
                 <td>
                     @if (!string.IsNullOrEmpty(album.A_CoverImagePath))
                     {
@@ -29,20 +30,39 @@
                         <span>No Cover</span>
                     }
                 </td>
+
+                <!-- Tên album -->
                 <td>@album.A_Name</td>
+
+                <!-- Mô tả album -->
                 <td>@album.A_Description</td>
-                <td>@album.Songs.Count</td>
+
+                <!-- Chủ sở hữu album -->
                 <td>
-                    <a asp-action="AddSong" asp-route-albumId="@album.A_Id" class="btn btn-success">Add Songs</a>
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@album.A_Id" class="btn btn-info">Details</a>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@album.A_Id" class="btn btn-warning">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@album.A_Id" class="btn btn-danger">Xóa</a>
+                    @if (album.Artist != null)
+                    {
+                        <span>Artist: @album.Artist.ART_Name</span>
+                    }
+                    else if (!string.IsNullOrEmpty(album.UserId))
+                    {
+                        <span>User: @album.User.U_FullName</span>
+                    }
+                    else
+                    {
+                        <span>Unknown</span>
+                    }
                 </td>
 
+                <!-- Số lượng bài hát -->
+                <td>@album.Songs.Count</td>
+
+                <!-- Các hành động -->
+                <td>
+                    <a asp-action="AddSong" asp-route-albumId="@album.A_Id" class="btn btn-success">Add Songs</a>
+                    <a asp-action="Details" asp-route-id="@album.A_Id" class="btn btn-info">Details</a>
+                    <a asp-action="Edit" asp-route-id="@album.A_Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@album.A_Id" class="btn btn-danger">Delete</a>
+                </td>
             </tr>
         }
     </tbody>

@@ -1,0 +1,26 @@
+﻿@model WebNgheNhacTrucTuyen.ViewModels.UploadLyricsViewModel
+
+@{
+    ViewData["Title"] = "Upload Lyrics";
+}
+
+<h2>Upload Lyrics</h2>
+
+<form asp-action="UploadLyrics" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="SongId" />
+
+    <div class="form-group">
+        <label for="File">Upload file lyrics (.txt)</label>
+        <input type="file" asp-for="File" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Content">Hoặc nhập nội dung lyrics</label>
+        <textarea asp-for="Content" class="form-control" rows="5" placeholder="Nhập nội dung..."></textarea>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Tải lên</button>
+        <a asp-action="Details" asp-route-id="@Model.SongId" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

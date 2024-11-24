@@ -1,0 +1,20 @@
+﻿@model WebNgheNhacTrucTuyen.Models.Artists
+
+<h2>Chỉnh sửa thông tin nghệ sĩ</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="ART_Id" />
+
+    <div class="form-group">
+        <label asp-for="ART_Name" class="control-label">Tên nghệ sĩ</label>
+        <input asp-for="ART_Name" class="form-control" />
+        <span asp-validation-for="ART_Name" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

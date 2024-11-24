@@ -13,29 +13,33 @@
 <a asp-action="EditSong" asp-route-id="@Model.S_Id" class="btn btn-warning">Sửa</a>
 <a asp-controller="Playlists" asp-action="AddSongToPlaylist" class="btn btn-success">Thêm bài hát vào Playlist</a>
 
+
+
 <audio controls>
     <source src="@Url.Content(Model.S_FilePath)" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
-
-
-<h3>Lyrics:</h3>
+<h3>Lời bài hát</h3>
 @if (ViewBag.LyricsContent != null)
 {
-    <pre>@ViewBag.LyricsContent</pre>
+    <div class="lyrics-content">
+        <pre style="white-space: pre-wrap;">@ViewBag.LyricsContent</pre>
+    </div>
 }
 else
 {
-    <p><em>Chưa có lyrics nào được tải lên.</em></p>
+    <p><em>Chưa có lyrics cho bài hát này.</em></p>
 }
 
-<h3>Tải lên Lyrics:</h3>
-<form asp-action="UploadLyrics" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="id" value="@Model.S_Id" />
-    <div>
-        <input type="file" name="file" accept=".txt" />
-    </div>
-    <button type="submit">Tải lên</button>
-</form>
-
+@if (Model.Lyrics == null)
+{
+    <a asp-action="UploadLyrics" asp-route-songId="@Model.S_Id" class="btn btn-success">Tải lên Lyrics</a>
+}
+else
+{
+    <a asp-action="EditLyrics" asp-route-id="@Model.Lyrics.L_Id" class="btn btn-warning">Chỉnh sửa Lyrics</a>
+    <form asp-action="DeleteLyrics" asp-route-id="@Model.Lyrics.L_Id" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa lyrics này không?');">Xóa Lyrics</button>
+    </form>
+}

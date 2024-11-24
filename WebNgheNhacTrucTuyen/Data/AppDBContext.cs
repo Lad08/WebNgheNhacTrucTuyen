@@ -57,6 +57,13 @@ namespace WebNgheNhacTrucTuyen.Data
                 .WithMany(s => s.PlaylistSongs) // Một Song có thể nằm trong nhiều PlaylistSong
                 .HasForeignKey(ps => ps.SongId)
                 .OnDelete(DeleteBehavior.NoAction); // Khi Song bị xóa, các PlaylistSong liên quan cũng bị xóa
+
+            // Thiết lập quan hệ giữa Album và Artists
+            modelBuilder.Entity<Album>()
+                .HasOne(a => a.Artist)
+                .WithMany(a => a.Albums) // Thêm property Albums vào Artists nếu cần
+                .HasForeignKey(a => a.ArtistId)
+                .OnDelete(DeleteBehavior.SetNull); // Xóa nghệ sĩ không xóa album
         }
     }
 }
