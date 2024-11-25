@@ -1,13 +1,25 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Artists
 
-<h1>Thêm nghệ sĩ mới</h1>
+<h2>Tạo mới nghệ sĩ</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="ART_Name">Tên nghệ sĩ</label>
+        <label asp-for="ART_Name" class="control-label">Tên nghệ sĩ</label>
         <input asp-for="ART_Name" class="form-control" />
         <span asp-validation-for="ART_Name" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Lưu</button>
-    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+
+    <div class="form-group">
+        <label asp-for="ART_Description" class="control-label">Mô tả</label>
+        <textarea asp-for="ART_Description" class="form-control"></textarea>
+        <span asp-validation-for="ART_Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ART_ImageFile">Hình ảnh</label>
+        <input type="file" name="ART_ImageFile" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Tạo mới</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 </form>

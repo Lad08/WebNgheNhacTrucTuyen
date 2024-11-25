@@ -200,6 +200,13 @@ namespace WebNgheNhacTrucTuyen.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ART_Id"));
 
+                    b.Property<string>("ART_Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ART_Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ART_Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -258,6 +265,10 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("P_Id"));
+
+                    b.Property<string>("P_Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("P_Name")
                         .IsRequired()

@@ -27,13 +27,26 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View();
         }
 
-        // POST: Tạo mới artist
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Artists artist)
+        public async Task<IActionResult> Create(Artists artist, IFormFile? ART_ImageFile)
         {
             if (ModelState.IsValid)
             {
+                if (ART_ImageFile != null && ART_ImageFile.Length > 0)
+                {
+                    // Lưu ảnh vào thư mục wwwroot/images/artists
+                    var fileName = Path.GetFileName(ART_ImageFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/artists", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ART_ImageFile.CopyToAsync(stream);
+                    }
+
+                    artist.ART_Image = fileName;
+                }
+
                 _context.Add(artist);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -57,10 +70,9 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View(artist);
         }
 
-        // POST: Sửa artist
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Artists artist)
+        public async Task<IActionResult> Edit(int id, Artists artist, IFormFile? ART_ImageFile)
         {
             if (id != artist.ART_Id)
             {
@@ -71,6 +83,21 @@ namespace WebNgheNhacTrucTuyen.Controllers
             {
                 try
                 {
+                    if (ART_ImageFile != null && ART_ImageFile.Length > 0)
+                    {
+                        // Lưu ảnh mới
+                        var fileName = Path.GetFileName(ART_ImageFile.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/artists", fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await ART_ImageFile.CopyToAsync(stream);
+                        }
+
+                        // Cập nhật đường dẫn ảnh
+                        artist.ART_Image = fileName;
+                    }
+
                     _context.Update(artist);
                     await _context.SaveChangesAsync();
                 }
@@ -89,6 +116,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
             return View(artist);
         }
+
 
         // GET: Xóa artist
         public async Task<IActionResult> Delete(int? id)

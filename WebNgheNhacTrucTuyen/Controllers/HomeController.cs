@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebNgheNhacTrucTuyen.Data;
 using WebNgheNhacTrucTuyen.Models;
+using WebNgheNhacTrucTuyen.ViewModels;
 
 namespace WebNgheNhacTrucTuyen.Controllers
 {
@@ -21,15 +22,65 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
         public async Task<IActionResult> Index()
         {
-
-            // Lấy tất cả bài hát và nhóm theo thể loại
-            var songsByGenre = await _context.Songs
-                .Include(s => s.Genre) // Bao gồm thông tin thể loại
+            var latestSongs = await _context.Songs
+                .OrderByDescending(s => s.S_UploadDate)
+                .Take(5)
+                .Include(s => s.Genre)
                 .Include(s => s.Artist)
                 .Include(s => s.Album)
                 .ToListAsync();
 
-            return View(songsByGenre);
+            var songsByEDM = await _context.Songs
+                .Where(s => s.Genre.G_Name == "EDM")
+                .Take(5)
+                .Include(s => s.Genre)
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .ToListAsync();
+
+            var songsByBGM = await _context.Songs
+                .Where(s => s.Genre.G_Name == "BGM")
+                .Take(5)
+                .Include(s => s.Genre)
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .ToListAsync();
+
+            var playlists = await _context.Playlists
+                .Take(5)
+                .Include(p => p.PlaylistSongs)
+                .ThenInclude(ps => ps.Song)
+                .ToListAsync();
+
+            var albums = await _context.Albums
+                .Take(5)
+                .Include(a => a.Songs)
+                .ToListAsync();
+
+            // Lấy danh sách nghệ sĩ
+            var artists = await _context.Artists
+                .Take(5)
+                .ToListAsync();
+
+            foreach (var artist in artists)
+            {
+                if (!string.IsNullOrEmpty(artist.ART_Image))
+                {
+                    artist.ART_Image = $"/{artist.ART_Image.TrimStart('/')}";
+                }
+            }
+
+            var viewModel = new HomeViewModel
+            {
+                LatestSongs = latestSongs,
+                SongsByEDM = songsByEDM,
+                SongsByBGM = songsByBGM,
+                Playlists = playlists,
+                Albums = albums,
+                Artists = artists // Gán dữ liệu nghệ sĩ vào ViewModel
+            };
+
+            return View(viewModel);
 
         }
 
@@ -116,6 +167,48 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             TempData["Message"] = "Lyrics đã được tải lên thành công.";
             return RedirectToAction("Details", new { id });
+        }
+
+        public async Task<IActionResult> Search(string searchType, string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return RedirectToAction("Index");
+            }
+
+            if (searchType == "song")
+            {
+                // Tìm kiếm bài hát
+                var songs = await _context.Songs
+                    .Where(s => EF.Functions.Like(s.S_Title, $"%{query}%"))
+                    .Include(s => s.Artist)
+                    .Include(s => s.Genre)
+                    .Include(s => s.Album)
+                    .ToListAsync();
+
+                return View("Search", new SearchViewModel
+                {
+                    Query = query,
+                    Songs = songs,
+                    Artists = null // Không trả về danh sách nghệ sĩ
+                });
+            }
+            else if (searchType == "artist")
+            {
+                // Tìm kiếm nghệ sĩ
+                var artists = await _context.Artists
+                    .Where(a => EF.Functions.Like(a.ART_Name, $"%{query}%"))
+                    .ToListAsync();
+
+                return View("Search", new SearchViewModel
+                {
+                    Query = query,
+                    Songs = null, // Không trả về danh sách bài hát
+                    Artists = artists
+                });
+            }
+
+            return RedirectToAction("Index");
         }
 
 

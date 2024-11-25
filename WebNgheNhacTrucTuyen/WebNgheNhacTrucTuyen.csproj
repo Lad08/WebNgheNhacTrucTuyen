@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\images\artists\" />
     <Folder Include="wwwroot\music\" />
     <Folder Include="wwwroot\Lyrics\" />
   </ItemGroup>

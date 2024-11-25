@@ -37,9 +37,15 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View(playlists);
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string playlistName)
+        public async Task<IActionResult> Create(string playlistName, IFormFile playlistImage)
         {
             if (string.IsNullOrWhiteSpace(playlistName))
             {
@@ -47,18 +53,39 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Lấy thông tin người dùng hiện tại
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return RedirectToAction("Login", "Account"); // Điều hướng nếu chưa đăng nhập
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Đặt đường dẫn ảnh mặc định
+            string imagePath = "/images/playlist-img/default-playlist.jpg";
+
+            if (playlistImage != null && playlistImage.Length > 0)
+            {
+                var uploadsFolder = Path.Combine("wwwroot/images/playlist_img");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + playlistImage.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await playlistImage.CopyToAsync(stream);
+                }
+
+                imagePath = $"/images/playlist_img/{uniqueFileName}";
             }
 
             var playlist = new Playlist
             {
                 P_Name = playlistName,
-                UserId = user.Id, // Lưu UserId từ UserManager
-                
+                UserId = user.Id,
+                P_Image = imagePath
             };
 
             _context.Playlists.Add(playlist);
@@ -170,6 +197,95 @@ namespace WebNgheNhacTrucTuyen.Controllers
             TempData["Message"] = "Bài hát đã được xóa khỏi playlist.";
             return RedirectToAction(nameof(Details), new { id = playlistId });
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var playlist = await _context.Playlists.FirstOrDefaultAsync(p => p.P_Id == id);
+            if (playlist == null)
+            {
+                return NotFound();
+            }
+
+            var model = new UpdatePlaylistViewModel
+            {
+                Id = playlist.P_Id,
+                Name = playlist.P_Name
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(UpdatePlaylistViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var playlist = await _context.Playlists.FirstOrDefaultAsync(p => p.P_Id == model.Id);
+            if (playlist == null)
+            {
+                return NotFound();
+            }
+
+            playlist.P_Name = model.Name;
+
+            // Xử lý ảnh
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine("wwwroot/images/playlist_img");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                playlist.P_Image = $"/images/playlist_img/{uniqueFileName}";
+            }
+
+            _context.Playlists.Update(playlist);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Playlist đã được cập nhật.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var playlist = await _context.Playlists
+                .Include(p => p.PlaylistSongs) // Include danh sách bài hát trong playlist
+                .FirstOrDefaultAsync(p => p.P_Id == id);
+
+            if (playlist == null)
+            {
+                TempData["Error"] = "Playlist không tồn tại.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Xóa danh sách bài hát trong playlist trước
+            _context.PlaylistSongs.RemoveRange(playlist.PlaylistSongs);
+
+            // Xóa playlist
+            _context.Playlists.Remove(playlist);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Playlist đã được xóa thành công.";
+            return RedirectToAction(nameof(Index));
+        }
+
+
 
     }
 }

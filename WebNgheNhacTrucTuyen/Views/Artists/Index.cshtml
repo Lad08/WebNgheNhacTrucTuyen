@@ -7,6 +7,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Hình ảnh</th>
             <th>Tên nghệ sĩ</th>
             <th>Hành động</th>
         </tr>
@@ -15,10 +16,12 @@
         @foreach (var artist in Model)
         {
             <tr>
+                <td>
+                    <img src="/images/artists/@artist.ART_Image" alt="@artist.ART_Name" style="width: 100px; height: auto;" />
+                </td>
                 <td>@artist.ART_Name</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@artist.ART_Id" class="btn btn-info">Chi tiết</a>
-
                     <a asp-action="Edit" asp-route-id="@artist.ART_Id" class="btn btn-warning">Sửa</a>
                     <a asp-action="Delete" asp-route-id="@artist.ART_Id" class="btn btn-danger">Xóa</a>
                 </td>

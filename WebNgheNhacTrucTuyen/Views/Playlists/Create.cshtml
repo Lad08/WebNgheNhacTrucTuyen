@@ -1,0 +1,30 @@
+﻿@model WebNgheNhacTrucTuyen.ViewModels.UpdatePlaylistViewModel
+
+@{
+    ViewData["Title"] = "Tạo Playlist Mới";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="playlistName">Tên Playlist:</label>
+        <input type="text" id="playlistName" name="playlistName" class="form-control" placeholder="Nhập tên playlist" required />
+    </div>
+
+    <div class="form-group">
+        <label for="playlistImage">Ảnh Playlist:</label>
+        <input type="file" id="playlistImage" name="playlistImage" class="form-control" />
+        <small class="form-text text-muted">Chọn ảnh cho playlist (tuỳ chọn, nếu không chọn sẽ sử dụng ảnh mặc định).</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Tạo Playlist</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["Error"]
+    </div>
+}

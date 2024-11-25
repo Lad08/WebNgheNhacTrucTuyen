@@ -17,7 +17,9 @@ namespace WebNgheNhacTrucTuyen.Migrations
                 {
                     ART_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ART_Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ART_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ART_Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ART_Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,6 +224,7 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     P_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     P_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    P_Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>

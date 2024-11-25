@@ -9,6 +9,9 @@ namespace WebNgheNhacTrucTuyen.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int P_Id { get; set; }
         public string P_Name { get; set; }
+
+        public string P_Image { get; set; } 
+
         public string UserId { get; set; } // Người tạo playlist
         public virtual Users User { get; set; } // Navigation property
 

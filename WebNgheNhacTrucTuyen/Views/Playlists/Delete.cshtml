@@ -1,0 +1,14 @@
+﻿@model WebNgheNhacTrucTuyen.Models.Playlist
+
+@{
+    ViewData["Title"] = "Xác nhận xóa Playlist";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>Bạn có chắc chắn muốn xóa playlist <strong>@Model.P_Name</strong>?</p>
+
+<form method="post" asp-action="DeleteConfirmed" asp-route-id="@Model.P_Id">
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy</a>
+</form>

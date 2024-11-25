@@ -18,7 +18,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
         private readonly UserManager<Users> _userManager;
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger<SongsController> _logger;
-
+        private static List<Songs> _queue = new List<Songs>();
         public SongsController(AppDBContext context, UserManager<Users> userManager, IWebHostEnvironment environment, ILogger<SongsController> logger)
         {
             _context = context;
@@ -102,7 +102,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> Library(string genre)
+        public async Task<IActionResult> FavoriteSongs(string genre)
         {
             // Lấy thông tin người dùng hiện tại
             var user = await _userManager.GetUserAsync(User);
@@ -122,31 +122,20 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 .Include(s => s.Album)
                 .Where(s => s.S_IsFavorite);
 
-            // Lấy bài hát người dùng tải lên
-            var uploadedSongsQuery = _context.Songs
-                .Include(s => s.Genre)
-                .Include(s => s.Artist)
-                .Include(s => s.Album)
-                .Where(s => s.UserId == user.Id);
-
             // Nếu genre không null, lọc thêm theo thể loại
             if (!string.IsNullOrEmpty(genre))
             {
                 favoriteSongsQuery = favoriteSongsQuery.Where(s => s.Genre.G_Name == genre);
-                uploadedSongsQuery = uploadedSongsQuery.Where(s => s.Genre.G_Name == genre);
             }
 
-            // Kết hợp cả hai danh sách
+            // Lấy danh sách bài hát yêu thích
             var favoriteSongs = await favoriteSongsQuery.ToListAsync();
-            var uploadedSongs = await uploadedSongsQuery.ToListAsync();
-            var combinedSongs = favoriteSongs.Union(uploadedSongs).ToList();
 
-            // Truyền hai danh sách vào ViewBag để sử dụng trong View
+            // Truyền danh sách bài hát yêu thích vào ViewBag
             ViewBag.FavoriteSongs = favoriteSongs;
-            ViewBag.UploadedSongs = uploadedSongs;
 
-            // Trả về danh sách bài hát tải lên để hiển thị mặc định
-            return View(combinedSongs);
+            // Trả về danh sách bài hát yêu thích để hiển thị
+            return View(favoriteSongs);
         }
 
         public async Task<IActionResult> Play(int id)
@@ -214,7 +203,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 song.S_IsFavorite = !song.S_IsFavorite;
                 _context.SaveChanges();
             }
-            return RedirectToAction("Library");
+            return RedirectToAction("FavoriteSongs");
         }
 
 
@@ -333,7 +322,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             _context.Songs.Update(song);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Library", "Songs");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -492,6 +481,10 @@ namespace WebNgheNhacTrucTuyen.Controllers
             TempData["Message"] = "Lyrics đã được xóa.";
             return RedirectToAction("Details", new { id = lyrics.SongId });
         }
+
+
+
+
 
     }
 }

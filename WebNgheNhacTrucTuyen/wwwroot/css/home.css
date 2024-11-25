@@ -28,15 +28,15 @@ body {
     color: #fff;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 /* Icon styles */
 .header-icon {
-    margin-left: 240px;
+    
     display: flex;
     width: 60px;
     height: 46px;
-    margin-right: 10px; /* Khoảng cách giữa icon và các mục điều hướng */
     align-items: center;
     justify-content: center;
 }
@@ -62,7 +62,6 @@ body {
 
 .li-border {
     display: flex;
-    border: 1px solid #111;
     width: 90px;
     height: 46px;
     align-items: center;
@@ -190,17 +189,29 @@ input:focus {
 /* Start of main content */
 
 .main-content {
-    padding-top: 64px;
+    padding-top: 56px;
     width: 100%;
+    padding-left: 12px;
+    margin-left: 8px;
+}
+
+.music-content {
+    width: 99%;
+    border: 3px solid #cfcdc8;
+    border-radius: 8px;
+    max-height: 650px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .heading-title {
     display: flex;
+    align-items: center;
     font-size: 32px;
-    width: 75%;
-    border-bottom: 1px solid #333;
+    width: 100%;
     padding-bottom: 8px;
     margin-bottom: 20px;
+    border-bottom: 1px solid #cfcdc8;
 }
 
 .trending-selection {
@@ -214,7 +225,7 @@ input:focus {
     text-decoration: none;
 }
 
-.seclection-title1 {
+.section-title {
     font-size: 24px;
     margin-bottom: 20px;
 }
@@ -226,9 +237,10 @@ input:focus {
 }
 
 .music-section {
-    width: 75%;
+    margin-left: 8px;
+    width: 100%;
     height: auto;
-    border-right: 1px solid #8a8484;
+
 }
 /* Music Section */
 .trendingtrack-title {
@@ -241,6 +253,7 @@ input:focus {
 .item-img {
     width: 156px;
     height: 156px;
+
 }
 
 .music-name {
@@ -264,20 +277,22 @@ input:focus {
 /* Item Section */
 
 .item-container {
+    padding-left: 0;
     list-style-type: none; /* Bỏ dấu đầu dòng */
     display: flex;
     margin-bottom: 20px; /* Khoảng cách giữa các danh sách */
 }
 
 .music-card {
-    width: 156px;
+    width: auto;
     height: auto;
     margin-right: 32px;
-    border: 1px solid #333;
 }
 
-.img-container{
-
+.img-container {
+    position: relative;
+    overflow: hidden;
+    padding-left: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -297,8 +312,25 @@ input:focus {
 .img-container:hover .play-button {
     opacity: 1; /* Hiển thị nút khi di chuột vào container */
 }
-/* play control section */
 
+.heart-button {
+    position: absolute;
+    bottom: 0;
+    right: 15%;
+    color: #f50;
+    background-color: transparent;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    opacity: 0; /* Ẩn nút ban đầu */
+    transition: opacity 0.3s ease-in-out; /* Tạo hiệu ứng chuyển đổi mượt mà */
+}
+
+.img-container:hover .heart-button {
+    opacity: 1; /* Hiển thị nút khi di chuột vào container */
+}
+
+/* play control section */
 .play-controll {
     display: none;
     width: 100%;
@@ -440,4 +472,150 @@ input:focus {
     line-height: 1.4;
     color: #333;
     margin-left: 8px;
+}
+
+/* Menu bar Section*/
+
+.page-container {
+    display: flex;
+
+}
+
+.sidebar-title {
+    font-size: 32px;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #cfcdc8
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #fff;
+    padding-top: 56px;
+}
+
+.menu {
+    width: 250px;
+    position: fixed;
+    height: 650px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 3px solid #cfcdc8;
+    border-radius: 8px;
+}
+
+.menu ul {
+    padding: 0;
+}
+
+.menu li {
+    margin: 10px 0;
+
+}
+
+.menu a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.menu a:hover {
+    background-color: #f50;
+}
+
+/* Artist Section */
+.img-artist {
+    width: 140px; /* Kích thước chiều rộng */
+    height: 140px; /* Kích thước chiều cao (phải bằng width để tạo hình tròn) */
+    border-radius: 50%; /* Làm tròn toàn bộ cạnh */
+    overflow: hidden; /* Đảm bảo phần dư của ảnh không hiển thị */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Đường viền xung quanh (tuỳ chỉnh nếu cần) */
+    background-color: #000; /* Màu nền (nếu ảnh không phủ hết) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-artist img {
+    width: 100%; /* Đảm bảo ảnh phủ toàn bộ container */
+    height: 100%;
+    object-fit: cover; /* Cắt và căn ảnh vừa khít */
+}
+
+.artist-card {
+    width: 160px; /* Kích thước chiều rộng */
+    height: 160px;
+    margin-bottom: 20px;
+
+}
+
+.artist-name {
+    margin-top: 8px;
+    font-size: 18px;
+    text-decoration: none;
+    color: #333;
+}
+
+.artist-name:hover {
+    color: #f50;
+}
+
+/* Play list Section */
+
+.playlist-name {
+    margin-top: 8px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #333;
+}
+
+.playlist-name:hover {
+    color: #f50;
+}
+
+.playlist-card {
+    width: auto;
+    height: auto;
+    margin-right: 32px; 
+}
+
+.playlist-img {
+    position: relative;
+    overflow: hidden;
+    padding-left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Album Section */
+.album-card {
+    width: auto;
+    height: auto;
+    margin-right: 32px;
+}
+
+.album-img {
+    position: relative;
+    overflow: hidden;
+    padding-left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.album-name {
+    margin-top: 8px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #333;
+}
+
+.album-name:hover {
+    color: #f50;
 }

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Songs>
+
+@{
+    ViewData["Title"] = "Thư viện";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="container">
+    <h1 class="heading-title">Thư viện Bài hát</h1>
+
+    <div class="music-section">
+        <h2 class="seclection-title1">Bài hát yêu thích</h2>
+        <ul class="item-container songList">
+            @if (Model != null && Model.Any(s => s.S_IsFavorite))
+            {
+                foreach (var song in Model.Where(s => s.S_IsFavorite))
+                {
+                    <li class="music-card">
+                        <div>
+                            <div class="img-container">
+                                <img class="item-img" src="@Url.Content(song.S_CoverImagePath)" />
+                                <button class="play-button" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="heart-button" type="button" onclick="toggleFavorite(@song.S_Id, this)">
+                                    <i class="@(song.S_IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                            </div>
+                            <div>
+                                <a class="artist">@song.Artist.ART_Name</a>
+                            </div>
+
+                        </div>
+                    </li>
+                }
+            }
+            else
+            {
+                <li>Không có bài hát yêu thích nào.</li>
+            }
+        </ul>
+        
+    </div>
+
+<audio id="audioPlayer" preload="auto"></audio>

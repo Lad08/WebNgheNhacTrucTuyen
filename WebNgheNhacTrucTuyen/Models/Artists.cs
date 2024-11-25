@@ -8,8 +8,9 @@ namespace WebNgheNhacTrucTuyen.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ART_Id { get; set; }
-        public string ART_Name { get; set; } // Tên nghệ sĩ
-        
+        public string ART_Name { get; set; } 
+        public string? ART_Description { get; set; } 
+        public string ART_Image { get; set; } = "default-artist.png";
 
 
         // Danh sách bài hát của nghệ sĩ

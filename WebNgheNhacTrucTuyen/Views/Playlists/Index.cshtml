@@ -4,39 +4,44 @@
     ViewData["Title"] = "Danh sách Playlist";
 }
 
-<div class="container mt-4">
-    <h2>Danh sách Playlist</h2>
+<h2>@ViewData["Title"]</h2>
 
-    @if (TempData["Message"] != null)
-    {
-        <div class="alert alert-success">@TempData["Message"]</div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger">@TempData["Error"]</div>
-    }
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
 
-    <form asp-action="Create" method="post" class="mb-3">
-        <div class="input-group">
-            <input type="text" name="playlistName" class="form-control" placeholder="Nhập tên playlist..." required>
-            <button type="submit" class="btn btn-primary">Tạo Playlist</button>
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Tạo Playlist Mới</a>
+</p>
+
+<div class="row">
+    @foreach (var playlist in Model)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <img src="@playlist.P_Image" class="card-img-top" alt="Playlist Image" style="width: 100%; height: 150px; object-fit: cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@playlist.P_Name</h5>
+                    <p class="card-text">Tạo bởi: @playlist.User.UserName</p>
+                    <a href="@Url.Action("Edit", "Playlists", new { id = playlist.P_Id })" class="btn btn-warning">Sửa</a>
+                    <form asp-action="Delete" asp-controller="Playlists" method="post">
+                        <input type="hidden" name="id" value="@playlist.P_Id" />
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa playlist này?');">
+                            Xóa
+                        </button>
+                    </form>
+
+                </div>
+            </div>
         </div>
-    </form>
-
-    @if (Model.Any())
-    {
-        <ul class="list-group">
-            @foreach (var playlist in Model)
-            {
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>@playlist.P_Name</span>
-                    <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.P_Id" class="btn btn-outline-secondary btn-sm">Xem chi tiết</a>
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <p class="text-muted">Chưa có playlist nào. Hãy tạo một playlist mới!</p>
     }
 </div>

@@ -1,0 +1,18 @@
+﻿@model WebNgheNhacTrucTuyen.ViewModels.UpdatePlaylistViewModel
+
+<h2>Sửa Playlist</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <div>
+        <label for="Name">Tên Playlist:</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div>
+        <label for="Image">Ảnh Playlist:</label>
+        <input type="file" asp-for="Image" class="form-control" />
+        <img src="@Model.Image" alt="Current Playlist Image" style="width: 150px; height: 150px; margin-top: 10px;" />
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+
