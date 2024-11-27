@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
         {
             var latestSongs = await _context.Songs
                 .OrderByDescending(s => s.S_UploadDate)
-                .Take(5)
+                .Take(6)
                 .Include(s => s.Genre)
                 .Include(s => s.Artist)
                 .Include(s => s.Album)
@@ -32,7 +33,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             var songsByEDM = await _context.Songs
                 .Where(s => s.Genre.G_Name == "EDM")
-                .Take(5)
+                .Take(6)
                 .Include(s => s.Genre)
                 .Include(s => s.Artist)
                 .Include(s => s.Album)
@@ -40,26 +41,26 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             var songsByBGM = await _context.Songs
                 .Where(s => s.Genre.G_Name == "BGM")
-                .Take(5)
+                .Take(6)
                 .Include(s => s.Genre)
                 .Include(s => s.Artist)
                 .Include(s => s.Album)
                 .ToListAsync();
 
             var playlists = await _context.Playlists
-                .Take(5)
+                .Take(6)
                 .Include(p => p.PlaylistSongs)
                 .ThenInclude(ps => ps.Song)
                 .ToListAsync();
 
             var albums = await _context.Albums
-                .Take(5)
+                .Take(6)
                 .Include(a => a.Songs)
                 .ToListAsync();
 
             // Lấy danh sách nghệ sĩ
             var artists = await _context.Artists
-                .Take(5)
+                .Take(6)
                 .ToListAsync();
 
             foreach (var artist in artists)
@@ -209,21 +210,6 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
 
             return RedirectToAction("Index");
-        }
-
-
-
-
-        [Authorize]
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
 

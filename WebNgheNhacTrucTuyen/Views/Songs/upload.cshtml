@@ -1,37 +1,51 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Songs
 @{
     ViewData["Title"] = "Upload Bài Hát";
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
 }
 
-<h2>Upload Bài Hát</h2>
+<div class="main-container">
+    <h2 class="">Upload bài hát của bạn</h2>
 
-<form asp-action="Upload" method="post" enctype="multipart/form-data">
-    <div>
-        <label>Title:</label>
-        <input type="text" name="title" required />
+    <div class="form-container">
+        <form asp-action="Upload" method="post" enctype="multipart/form-data">
+            <div class="title-item">
+                <label class="label-size">Tên bài hát:</label>
+                <input class="input-size" type="text" name="title" required />
+            </div>
+            <div class="form-group align-div ">
+                <label class="label-size">Nghệ sĩ:</label>
+                <select name="artistId" class="select-item" required>
+                    <option value="">-- Chọn Nghệ Sĩ --</option>
+                    @foreach (var artist in (List<WebNgheNhacTrucTuyen.Models.Artists>)ViewBag.Artists)
+                    {
+                        <option value="@artist.ART_Id">@artist.ART_Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group align-div  ">
+                <label asp-for="GenreId" class="label-size">Chọn thể loại:</label>
+                <select asp-for="GenreId" class="select-item" asp-items="@(new SelectList(ViewBag.Genres, "G_Id", "G_Name"))">
+                    <option value="">-- Chọn Thể Loại --</option>
+                </select>
+                <span asp-validation-for="GenreId" class="text-danger"></span>
+            </div>
+            <div class="align-div">
+                <label class="label-size">Tải lên File bài hát:</label>
+                <input type="file" name="file" accept="audio/*" required />
+            </div>
+            <div class="align-div">
+                <label class="label-size">Thêm ảnh bìa:</label>
+                <input type="file" name="coverImage" accept="image/*" required />
+            </div>
+
+            <div >
+                <button class="upload-button " type="submit">Upload</button>
+            </div>
+
+        </form>
     </div>
-    <div class="form-group">
-        <label>Nghệ sĩ:</label>
-        <select name="artistId" class="form-control" required>
-            <option value="">-- Chọn Nghệ Sĩ --</option>
-            @foreach (var artist in (List<WebNgheNhacTrucTuyen.Models.Artists>)ViewBag.Artists)
-            {
-                <option value="@artist.ART_Id">@artist.ART_Name</option>
-            }
-        </select>
-    </div>
-    <div class="form-group">
-        <label asp-for="GenreId" class="control-label">Chọn thể loại</label>
-        <select asp-for="GenreId" class="form-control" asp-items="@(new SelectList(ViewBag.Genres, "G_Id", "G_Name"))"></select>
-        <span asp-validation-for="GenreId" class="text-danger"></span>
-    </div>
-    <div>
-        <label>File:</label>
-        <input type="file" name="file" accept="audio/*" required />
-    </div>
-    <div>
-        <label>Cover Image:</label>
-        <input type="file" name="coverImage" accept="image/*" required />
-    </div>
-    <button type="submit">Upload</button>
-</form>
+    
+</div>
+
+

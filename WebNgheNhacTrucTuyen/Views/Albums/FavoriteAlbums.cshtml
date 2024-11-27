@@ -1,0 +1,25 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Album>
+
+<h2>Danh sách album yêu thích</h2>
+
+@if (!Model.Any())
+{
+    <p>Bạn chưa thích album nào.</p>
+}
+else
+{
+    <div class="album-list">
+        @foreach (var album in Model)
+        {
+            <div class="album-item">
+                <h3>@album.A_Name</h3>
+                <p>@album.A_Description</p>
+                @if (!string.IsNullOrEmpty(album.A_CoverImagePath))
+                {
+                    <img src="@album.A_CoverImagePath" alt="@album.A_Name" style="width: 200px; height: auto;" />
+                }
+                <p>Ngày tạo: @album.A_CreatedDate.ToString("dd/MM/yyyy")</p>
+            </div>
+        }
+    </div>
+}

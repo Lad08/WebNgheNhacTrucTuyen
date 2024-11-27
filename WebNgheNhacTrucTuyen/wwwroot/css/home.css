@@ -54,10 +54,14 @@ body {
     padding: 0;
 }
 
-.a-style {
-    text-decoration: none;
-    color: #f0e8e8;
-    font-size: 14px;
+.a-style {  
+    color: #fff;
+    font-size: 20px;
+
+}
+
+.a-style:hover {
+    color: #f50;
 }
 
 .li-border {
@@ -108,16 +112,20 @@ input:focus {
 }
 
 .search-icon {
-    width: 32px; /* Match the height of the input field */
+    width: 32px; 
     height: 32px;
     border: none;
     padding: 0;
-    background-color: #E5E5E5; /* Make the background transparent */
+    background-color: #E5E5E5; 
     cursor: pointer;
 }
 
-/* Button sign in */
+.search-type {
+    border: none;
+    background-color: #E5E5E5;
+}
 
+/* Button sign in */
 .sign-in {
     height: 46px;
     display: flex;
@@ -228,6 +236,7 @@ input:focus {
 .section-title {
     font-size: 24px;
     margin-bottom: 20px;
+
 }
 
 .ul-main {
@@ -401,27 +410,6 @@ input:focus {
     padding: 0;
 }
 
-.playControl_shuffle {
-    background-image: url('/images/play_control/arrow.png');
-    background-repeat: no-repeat;
-    background-position: 40%;
-    margin-left: 12px;
-    width: 24px;
-    height: 100%;
-    border: none;
-    padding: 0;
-}
-
-.control_shuffle {
-    position: relative;
-    border: 0;
-    padding: 0;
-    margin: 0;
-    height: 100%;
-    width: 100%;
-    outline: none;
-    background: transparent;
-}
 
 .playControl_repeat {
     margin-left: 12px;
@@ -442,7 +430,11 @@ input:focus {
     color: blue; /* Màu nền khi nút được nhấn */
 }
 
-
+.volume-control {
+    border: none;
+    display: flex;
+    align-items: center;
+}
 
 
 .time-container {
@@ -556,7 +548,7 @@ input:focus {
 
 .artist-name {
     margin-top: 8px;
-    font-size: 18px;
+    font-size: 16px;
     text-decoration: none;
     color: #333;
 }
@@ -593,6 +585,12 @@ input:focus {
     justify-content: center;
 }
 
+.playlist-section {
+    margin-left: 8px;
+    width: 100%;
+    height: auto;
+}
+
 /* Album Section */
 .album-card {
     width: auto;
@@ -618,4 +616,10 @@ input:focus {
 
 .album-name:hover {
     color: #f50;
+}
+
+.album-section {
+    margin-left: 8px;
+    width: 100%;
+    height: auto;
 }

@@ -111,7 +111,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View(genre);
         }
 
-        // POST: Genres/Delete/5
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -123,6 +123,25 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var genre = await _context.Genres
+                .Include(g => g.Songs) // Include để lấy cả danh sách bài hát thuộc thể loại này
+                .FirstOrDefaultAsync(m => m.G_Id == id);
+
+            if (genre == null)
+            {
+                return NotFound();
+            }
+
+            return View(genre);
         }
 
     }

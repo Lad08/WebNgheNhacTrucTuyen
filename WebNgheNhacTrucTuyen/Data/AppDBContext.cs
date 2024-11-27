@@ -18,7 +18,6 @@ namespace WebNgheNhacTrucTuyen.Data
         public DbSet<Songs> Songs { get; set; }
 
         public DbSet<Genres> Genres { get; set; }
-
         public DbSet<Lyrics> Lyrics { get; set; }
 
         public DbSet<Playlist> Playlists { get; set; }
@@ -64,6 +63,8 @@ namespace WebNgheNhacTrucTuyen.Data
                 .WithMany(a => a.Albums) // Thêm property Albums vào Artists nếu cần
                 .HasForeignKey(a => a.ArtistId)
                 .OnDelete(DeleteBehavior.SetNull); // Xóa nghệ sĩ không xóa album
+
+
         }
     }
 }

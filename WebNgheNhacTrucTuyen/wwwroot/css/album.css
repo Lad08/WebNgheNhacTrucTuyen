@@ -1,0 +1,502 @@
+﻿/* Google Fonts 'Poppins' */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Start of Header */
+.header {
+    position: fixed;
+    width: 100%;
+    height: 46px;
+    background: #333;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* inner header */
+.inner-header {
+    width: 100%;
+    height: 46px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Icon styles */
+.header-icon {
+    display: flex;
+    width: 60px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-img {
+    height: 32px; /* Kích thước của icon */
+    width: 48px;
+}
+
+/* Navigation styles */
+.ul-header {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.a-style {
+    color: #fff;
+    font-size: 20px;
+}
+
+    .a-style:hover {
+        color: #f50;
+    }
+
+.li-border {
+    display: flex;
+    width: 90px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+}
+
+.none-borderleft {
+    border-left: none;
+}
+
+.g-dark {
+    color: #999;
+}
+
+/* Search Section */
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    width: 480px;
+    margin-left: 24px;
+}
+
+.search-form {
+    display: flex; /* Add flex display to align elements horizontally */
+    width: 440px;
+    height: 32px;
+    margin-right: 14px;
+    border-radius: 3px;
+}
+
+.search-input {
+    flex: 1; /* Make the input field take up most of the space */
+    padding: 0 16px;
+    height: 32px;
+    border: none;
+    background-color: #E5E5E5;
+}
+
+input:focus {
+    outline: none;
+}
+
+.search-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    padding: 0;
+    background-color: #E5E5E5;
+    cursor: pointer;
+}
+
+.search-type {
+    border: none;
+    background-color: #E5E5E5;
+}
+
+/* Button sign in */
+.sign-in {
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-signin {
+    border: 1px solid #999;
+    font-size: 14px;
+    background-color: #00000000;
+    color: #ffffff;
+    border-radius: 6px;
+    width: 96px;
+    height: 30px;
+    line-height: 24px;
+    margin-right: 8px;
+}
+
+.button-signup {
+    border: 1px solid #f50;
+    font-size: 14px;
+    background-color: #FF5500;
+    color: #ffffff;
+    border-radius: 6px;
+    width: 110px;
+    height: 30px;
+    line-height: 24px;
+    margin: 8px;
+    padding: 2px 16px;
+}
+
+.upload {
+    font-size: 15px;
+    color: #999;
+    text-decoration: none;
+    margin: 8px;
+}
+
+.login-a {
+    font-size: 14px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+    .login-a:hover {
+        background-color: #00000000;
+        color: #fff;
+    }
+
+.logout {
+    margin-left: 12px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    // ... các style khác tùy chỉnh
+}
+
+.user-name:hover .dropdown-menu {
+    display: block;
+}
+
+/* End of Header */
+
+/* Start of main content */
+
+.main-content {
+    padding-top: 56px;
+    width: 100%;
+    padding-left: 12px;
+    margin-left: 8px;
+}
+
+.music-content {
+    width: 99%;
+    border: 3px solid #cfcdc8;
+    border-radius: 8px;
+    max-height: 650px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Menu bar Section*/
+
+.page-container {
+    display: flex;
+
+}
+
+.sidebar-title {
+    font-size: 32px;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #cfcdc8
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #fff;
+    padding-top: 56px;
+}
+
+.menu {
+    width: 250px;
+    position: fixed;
+    height: 650px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 3px solid #cfcdc8;
+    border-radius: 8px;
+}
+
+.menu ul {
+    padding: 0;
+}
+
+.menu li {
+    margin: 10px 0;
+
+}
+
+.menu a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.menu a:hover {
+    background-color: #f50;
+}
+
+/* play control section */
+.play-controll {
+    display: none;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+
+.control-inner {
+    background-color: #f2f2f2;
+    border-top: 1px solid #cecece;
+    height: 48px;
+}
+
+.playControls_elements {
+    display: flex;
+    position: relative;
+    height: 100%;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.skipControl_previous {
+    background-image: url('/images/play_control/previous.png');
+    background-position: 40%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.skipControl_play {
+    background-image: url('/images/play_control/play-button-arrowhead.png');
+    background-position: 55%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.skipControl_pause {
+    background-image: url('/images/play_control/pause.png');
+    background-position: 55%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.skipControl_next {
+    background-image: url('/images/play_control/next.png');
+    background-position: 60%;
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    margin-left: 12px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+
+.playControl_repeat {
+    margin-left: 12px;
+    margin-right: 20px;
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+.control_repeat {
+    width: 24px;
+    height: 100%;
+    border: none;
+    padding: 0;
+}
+
+    .control_repeat.active {
+        color: blue; /* Màu nền khi nút được nhấn */
+    }
+
+.volume-control {
+    border: none;
+    display: flex;
+    align-items: center;
+}
+
+
+.time-container {
+    display: flex;
+    align-items: center;
+}
+
+.progress-bar {
+    flex: 1; /* Cho phép thanh tiến trình chiếm phần còn lại của không gian */
+    height: 5px;
+    width: 400px;
+    background-color: #ddd;
+    margin: 0 10px;
+    z-index: 1;
+    position: relative;
+}
+
+.progress-filled {
+    position: absolute;
+    height: 5px;
+    background-color: #333;
+    width: 0%;
+}
+
+.current-song-title {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+    margin-left: 8px;
+}
+
+/* Cover Image Section */
+
+.header-container {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 128px;
+    margin-bottom: 16px;
+}
+
+.img-item {
+    margin: 8px 0 0 8px;
+    width: 128px;
+    height: 128px;
+}
+
+.Title-album {
+    margin: 8px 0 0 8px;
+}
+
+.artist {
+    margin-top: 8px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #333;
+}
+
+.music-name {
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+}
+
+ /* button section */
+
+.heart-button {
+    color: #f50;
+    background-color: transparent;
+    font-size: 16px;
+    border: none;
+}
+
+.heart-button1 {
+    color: #f50;
+    background-color: transparent;
+    font-size: 36px;
+    border: none;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    color: #f50;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    opacity: 0; /* Ẩn nút ban đầu */
+    transition: opacity 0.3s ease-in-out; /* Tạo hiệu ứng chuyển đổi mượt mà */
+}
+
+.play-button:hover {
+    opacity: 1; /* Hiển thị nút khi di chuột vào container */
+}
+
+.stt-wrapper {
+    position: relative;
+    display: inline-block; 
+    width: 30px; 
+    height: 30px; 
+    text-align: center;
+}
+
+.stt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease; /* Thêm hiệu ứng mượt mà */
+    opacity: 1;
+}
+.stt-wrapper:hover .stt {
+    opacity: 0; /* Ẩn STT khi di chuột */
+}
+
+/* Hiệu ứng hover */
+.song-row:hover {
+    background-color: #f5f5f5; /* Màu nền khi di chuột */
+    cursor: pointer;
+}
+
+/* Tô đậm khi click */
+.song-row.active {
+    background-color: #d1ecf1; /* Màu nền khi được chọn */
+}
+
+/* Để đảm bảo hiệu ứng hover không ghi đè khi hàng đã active */
+.song-row.active:hover {
+    background-color: #c1e4ec;
+}
+
+.song-row:hover .stt {
+    opacity: 0; /* Ẩn STT */
+}
+
+.song-row:hover .play-button {
+    opacity: 1; /* Hiện nút Play */
+}

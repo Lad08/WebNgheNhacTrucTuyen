@@ -10,13 +10,17 @@ namespace WebNgheNhacTrucTuyen.Models
         public int P_Id { get; set; }
         public string P_Name { get; set; }
 
-        public string P_Image { get; set; } 
+        public string P_Image { get; set; }
+
+        public bool IsFavoritePlaylist { get; set; } = false;
 
         public string UserId { get; set; } // Người tạo playlist
         public virtual Users User { get; set; } // Navigation property
 
         // Danh sách bài hát trong playlist
         public virtual ICollection<PlaylistSong> PlaylistSongs { get; set; } = new List<PlaylistSong>();
+
+
     }
 
     public class PlaylistSong

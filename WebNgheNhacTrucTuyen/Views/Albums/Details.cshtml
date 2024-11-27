@@ -1,59 +1,108 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Album
 
-<h2>Chi tiết Album: @Model.A_Name</h2>
-
-<div class="mb-3">
-    <strong>Mô tả:</strong>
-    <p>@Model.A_Description</p>
-</div>
-
-@if (!string.IsNullOrEmpty(Model.A_CoverImagePath))
-{
-    <div class="mb-3">
-        <strong>Ảnh bìa:</strong>
-        <img src="@Model.A_CoverImagePath" alt="Ảnh bìa album" style="max-width: 300px;" />
-    </div>
+@{
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
-<h3>Danh sách bài hát</h3>
+<div class="music-content">
 
-@if (Model.Songs != null && Model.Songs.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>STT</th>
-                <th>Tên bài hát</th>
-                <th>Nghệ sĩ</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int index = 1;
-            }
-            @foreach (var song in Model.Songs)
+    <div class="header-container">
+            @if (!string.IsNullOrEmpty(Model.A_CoverImagePath))
             {
-                <tr>
-                    <td>@index</td>
-                    <td>@song.S_Title</td>
-                    <td>@song.Artist?.ART_Name</td>
-                    <td>
-                        <form asp-action="RemoveSong" method="post" style="display: inline;">
-                            <input type="hidden" name="albumId" value="@Model.A_Id" />
-                            <input type="hidden" name="songId" value="@song.S_Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                        </form>
-                    </td>
-                </tr>
-                index++;
+                <div>
+                    <img class="img-item" src="@Model.A_CoverImagePath" alt="Ảnh bìa album" />
+                </div>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Album này chưa có bài hát nào.</p>
-}
+    
 
-<a asp-action="Index" class="btn btn-secondary">Quay lại danh sách album</a>
+
+        <div class="Title-album">
+            <p>Album</p>
+            <h1>@Model.A_Name</h1>
+            
+            <div style="display: flex; align-items: center; gap: 8px;">
+                @foreach (var song in Model.Songs)
+                {
+                    <a asp-controller="Artists" asp-action="Details" asp-route-id="@song.Artist.ART_Id" class="artist">@song.Artist.ART_Name</a>
+                }
+
+                <span style="margin-top: 8px;"> • @(Model.Songs?.Count ?? 0) bài hát</span>
+            </div>
+
+
+        </div>
+       
+        
+    </div>
+
+    <div>
+        <button class="toggle-favorite heart-button1" data-id="@Model.A_Id">
+            <i class="@(Model.IsFavoriteAlbum ? "fa-solid fa-heart" : "fa-regular fa-heart")">
+            </i>
+        </button>
+    </div>
+
+    <div>
+
+
+        <h3>Danh sách bài hát</h3>
+
+        @if (Model.Songs != null && Model.Songs.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên bài hát</th>
+                        <th>Tên nghệ sĩ</th>
+                        <th style="text-align: center;">Yêu thích</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var song in Model.Songs)
+                    {
+                        <tr class="song-row" data-id="@song.S_Id">
+
+                            <td style="text-align:center; width: 30px; ">
+
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                    <button class="play-button" data-id="@song.S_Id" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                                
+                                </td>
+
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                            </td>
+                            <td style="border-top: 1px solid #333;">
+                                <a asp-controller="Artists" asp-action="Details" asp-route-id="@song.Artist.ART_Id" class="artist">@song.Artist.ART_Name</a>
+                            </td>
+                            <td style="border-top: 1px solid #333; text-align: center;">
+                                <button class="heart-button" type="button" onclick="toggleFavorite(@song.S_Id, this)">
+                                    <i class="@(song.S_IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Album này chưa có bài hát nào.</p>
+        }
+
+    </div>
+
+
+ 
+
+</div>
+<audio id="audioPlayer" preload="auto"></audio>

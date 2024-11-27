@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Album>
+@{
+    var userId = ViewBag.UserId as string;
+}
 
 <h1>Albums</h1>
 
@@ -13,13 +16,14 @@
             <th>Owner</th>
             <th>Songs Count</th>
             <th>Actions</th>
+            <th>Favorites</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var album in Model)
         {
+
             <tr>
-                <!-- Hiển thị ảnh bìa -->
                 <td>
                     @if (!string.IsNullOrEmpty(album.A_CoverImagePath))
                     {
@@ -30,14 +34,8 @@
                         <span>No Cover</span>
                     }
                 </td>
-
-                <!-- Tên album -->
                 <td>@album.A_Name</td>
-
-                <!-- Mô tả album -->
                 <td>@album.A_Description</td>
-
-                <!-- Chủ sở hữu album -->
                 <td>
                     @if (album.Artist != null)
                     {
@@ -52,11 +50,7 @@
                         <span>Unknown</span>
                     }
                 </td>
-
-                <!-- Số lượng bài hát -->
                 <td>@album.Songs.Count</td>
-
-                <!-- Các hành động -->
                 <td>
                     <a asp-action="AddSong" asp-route-albumId="@album.A_Id" class="btn btn-success">Add Songs</a>
                     <a asp-action="Details" asp-route-id="@album.A_Id" class="btn btn-info">Details</a>

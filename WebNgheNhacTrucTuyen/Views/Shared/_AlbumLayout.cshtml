@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebNgheNhac</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/album.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div>
+
+        <header class="header g-dark">
+
+            <div class="inner-header">
+
+                <div class="header-icon">
+                    <a asp-controller="home" asp-action="index">
+                        <img src="~/images/home/logo.png" alt="Icon" class="icon-img" />
+                    </a>
+                </div>
+
+                <nav class="header-nav">
+                    <ul class="ul-header">
+                        <li class="li-border">
+                            <a class="a-style" asp-controller="home" asp-action="index">
+                                <i class="fa-solid fa-house"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+                <div class="search-container">
+                    <form class="search-form" asp-controller="Home" asp-action="Search" method="get">
+                        <select class="search-type" name="searchType">
+                            <option value="song">Bài hát</option>
+                            <option value="artist">Nghệ sĩ</option>
+                        </select>
+                        <input class="search-input" type="text" name="query" placeholder="Nhập từ khóa tìm kiếm..." />
+                        <button class="search-icon" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+
+
+                <!-- sign-in and upload section -->
+                @await Html.PartialAsync("_LoginPartial")
+
+
+
+            </div>
+
+        </header>
+
+        <div class="page-container">
+            <!-- Menu bên trái -->
+            <aside class="sidebar">
+
+                <div class="menu">
+                    <nav>
+
+                        <div>
+                            <h2 class="sidebar-title"> Thư viện </h2>
+                        </div>
+
+                        <ul>
+                            <li><a asp-controller="Songs" asp-action="FavoriteSongs">Favorites Songs</a></li>
+                            <li><a asp-controller="Artists" asp-action="Index">Artists</a></li>
+                            <li><a asp-controller="Playlists" asp-action="Index">Playlists</a></li>
+                            <li><a asp-controller="Albums" asp-action="Index">Albums</a></li>
+                            <a asp-controller="Playlists" asp-action="Favorites">Playlist yêu thích</a>
+
+                        </ul>
+                    </nav>
+                </div>
+
+            </aside>
+
+            <!-- Nội dung chính -->
+            <div class="main-content">
+                @RenderBody()
+            </div>
+        </div>
+
+
+        <!-- Play Control Section -->
+        <div class="play-controll">
+            <section role="contentinfo" class="control-inner">
+                <div class="playControls_elements">
+                    <button class="skipControl_previous"></button>
+                    <button id="playPauseButton" class="skipControl_play"></button>
+                    <button class="skipControl_next"></button>
+
+
+                    <div class="playControl_repeat">
+                        <button id="repeatButton" class="control_repeat">
+                            <i class="fa-solid fa-repeat"></i>
+                        </button>
+                    </div>
+
+                    <div class="time-container">
+                        <span id="currentTime">00:00</span>
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-filled"></div>
+                        </div>
+                        <span id="duration">00:00</span>
+                    </div>
+
+                    <div class="volume-control">
+                        <button id="volumeButton" style="border: none;"><i id="volumeIcon" class="fa-solid fa-volume-high"></i></button>
+                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
+                    </div>
+
+                    <div id="currentSongTitle" class="current-song-title">Current Song: </div>
+
+
+                </div>
+            </section>
+        </div>
+
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/favo.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+
+    </div>
+</body>
+</html>

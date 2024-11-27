@@ -285,6 +285,33 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ToggleFavorite(int id)
+        {
+            var playlist = await _context.Playlists.FindAsync(id);
+
+            if (playlist == null)
+            {
+                return Json(new { success = false, message = "Playlist không tồn tại." });
+            }
+
+            playlist.IsFavoritePlaylist = !playlist.IsFavoritePlaylist; // Đảo trạng thái
+            _context.Playlists.Update(playlist);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, isFavorite = playlist.IsFavoritePlaylist });
+        }
+
+        // Hiển thị danh sách playlist yêu thích của người dùng
+        public async Task<IActionResult> FavoritePlaylists()
+        {
+            // Lấy tất cả playlist mà người dùng đã thích (IsFavorite = true)
+            var favoritePlaylists = await _context.Playlists
+                .Where(p => p.IsFavoritePlaylist)
+                .ToListAsync();
+
+            return View(favoritePlaylists);
+        }
 
 
     }

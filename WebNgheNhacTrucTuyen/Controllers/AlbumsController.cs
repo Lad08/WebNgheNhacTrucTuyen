@@ -19,11 +19,14 @@ namespace WebNgheNhacTrucTuyen.Controllers
         // Hiển thị danh sách album
         public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
             var albums = await _context.Albums
-                    .Include(a => a.Songs)
-                    .Include(a => a.Artist) // Bao gồm thông tin nghệ sĩ
-                    .Include(a => a.User)  // Bao gồm thông tin người dùng
-                    .ToListAsync();
+                .Include(a => a.Artist) // Bao gồm nghệ sĩ
+                .Include(a => a.User) // Bao gồm người dùng
+                .ToListAsync();
+
+            ViewBag.UserId = userId; // Truyền thông tin UserId sang View
 
             return View(albums);
         }
@@ -331,5 +334,35 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             return RedirectToAction(nameof(Details), new { id = albumId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleFavorite(int id)
+        {
+            var album = await _context.Albums.FindAsync(id);
+
+            if (album == null)
+            {
+                return Json(new { success = false, message = "Album không tồn tại." });
+            }
+
+            album.IsFavoriteAlbum = !album.IsFavoriteAlbum;
+            _context.Albums.Update(album);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, isFavorite = album.IsFavoriteAlbum });
+        }
+
+
+        public async Task<IActionResult> FavoriteAlbums()
+        {
+            // Lấy danh sách album yêu thích từ cơ sở dữ liệu
+            var favoriteAlbums = await _context.Albums
+                .Where(a => a.IsFavoriteAlbum)
+                .ToListAsync();
+
+            return View(favoriteAlbums);
+        }
+
+
     }
 }

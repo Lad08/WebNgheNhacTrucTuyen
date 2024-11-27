@@ -1,0 +1,30 @@
+﻿@model WebNgheNhacTrucTuyen.Models.Genres
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h3>Thể loại: @Model.G_Name</h3>
+</div>
+
+@if (Model.Songs.Any())
+{
+    <h4>Danh sách bài hát:</h4>
+    <ul>
+        @foreach (var song in Model.Songs)
+        {
+            <li>@song.S_Title (@song.Artist)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Không có bài hát nào thuộc thể loại này.</p>
+}
+
+<div>
+    <a asp-action="Index">Quay lại danh sách thể loại</a>
+</div>

@@ -13,7 +13,9 @@ namespace WebNgheNhacTrucTuyen.Models
         public string A_Name { get; set; }
 
         public string A_Description { get; set; }
-        
+
+        public bool IsFavoriteAlbum { get; set; } = false;
+
         public string? A_CoverImagePath { get; set; }
 
         public DateTime A_CreatedDate { get; set; }
@@ -27,5 +29,6 @@ namespace WebNgheNhacTrucTuyen.Models
         public int? ArtistId { get; set; } // ID của nghệ sĩ
         [ForeignKey("ArtistId")]
         public virtual Artists Artist { get; set; } // Nghệ sĩ liên kết
+
     }
 }

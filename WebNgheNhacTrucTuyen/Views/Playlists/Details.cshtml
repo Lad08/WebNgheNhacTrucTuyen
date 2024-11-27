@@ -1,4 +1,7 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Playlist
+@{
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
 
 <h2>Chi tiết Playlist: @Model.P_Name</h2>
 
@@ -46,3 +49,12 @@ else
 }
 
 <a asp-action="Index" class="btn btn-primary">Quay lại danh sách Playlist</a>
+
+<div>
+    <button class="btn toggle-favorite-playlist" data-id="@Model.P_Id"
+            style="background-color: transparent; border: none; outline: none;">
+        <i class="@(Model.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")"
+           style="color: @(Model.IsFavoritePlaylist ? "red" : "gray"); font-size: 24px;">
+        </i>
+    </button>
+</div>

@@ -4,8 +4,6 @@ const progressFilled = document.querySelector('.progress-filled');
 const currentTimeDisplay = document.getElementById('currentTime');
 const durationDisplay = document.getElementById('duration');
 const currentSongTitle = document.getElementById('currentSongTitle'); // Thêm dòng này
-const searchInput = document.getElementById('searchInput');
-const songLists = document.querySelectorAll('.songList'); // Lấy tất cả các danh sách bài hát
 const playPauseButton = document.getElementById('playPauseButton');
 let isRepeating = false; // Trạng thái lập lại của bài hát
 const repeatButton = document.getElementById('repeatButton');
@@ -28,37 +26,37 @@ document.querySelectorAll('.play-button').forEach(button => {
     });
 });
 
-    // Cập nhật progress bar và thời gian khi bài hát đang phát
-    audioPlayer.addEventListener('timeupdate', function() {
-        if (audioPlayer.duration > 0) {
-            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-    progressFilled.style.width = progress + '%'; // Cập nhật chiều rộng của thanh tiến trình
-    currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
-        }
-    });
+// Cập nhật progress bar và thời gian khi bài hát đang phát
+audioPlayer.addEventListener('timeupdate', function () {
+    if (audioPlayer.duration > 0) {
+        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressFilled.style.width = progress + '%'; // Cập nhật chiều rộng của thanh tiến trình
+        currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
+    }
+});
 
-    // Cập nhật thời gian tổng khi bài hát được tải
-    audioPlayer.addEventListener('loadedmetadata', function() {
-        durationDisplay.textContent = formatTime(audioPlayer.duration);
-    });
+// Cập nhật thời gian tổng khi bài hát được tải
+audioPlayer.addEventListener('loadedmetadata', function () {
+    durationDisplay.textContent = formatTime(audioPlayer.duration);
+});
 
-    // Đặt lại progress bar và thời gian khi bài hát kết thúc
-    audioPlayer.addEventListener('ended', function() {
-        progressFilled.style.width = '0%'; // Reset progress bar khi bài hát kết thúc
+// Đặt lại progress bar và thời gian khi bài hát kết thúc
+audioPlayer.addEventListener('ended', function () {
+    progressFilled.style.width = '0%'; // Reset progress bar khi bài hát kết thúc
     currentTimeDisplay.textContent = '00:00'; // Reset thời gian hiện tại
     currentSongTitle.textContent = "Bài hát hiện tại: "; // Reset tên bài hát
-    });
+});
 
-    // Hàm định dạng thời gian
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
+// Hàm định dạng thời gian
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-    }
+}
 
-    // Thêm sự kiện click cho progress bar
-    progressBar.addEventListener('click', function(event) {
-        const rect = progressBar.getBoundingClientRect();
+// Thêm sự kiện click cho progress bar
+progressBar.addEventListener('click', function (event) {
+    const rect = progressBar.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const totalWidth = rect.width;
     const percentage = offsetX / totalWidth;
@@ -68,27 +66,6 @@ document.querySelectorAll('.play-button').forEach(button => {
     // Cập nhật progressbar ngay lập tức
     progressFilled.style.width = percentage * 100 + '%'; // Cập nhật giá trị progress bar
     currentTimeDisplay.textContent = formatTime(newTime); // Cập nhật thời gian hiện tại
-    });
-
-// Search Function
-searchInput.addEventListener('input', function () {
-    const searchTerm = this.value.toLowerCase(); // Lấy giá trị tìm kiếm và chuyển thành chữ thường
-
-    songLists.forEach(songList => {
-        const songs = songList.getElementsByTagName('li'); // Lấy tất cả các bài hát trong danh sách hiện tại
-
-        Array.from(songs).forEach(song => {
-            const songTitle = song.querySelector('.music-name').textContent.toLowerCase(); // Lấy tên bài hát
-            const artistName = song.querySelector('.artist').textContent.toLowerCase(); // Lấy tên nghệ sĩ
-
-            // Kiểm tra xem tên bài hát hoặc tên nghệ sĩ có chứa từ khóa tìm kiếm không
-            if (songTitle.includes(searchTerm) || artistName.includes(searchTerm)) {
-                song.style.display = ''; // Hiển thị bài hát nếu tìm thấy
-            } else {
-                song.style.display = 'none'; // Ẩn bài hát nếu không tìm thấy
-            }
-        });
-    });
 });
 
 function toggleFavorite(songId) {
@@ -141,7 +118,86 @@ audioPlayer.addEventListener('ended', function () {
 // Đặt âm lượng ban đầu
 audioPlayer.volume = 1; // Mặc định là âm lượng tối đa
 
+const volumeIcon = document.getElementById('volumeIcon'); // Lấy phần tử icon âm lượng
+
 // Thêm sự kiện cho thanh trượt âm lượng
 volumeSlider.addEventListener('input', function () {
     audioPlayer.volume = this.value; // Cập nhật âm lượng của audioPlayer
+
+    // Thay đổi icon dựa vào giá trị âm lượng
+    if (audioPlayer.volume === 0) {
+        volumeIcon.classList.remove('fa-volume-high');
+        volumeIcon.classList.add('fa-volume-xmark'); // Đổi sang icon mute
+    } else {
+        volumeIcon.classList.remove('fa-volume-xmark');
+        volumeIcon.classList.add('fa-volume-high'); // Đổi sang icon âm lượng cao
+    }
 });
+
+// Bỏ qua 10 giây
+document.querySelector('.skipControl_next').addEventListener('click', function () {
+    if (audioPlayer.currentTime + 10 <= audioPlayer.duration) {
+        audioPlayer.currentTime += 10; // Tiến 10 giây
+    } else {
+        audioPlayer.currentTime = audioPlayer.duration; // Đến cuối bài hát
+    }
+});
+
+// Quay lại 10 giây
+document.querySelector('.skipControl_previous').addEventListener('click', function () {
+    if (audioPlayer.currentTime - 10 >= 0) {
+        audioPlayer.currentTime -= 10; // Lùi 10 giây
+    } else {
+        audioPlayer.currentTime = 0; // Đặt về đầu bài hát
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Lấy tất cả các hàng trong bảng
+    const rows = document.querySelectorAll(".song-row");
+    const tableContainer = document.querySelector(".table-container");
+
+    // Thêm sự kiện click vào từng hàng
+    rows.forEach(row => {
+        row.addEventListener("click", function (event) {
+            // Bỏ lớp 'active' trên tất cả các hàng
+            rows.forEach(r => r.classList.remove("active"));
+            // Thêm lớp 'active' vào hàng được click
+            this.classList.add("active");
+
+            // Ngăn không cho sự kiện click lan ra ngoài
+            event.stopPropagation();
+        });
+    });
+
+    // Xóa lớp 'active' khi click ra bên ngoài bảng
+    document.addEventListener("click", function () {
+        rows.forEach(row => row.classList.remove("active"));
+    });
+
+    // Ngăn việc bỏ chọn khi click vào bên trong bảng
+    tableContainer.addEventListener("click", function (event) {
+        event.stopPropagation();
+    });
+});
+
+$(document).on('click', '.toggle-favorite', function (e) {
+    e.preventDefault();
+    var button = $(this);
+    var albumId = button.data('id');
+
+    $.post('/Albums/ToggleFavorite', { id: albumId }, function (response) {
+        if (response.success) {
+            var icon = button.find('i');
+            if (response.isFavorite) {
+                icon.removeClass('fa-regular fa-heart').addClass('fa-solid fa-heart');
+            } else {
+                icon.removeClass('fa-solid fa-heart').addClass('fa-regular fa-heart');
+            }
+        } else {
+            alert(response.message);
+        }
+    });
+});
+
+

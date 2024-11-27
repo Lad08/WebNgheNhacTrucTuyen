@@ -180,6 +180,9 @@ namespace WebNgheNhacTrucTuyen.Migrations
                     b.Property<int?>("ArtistId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsFavoriteAlbum")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -265,6 +268,9 @@ namespace WebNgheNhacTrucTuyen.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("P_Id"));
+
+                    b.Property<bool>("IsFavoritePlaylist")
+                        .HasColumnType("bit");
 
                     b.Property<string>("P_Image")
                         .IsRequired()

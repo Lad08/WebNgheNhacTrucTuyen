@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Playlist>
+
+@{
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
+<div class="music-content">
+    <h2>Playlist yêu thích</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="playlist-container">
+            @foreach (var playlist in Model)
+            {
+                <div class="playlist-item">
+                    <div class="playlist-image">
+                        <img src="@playlist.P_Image" alt="Ảnh playlist" style="width: 100px; height: 100px; object-fit: cover;">
+                    </div>
+                    <div class="playlist-info">
+                        <h3>@playlist.P_Name</h3>
+
+                        <!-- Nút thích/bỏ thích -->
+
+                    </div>
+
+                    <div>
+                        <button class="btn toggle-favorite-playlist" data-id="@playlist.P_Id"
+                                style="background-color: transparent; border: none; outline: none;">
+                            <i class="@(playlist.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")"
+                               style="color: @(playlist.IsFavoritePlaylist ? "red" : "gray"); font-size: 24px;">
+                            </i>
+                        </button>
+                    </div>
+
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Chưa có playlist yêu thích nào.</p>
+    }
+</div>

@@ -234,13 +234,14 @@ namespace WebNgheNhacTrucTuyen.Controllers
             var genres = await _context.Genres.ToListAsync();
             var albums = await _context.Albums.ToListAsync();
 
-            ViewBag.Genres = genres.Any()
-                ? new SelectList(genres, "G_Id", "G_Name")
-                : new SelectList(new List<SelectListItem> { new SelectListItem { Text = "No Genres Available", Value = "0" } });
+            ViewBag.Genres = new SelectList(genres, "G_Id", "G_Name");
+            ViewBag.Albums = new SelectList(
+                albums.Prepend(new Album { A_Id = 0, A_Name = "Không thuộc album nào" }),
+                "A_Id",
+                "A_Name",
+                model.AlbumId
+            );
 
-            ViewBag.Albums = albums.Any()
-                ? new SelectList(albums, "A_Id", "A_Name")
-                : new SelectList(new List<SelectListItem> { new SelectListItem { Text = "No Albums Available", Value = "0" } });
 
             return View(model);
         }
@@ -255,8 +256,15 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Genres = new SelectList(_context.Genres, "G_Id", "G_Name");
-                ViewBag.Albums = new SelectList(_context.Albums, "A_Id", "A_Name");
+                var genres = await _context.Genres.ToListAsync();
+                var albums = await _context.Albums.ToListAsync();
+                ViewBag.Genres = new SelectList(genres, "G_Id", "G_Name");
+                ViewBag.Albums = new SelectList(
+                    albums.Prepend(new Album { A_Id = 0, A_Name = "Không thuộc album nào" }),
+                    "A_Id",
+                    "A_Name",
+                    model.AlbumId
+                );
                 return View(model);
             }
 
@@ -269,12 +277,10 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             song.S_Title = model.Title;
             song.S_UploadDate = model.UploadDate;
-            song.S_IsFavorite = model.IsFavorite;
 
             // Xử lý cập nhật ảnh bìa
             if (model.CoverImage != null)
             {
-                // Xóa ảnh bìa cũ nếu tồn tại
                 if (!string.IsNullOrEmpty(song.S_CoverImagePath))
                 {
                     var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", song.S_CoverImagePath.TrimStart('/'));
@@ -284,7 +290,6 @@ namespace WebNgheNhacTrucTuyen.Controllers
                     }
                 }
 
-                // Lưu ảnh bìa mới
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/song_img");
                 if (!Directory.Exists(uploadsFolder))
                 {
@@ -301,7 +306,6 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 song.S_CoverImagePath = $"/images/song_img/{uniqueFileName}";
             }
 
-
             // Tìm hoặc tạo nghệ sĩ mới
             var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ART_Name == model.ArtistName);
             if (artist == null)
@@ -312,18 +316,17 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
             song.ArtistId = artist.ART_Id;
 
-
-
             song.GenreId = model.GenreId;
-            song.AlbumId = model.AlbumId;
 
-
+            // Xử lý AlbumId (cho phép null)
+            song.AlbumId = model.AlbumId == 0 ? null : model.AlbumId;
 
             _context.Songs.Update(song);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Home");
         }
+
 
         [HttpGet]
         public IActionResult UploadLyrics(int songId)
