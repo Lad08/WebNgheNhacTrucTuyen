@@ -2,46 +2,77 @@
 
 @{
     ViewData["Title"] = "Danh sách Playlist";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["Message"]
-    </div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
-    </div>
-}
-
-<p>
-    <a href="@Url.Action("Create")" class="btn btn-primary">Tạo Playlist Mới</a>
-</p>
-
-<div class="row">
-    @foreach (var playlist in Model)
-    {
-        <div class="col-md-4">
-            <div class="card">
-                <img src="@playlist.P_Image" class="card-img-top" alt="Playlist Image" style="width: 100%; height: 150px; object-fit: cover;" />
-                <div class="card-body">
-                    <h5 class="card-title">@playlist.P_Name</h5>
-                    <p class="card-text">Tạo bởi: @playlist.User.UserName</p>
-                    <a href="@Url.Action("Edit", "Playlists", new { id = playlist.P_Id })" class="btn btn-warning">Sửa</a>
-                    <form asp-action="Delete" asp-controller="Playlists" method="post">
-                        <input type="hidden" name="id" value="@playlist.P_Id" />
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa playlist này?');">
-                            Xóa
-                        </button>
-                    </form>
-
-                </div>
-            </div>
+<div class="music-content">
+    <div class="header-container">
+        <div>
+            <img class="img-item" src="~/images/home/liked_song.png" alt="Ảnh bìa Playlist" />
         </div>
-    }
+        <h1 class="Title-album">@ViewData["Title"]</h1>
+    </div>
+
+    <div class="music-section">
+        <p>
+            <a href="@Url.Action("Create")" class="p-create">Tạo Playlist Mới</a>
+        </p>
+
+        @if (Model != null && Model.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên playlist</th>
+                        <th>Ảnh bìa</th>
+                        <th>Tạo bởi</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var playlist in Model)
+                    {
+                        <tr class="playlist-row" data-id="@playlist.P_Id">
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.P_Id" class="playlist-name">
+                                    @playlist.P_Name
+                                </a>
+                            </td>
+                            <td>
+                                <img src="@playlist.P_Image" alt="@playlist.P_Name" style="width: 80px; height: 80px; object-fit: cover;" />
+                            </td>
+                            <td>
+                                @playlist.User.U_FullName
+                            </td>
+                            <td>
+                                <div class="playlist-actions">
+                                    <a href="@Url.Action("Edit", "Playlists", new { id = playlist.P_Id })" class="btn btn-warning">Sửa</a>
+                                    <form asp-action="Delete" asp-controller="Playlists" method="post" style="display: inline;">
+                                        <input type="hidden" name="id" value="@playlist.P_Id" />
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa playlist này?');">
+                                            Xóa
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Không có playlist nào.</p>
+        }
+    </div>
 </div>

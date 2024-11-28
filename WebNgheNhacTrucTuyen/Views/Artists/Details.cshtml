@@ -1,23 +1,110 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Artists
 
-<h1>Chi tiết nghệ sĩ</h1>
+@{
+    Layout = "~/Views/Shared/_ArtistsLayout.cshtml";
+}
 
-<div>
-    <h3>@Model.ART_Name</h3>
-    <h4>Danh sách bài hát:</h4>
-    @if (Model.Songs.Any())
-    {
-        <ul>
-            @foreach (var song in Model.Songs)
-            {
-                <li>@song.S_Title</li> <!-- Thay "Title" bằng thuộc tính thực tế của bài hát -->
-            }
-        </ul>
-    }
-    else
-    {
-        <p>Nghệ sĩ này chưa có bài hát nào.</p>
-    }
+<div class="music-content">
+
+    <div class="header-container">
+        @if (!string.IsNullOrEmpty(Model.ART_Image))
+        {
+            <div>
+                <img class="img-item" src="~/images/artists/@Model.ART_Image" alt="@Model.ART_Name" />
+            </div>
+        }
+
+        <div class="Title-album">
+            <p>Nghệ sĩ</p>
+            <h1>@Model.ART_Name</h1>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="margin-top: 8px;"> @(Model.Songs?.Count ?? 0) bài hát</span>
+                <span style="margin-top: 8px;"> • @(Model.Albums?.Count ?? 0) album</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h3 style="margin-left: 8px;">Danh sách bài hát</h3>
+
+        @if (Model.Songs != null && Model.Songs.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên bài hát</th>
+                        <th style="text-align: center;">Yêu thích</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var song in Model.Songs)
+                    {
+                        <tr class="song-row" data-id="@song.S_Id">
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                    <button class="play-button" data-id="@song.S_Id" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </td>
+
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                            </td>
+
+                            <td style="text-align: center;">
+                                <button class="heart-button" type="button" onclick="toggleFavorite(@song.S_Id, this)">
+                                    <i class="@(song.S_IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Nghệ sĩ này chưa có bài hát nào.</p>
+        }
+    </div>
+
+    <div style="margin-left: 8px;">
+        <h3>Danh sách album</h3>
+        @if (Model.Albums != null && Model.Albums.Any())
+        {
+            <ul class="item-container albumList">
+                @foreach (var album in Model.Albums)
+                {
+                    <li>
+                        <div class="album-card">
+                            <div class="img-container">
+                                <img class="item-img album-cover" src="@album.A_CoverImagePath" alt="@album.A_Name" />
+                                <button class="toggle-favorite heart-button1" data-id="@album.A_Id">
+                                    <i class="@(album.IsFavoriteAlbum ? "fa-solid fa-heart" : "fa-regular fa-heart")">
+                                    </i>
+                                </button>
+                            </div>
+
+                            <div>
+                                <a asp-controller="Albums" asp-action="Details" asp-route-id="@album.A_Id" class="album-name">@album.A_Name</a>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>Nghệ sĩ này chưa có album nào.</p>
+        }
+    </div>
 </div>
 
-<a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+<audio id="audioPlayer" preload="auto"></audio>

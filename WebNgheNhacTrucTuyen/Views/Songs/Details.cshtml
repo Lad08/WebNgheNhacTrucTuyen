@@ -2,44 +2,149 @@
 
 @{
     ViewData["Title"] = "Chi tiết bài hát";
+    Layout = "~/Views/Shared/_SongDetailLayout.cshtml";
 }
 
-<h1>@Model.S_Title</h1>
-<p>Thể loại: @Model.Genre?.G_Name</p>
-<p><strong>Nghệ sĩ:</strong> @Model.Artist.ART_Name</p>
-<p><strong>Ngày đăng tải phát hành:</strong>@Model.S_UploadDate </p>
-<p>Uploaded by: @Model.User.U_FullName</p>
-<a href="@Model.S_FilePath" download>Download Song</a>
-<a asp-action="EditSong" asp-route-id="@Model.S_Id" class="btn btn-warning">Sửa</a>
-<a asp-controller="Playlists" asp-action="AddSongToPlaylist" class="btn btn-success">Thêm bài hát vào Playlist</a>
+<div class="music-content">
+    <div class="header-container">
+        @if (!string.IsNullOrEmpty(Model.S_CoverImagePath))
+        {
+            <div>
+                <img class="img-item" src="@Model.S_CoverImagePath" alt="Ảnh bìa album" />
+            </div>
+        }
+
+        <div class="Title-album">
+            <p>Bài hát</p>
+            <h1>@Model.S_Title</h1>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a asp-controller="Artists" asp-action="Details" asp-route-id="@Model.Artist.ART_Id" class="artist">
+                    @Model.Artist.ART_Name
+                </a>
+                <div style="margin-top: 8px;">
+                    @if (Model.Album != null)
+                    {
+                        <a asp-controller="Albums" asp-action="Details" asp-route-id="@Model.Album.A_Id" class="artist">
+                            • Thuộc Album: @Model.Album.A_Name
+                        </a>
+                    }
+                    else
+                    {
+                        <span>• Đĩa đơn</span>
+                    }
+                </div>
+            </div>
 
 
-
-<audio controls>
-    <source src="@Url.Content(Model.S_FilePath)" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-
-<h3>Lời bài hát</h3>
-@if (ViewBag.LyricsContent != null)
-{
-    <div class="lyrics-content">
-        <pre style="white-space: pre-wrap;">@ViewBag.LyricsContent</pre>
+        </div>
     </div>
-}
-else
-{
-    <p><em>Chưa có lyrics cho bài hát này.</em></p>
-}
 
-@if (Model.Lyrics == null)
-{
-    <a asp-action="UploadLyrics" asp-route-songId="@Model.S_Id" class="btn btn-success">Tải lên Lyrics</a>
-}
-else
-{
-    <a asp-action="EditLyrics" asp-route-id="@Model.Lyrics.L_Id" class="btn btn-warning">Chỉnh sửa Lyrics</a>
-    <form asp-action="DeleteLyrics" asp-route-id="@Model.Lyrics.L_Id" method="post" style="display:inline;">
-        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa lyrics này không?');">Xóa Lyrics</button>
-    </form>
-}
+    <div class="icon-container">
+        <button class="play-button" data-id="@Model.S_Id" data-file-path="@Url.Content(Model.S_FilePath)" data-title="@Model.S_Title">
+            <i class="fas fa-play"></i>
+        </button>
+
+        <button class="heart-button1" type="button" onclick="toggleFavorite(@Model.S_Id, this)">
+            <i class="@(Model.S_IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
+        </button>
+
+        <div class="dropdown">
+            <button class="btn dot3-button dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                ...
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li>
+                    <a class="dropdown-item" href="@Model.S_FilePath" download>Download mp3 của bài hát</a>
+                </li>
+
+                <li>
+                    <a class="dropdown-item" asp-action="EditSong" asp-route-id="@Model.S_Id">Sửa</a>
+                </li>
+
+                <li>
+                    <form asp-action="DeleteSong" asp-route-id="@Model.S_Id" method="post" style="display:inline;">
+                        <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa bài hát này không?');">Xóa Bài Hát</button>
+                    </form>
+                </li>
+
+                <li>
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addToPlaylistModal">
+                        Thêm bài hát vào Playlist
+                    </button>
+                </li>
+                @if (Model.Lyrics == null)
+                {
+                    <li>
+                        <a class="dropdown-item" asp-action="UploadLyrics" asp-route-songId="@Model.S_Id">Tải lên Lyrics</a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a class="dropdown-item" asp-action="EditLyrics" asp-route-id="@Model.Lyrics.L_Id">Chỉnh sửa Lyrics</a>
+                    </li>
+                    <li>
+                        <form asp-action="DeleteLyrics" asp-route-id="@Model.Lyrics.L_Id" method="post" style="display:inline;">
+                            <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa lyrics này không?');">Xóa Lyrics</button>
+                        </form>
+                    </li>
+                }
+
+            </ul>
+        </div>
+
+
+    </div>
+
+    <h4>Lời bài hát</h4>
+    @if (ViewBag.LyricsContent != null)
+    {
+        <div class="lyrics-content">
+            <pre style="white-space: pre-wrap;">@ViewBag.LyricsContent</pre>
+        </div>
+    }
+    else
+    {
+        <p><em>Chưa có lyrics cho bài hát này.</em></p>
+    }
+
+
+
+</div>
+
+
+
+
+
+
+<!-- Modal for Adding Song to Playlist -->
+<div class="modal fade" id="addToPlaylistModal" tabindex="-1" aria-labelledby="addToPlaylistModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addToPlaylistModalLabel">Thêm bài hát vào Playlist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addSongToPlaylistForm" method="post" asp-action="AddSongToPlaylist" asp-controller="Playlists">
+                    <input type="hidden" name="SongId" value="@Model.S_Id" />
+                    <div class="form-group">
+                        <label for="PlaylistId">Chọn Playlist</label>
+                        <select id="PlaylistId" name="PlaylistId" class="form-control">
+                            @foreach (var playlist in ViewBag.Playlists)
+                            {
+                                <option value="@playlist.P_Id">@playlist.P_Name</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" form="addSongToPlaylistForm" class="btn btn-primary">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="audioPlayer" preload="auto"></audio>

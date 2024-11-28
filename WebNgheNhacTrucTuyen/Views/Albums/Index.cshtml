@@ -1,63 +1,103 @@
 ﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Album>
+
 @{
+    ViewData["Title"] = "Danh sách Album";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
     var userId = ViewBag.UserId as string;
 }
 
-<h1>Albums</h1>
+<div class="music-content">
+    <div class="header-container">
+        <div>
+            <img class="img-item" src="~/images/home/album_default.png" alt="Ảnh bìa Album" />
+        </div>
+        <h1 class="Title-album">@ViewData["Title"]</h1>
+    </div>
 
-<a asp-action="A_Create" class="btn btn-primary">Create New Album</a>
+    <div class="music-section">
+        <h3>Danh sách Album</h3>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Cover</th>
-            <th>Album Name</th>
-            <th>Description</th>
-            <th>Owner</th>
-            <th>Songs Count</th>
-            <th>Actions</th>
-            <th>Favorites</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var album in Model)
+        <p>
+            <a asp-action="A_Create" class="btn btn-primary">Tạo Album Mới</a>
+        </p>
+
+        @if (Model != null && Model.Any())
         {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên Album</th>
+                        <th>Ảnh Bìa</th>
+                        <th>Chủ sở hữu</th>
+                       
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var album in Model)
+                    {
+                        <tr class="album-row" data-id="@album.A_Id">
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Albums" asp-action="Details" asp-route-id="@album.A_Id" class="album-name">
+                                    @album.A_Name
+                                </a>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(album.A_CoverImagePath))
+                                {
+                                    <img src="@album.A_CoverImagePath" alt="@album.A_Name" style="width: 80px; height: 80px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <span>Không có ảnh bìa</span>
+                                }
+                            </td>
+                            <td>
+                                @if (album.Artist != null)
+                                {
+                                    <span>Artist: @album.Artist.ART_Name</span>
+                                }
+                                else if (!string.IsNullOrEmpty(album.UserId))
+                                {
+                                    <span>User: @album.User.U_FullName</span>
+                                }
+                                else
+                                {
+                                    <span>Unknown</span>
+                                }
+                            </td>
+                            
+                            <td>
+                                <a asp-action="AddSong" asp-route-albumId="@album.A_Id" class="btn btn-success">Thêm Bài Hát</a>
+                                <a asp-action="Details" asp-route-id="@album.A_Id" class="btn btn-info">Chi tiết</a>
+                                <a asp-action="Edit" asp-route-id="@album.A_Id" class="btn btn-warning">Sửa</a>
 
-            <tr>
-                <td>
-                    @if (!string.IsNullOrEmpty(album.A_CoverImagePath))
-                    {
-                        <img src="@album.A_CoverImagePath" alt="@album.A_Name" width="100" />
+                                <form asp-action="Delete" asp-controller="Albums" method="post" style="display: inline;">
+                                    <input type="hidden" name="id" value="@album.A_Id" />
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa album này?');">
+                                        Xóa
+                                    </button>
+                                </form>
+
+                            </td>
+                        </tr>
+                        index++;
                     }
-                    else
-                    {
-                        <span>No Cover</span>
-                    }
-                </td>
-                <td>@album.A_Name</td>
-                <td>@album.A_Description</td>
-                <td>
-                    @if (album.Artist != null)
-                    {
-                        <span>Artist: @album.Artist.ART_Name</span>
-                    }
-                    else if (!string.IsNullOrEmpty(album.UserId))
-                    {
-                        <span>User: @album.User.U_FullName</span>
-                    }
-                    else
-                    {
-                        <span>Unknown</span>
-                    }
-                </td>
-                <td>@album.Songs.Count</td>
-                <td>
-                    <a asp-action="AddSong" asp-route-albumId="@album.A_Id" class="btn btn-success">Add Songs</a>
-                    <a asp-action="Details" asp-route-id="@album.A_Id" class="btn btn-info">Details</a>
-                    <a asp-action="Edit" asp-route-id="@album.A_Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@album.A_Id" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
+                </tbody>
+            </table>
         }
-    </tbody>
-</table>
+        else
+        {
+            <p>Không có album nào.</p>
+        }
+    </div>
+</div>

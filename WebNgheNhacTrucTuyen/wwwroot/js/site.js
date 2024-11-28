@@ -9,22 +9,61 @@ let isRepeating = false; // Trạng thái lập lại của bài hát
 const repeatButton = document.getElementById('repeatButton');
 const volumeSlider = document.getElementById('volumeSlider');
 
-// Thêm sự kiện cho các nút phát nhạc
 document.querySelectorAll('.play-button').forEach(button => {
     button.addEventListener('click', function () {
         const songTitle = this.getAttribute('data-title');
-        audioPlayer.src = this.getAttribute('data-file-path');
-        audioPlayer.play();
-        currentSongTitle.textContent = "Bài hát hiện tại: " + songTitle;
+        const filePath = this.getAttribute('data-file-path');
+        const icon = this.querySelector('i'); // Lấy icon trong nút hiện tại
 
-        // Hiện thanh điều khiển phát nhạc
-        document.querySelector('.play-controll').style.display = 'block';
+        // Nếu icon đang là "fa-play", phát nhạc
+        if (icon.classList.contains('fa-play')) {
+            
+            if (audioPlayer.src !== filePath) {
+                audioPlayer.src = filePath;
+            }
+
+            // Phát nhạc
+            audioPlayer.play();
+            currentSongTitle.textContent = "Bài hát hiện tại: " + songTitle;
+
+            // Hiện thanh điều khiển phát nhạc
+            document.querySelector('.play-controll').style.display = 'block';
+
+            // Cập nhật trạng thái icon nút trong danh sách
+            document.querySelectorAll('.play-button i').forEach(icon => {
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+            });
+
+            // Chuyển icon của nút hiện tại sang trạng thái "pause"
+            icon.classList.remove('fa-play');
+            icon.classList.add('fa-pause');
+        }
+        // Nếu icon đang là "fa-pause", tạm dừng nhạc
+        else if (icon.classList.contains('fa-pause')) {
+            audioPlayer.pause();
+
+            // Chuyển icon về trạng thái "play"
+            icon.classList.remove('fa-pause');
+            icon.classList.add('fa-play');
+        }
 
         // Cập nhật trạng thái nút play/pause
         playPauseButton.classList.remove('skipControl_play');
         playPauseButton.classList.add('skipControl_pause');
     });
 });
+
+// Đặt lại trạng thái các nút khi bài hát kết thúc
+audioPlayer.addEventListener('ended', function () {
+    document.querySelectorAll('.play-button i').forEach(icon => {
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-play');
+    });
+
+    currentSongTitle.textContent = "Bài hát hiện tại: ";
+});
+
 
 // Cập nhật progress bar và thời gian khi bài hát đang phát
 audioPlayer.addEventListener('timeupdate', function () {

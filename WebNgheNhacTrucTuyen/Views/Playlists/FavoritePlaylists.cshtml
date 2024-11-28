@@ -1,43 +1,69 @@
 ﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Playlist>
 
 @{
+    ViewData["Title"] = "Playlist yêu thích";
     Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
 <div class="music-content">
-    <h2>Playlist yêu thích</h2>
 
-    @if (Model != null && Model.Any())
-    {
-        <div class="playlist-container">
-            @foreach (var playlist in Model)
-            {
-                <div class="playlist-item">
-                    <div class="playlist-image">
-                        <img src="@playlist.P_Image" alt="Ảnh playlist" style="width: 100px; height: 100px; object-fit: cover;">
-                    </div>
-                    <div class="playlist-info">
-                        <h3>@playlist.P_Name</h3>
-
-                        <!-- Nút thích/bỏ thích -->
-
-                    </div>
-
-                    <div>
-                        <button class="btn toggle-favorite-playlist" data-id="@playlist.P_Id"
-                                style="background-color: transparent; border: none; outline: none;">
-                            <i class="@(playlist.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")"
-                               style="color: @(playlist.IsFavoritePlaylist ? "red" : "gray"); font-size: 24px;">
-                            </i>
-                        </button>
-                    </div>
-
-                </div>
-            }
+    <div class="header-container">
+        <div>
+            <img class="img-item" src="~/images/home/liked_song.png" alt="Ảnh bìa yêu thích" />
         </div>
-    }
-    else
-    {
-        <p>Chưa có playlist yêu thích nào.</p>
-    }
+        <h1 class="Title-album">Playlist yêu thích</h1>
+    </div>
+
+    <div class="music-section">
+        <h3>Danh sách playlist yêu thích</h3>
+
+        @if (Model != null && Model.Any(p => p.IsFavoritePlaylist))
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên playlist</th>
+                        <th>Ảnh bìa</th>
+                        <th style="text-align: center;">Yêu thích</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var playlist in Model.Where(p => p.IsFavoritePlaylist))
+                    {
+                        <tr class="playlist-row" data-id="@playlist.P_Id">
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.P_Id" class="playlist-name">
+                                    @playlist.P_Name
+                                </a>
+                            </td>
+                            <td>
+                                <img src="@playlist.P_Image" alt="@playlist.P_Name" style="width: 80px; height: 80px; object-fit: cover;" />
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="heart-button toggle-favorite-playlist" type="button" data-id="@playlist.P_Id">
+                                    <i class="@(playlist.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")"
+                                       style="color: @(playlist.IsFavoritePlaylist ? "red" : "gray"); font-size: 24px;">
+                                    </i>
+                                </button>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Không có playlist yêu thích nào.</p>
+        }
+    </div>
 </div>

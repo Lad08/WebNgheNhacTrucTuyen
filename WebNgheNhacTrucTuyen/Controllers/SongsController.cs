@@ -92,7 +92,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 UserId = user.Id,
                 S_UploadDate = DateTime.Now,
                 GenreId = genreId,
-                ArtistId = artistId // Liên kết với nghệ sĩ
+                ArtistId = artistId, // Liên kết với nghệ sĩ
+                AlbumId = null
             };
 
             _context.Songs.Add(song);
@@ -117,9 +118,11 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             // Lấy bài hát yêu thích
             var favoriteSongsQuery = _context.Songs
-                .Include(s => s.Genre)
-                .Include(s => s.Artist)
-                .Include(s => s.Album)
+                   .Include(s => s.User)      // Bao gồm User
+                   .Include(s => s.Genre)     // Bao gồm thể loại
+                   .Include(s => s.Lyrics)    // Bao gồm lyrics
+                   .Include(s => s.Album)     // Bao gồm Album
+                   .Include(s => s.Artist)
                 .Where(s => s.S_IsFavorite);
 
             // Nếu genre không null, lọc thêm theo thể loại
@@ -127,6 +130,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             {
                 favoriteSongsQuery = favoriteSongsQuery.Where(s => s.Genre.G_Name == genre);
             }
+
 
             // Lấy danh sách bài hát yêu thích
             var favoriteSongs = await favoriteSongsQuery.ToListAsync();
@@ -190,6 +194,14 @@ namespace WebNgheNhacTrucTuyen.Controllers
                     ViewBag.LyricsContent = song.Lyrics.L_Content; // Lấy nội dung trực tiếp từ DB
                 }
             }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            // Lấy danh sách playlist của người dùng
+            ViewBag.Playlists = await _context.Playlists
+                .Where(p => p.UserId == user.Id)
+                .ToListAsync();
+
 
             return View(song);
         }
@@ -483,6 +495,24 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             TempData["Message"] = "Lyrics đã được xóa.";
             return RedirectToAction("Details", new { id = lyrics.SongId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteSong(int id)
+        {
+            var song = await _context.Songs.FindAsync(id);
+            if (song == null)
+            {
+                return NotFound();
+            }
+
+            // Logic to delete the song
+            _context.Songs.Remove(song);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Song deleted successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
 

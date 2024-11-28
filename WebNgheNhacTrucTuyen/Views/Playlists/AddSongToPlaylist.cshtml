@@ -2,26 +2,52 @@
 
 <h2>Thêm bài hát vào Playlist</h2>
 
-<form asp-action="AddSongToPlaylist" method="post">
-    <div class="form-group">
-        <label for="PlaylistId">Chọn Playlist</label>
-        <select id="PlaylistId" name="PlaylistId" class="form-control">
-            @foreach (var playlist in Model.Playlists)
-            {
-                <option value="@playlist.P_Id">@playlist.P_Name</option>
-            }
-        </select>
-    </div>
+<div class="form-group">
+    <label for="PlaylistId">Chọn Playlist</label>
+    <select id="PlaylistId" name="PlaylistId" class="form-control">
+        @foreach (var playlist in Model.Playlists)
+        {
+            <option value="@playlist.P_Id">@playlist.P_Name</option>
+        }
+    </select>
+</div>
 
-    <div class="form-group">
-        <label for="SongId">Chọn Bài Hát</label>
-        <select id="SongId" name="SongId" class="form-control">
-            @foreach (var song in Model.Songs)
-            {
-                <option value="@song.S_Id">@song.S_Title</option>
-            }
-        </select>
-    </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Tên Bài Hát</th>
+            <th>Nghệ Sĩ</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var song in Model.Songs)
+        {
+            <tr>
+                <td>@song.S_Id</td>
+                <td>@song.S_Title</td>
+                <td>@song.Artist.ART_Name</td>
+                <td>
+                    <form asp-action="AddSongToPlaylist" method="post">
+                        <input type="hidden" name="SongId" value="@song.S_Id" />
+                        <input type="hidden" name="PlaylistId" value="" class="playlist-input" />
+                        <button type="submit" class="btn btn-primary">Thêm vào Playlist</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-    <button type="submit" class="btn btn-primary">Thêm</button>
-</form>
+<script>
+    document.getElementById('PlaylistId').addEventListener('change', function () {
+        // Lấy giá trị PlaylistId đã chọn
+        const playlistId = this.value;
+
+        // Cập nhật giá trị ẩn trong tất cả các form
+        document.querySelectorAll('.playlist-input').forEach(input => {
+            input.value = playlistId;
+        });
+    });
+</script>

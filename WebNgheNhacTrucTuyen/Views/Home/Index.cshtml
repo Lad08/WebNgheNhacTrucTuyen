@@ -10,7 +10,7 @@
 
     <!-- Bài hát mới nhất -->
     <div class="music-section">
-        <h2 class="section-title">Latest Music</h2>
+        <h2 class="section-title">Bài hát mới được cập nhật</h2>
 
         <ul class="item-container songList">
             @foreach (var song in Model.LatestSongs)
@@ -63,6 +63,61 @@
             }
     </ul>
 </div>
+
+    <!-- Danh sách album -->
+    <div class="album-section">
+        <h2 class="section-title">Albums</h2>
+        <ul class="item-container albumList">
+            @foreach (var album in Model.Albums)
+            {
+                <li>
+                    <div class="album-card">
+                        <div class="img-container">
+                            <img class="item-img album-cover" src="@album.A_CoverImagePath" alt="@album.A_Name" />
+                            <button class="toggle-favorite heart-button" data-id="@album.A_Id">
+                                <i class="@(album.IsFavoriteAlbum ? "fa-solid fa-heart" : "fa-regular fa-heart")">
+                                </i>
+                            </button>
+                        </div>
+
+                        <div>
+                            <a asp-controller="Albums" asp-action="Details" asp-route-id="@album.A_Id" class="album-name">@album.A_Name</a>
+                        </div>
+
+
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Danh sách playlist -->
+    <div class="playlist-section">
+        <h2 class="section-title">Playlists</h2>
+        <ul class="item-container playlistList">
+            @foreach (var playlist in Model.Playlists)
+            {
+                <li>
+                    <div class="playlist-card">
+                        <div class="img-container">
+                            <img class="item-img album-cover" src="@playlist.P_Image" alt="@playlist.P_Name" />
+                            <button class="heart-button toggle-favorite-playlist" data-id="@playlist.P_Id">
+                                <i class="@(playlist.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")">
+                                </i>
+                            </button>
+                        </div>
+
+                        <div class="playlist-name">
+                            <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.P_Id" class="playlist-name">@playlist.P_Name</a>
+                        </div>
+
+
+
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
 
     <!-- Bài hát theo thể loại EDM -->
     <div class="music-section">
@@ -124,64 +179,9 @@
         </ul>
     </div>
 
-    <!-- Danh sách playlist -->
-    <div class="playlist-section">
-        <h2 class="section-title">Playlists</h2>
-        <ul class="item-container playlistList">
-            @foreach (var playlist in Model.Playlists)
-            {
-                <li>
-                    <div class="playlist-card">
-                        <div class="playlist-img">
-                            <img class="item-img album-cover" src="@playlist.P_Image" alt="@playlist.P_Name" />
-                        </div>
-
-                        <div class="playlist-name">
-                            <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.P_Id" class="playlist-name">@playlist.P_Name</a>
-                        </div>
-
-                        <div>
-                            <button class="btn toggle-favorite-playlist" data-id="@playlist.P_Id"
-                                    style="background-color: transparent; border: none; outline: none;">
-                                <i class="@(playlist.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")"
-                                   style="color: @(playlist.IsFavoritePlaylist ? "red" : "gray"); font-size: 24px;">
-                                </i>
-                            </button>
-
-                        </div>
-                        
-                    </div>
-                </li>
-            }
-        </ul>
-    </div>
-
-    <!-- Danh sách album -->
-    <div class="album-section">
-        <h2 class="section-title">Albums</h2>
-        <ul class="item-container albumList">
-            @foreach (var album in Model.Albums)
-            {
-                <li>
-                    <div class="album-card">
-                        <div class="img-container">
-                            <img class="item-img album-cover" src="@album.A_CoverImagePath" alt="@album.A_Name" />
-                            <button class="toggle-favorite heart-button" data-id="@album.A_Id">
-                                <i class="@(album.IsFavoriteAlbum ? "fa-solid fa-heart" : "fa-regular fa-heart")">
-                                </i>
-                            </button>
-                        </div>
-                       
-                        <div>
-                            <a asp-controller="Albums" asp-action="Details" asp-route-id="@album.A_Id" class="album-name">@album.A_Name</a>
-                        </div>
 
 
-                    </div>
-                </li>
-            }
-        </ul>
-    </div>
+
     
 </div>
 

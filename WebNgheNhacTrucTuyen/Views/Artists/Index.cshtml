@@ -23,7 +23,14 @@
                 <td>
                     <a asp-action="Details" asp-route-id="@artist.ART_Id" class="btn btn-info">Chi tiết</a>
                     <a asp-action="Edit" asp-route-id="@artist.ART_Id" class="btn btn-warning">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@artist.ART_Id" class="btn btn-danger">Xóa</a>
+
+                    <form asp-action="Delete" asp-controller="Artists" method="post" style="display: inline;">
+                        <input type="hidden" name="id" value="@artist.ART_Id" />
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa artist này?');">
+                            Xóa
+                        </button>
+                    </form>
+
                 </td>
             </tr>
         }

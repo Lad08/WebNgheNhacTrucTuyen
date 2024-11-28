@@ -12,7 +12,7 @@ using WebNgheNhacTrucTuyen.Data;
 namespace WebNgheNhacTrucTuyen.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20241127143831_InitialCreate")]
+    [Migration("20241128031901_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

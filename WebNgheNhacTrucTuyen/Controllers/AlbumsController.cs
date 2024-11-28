@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebNgheNhacTrucTuyen.Data;
@@ -7,6 +8,7 @@ using WebNgheNhacTrucTuyen.ViewModels;
 
 namespace WebNgheNhacTrucTuyen.Controllers
 {
+    [Authorize(Roles = "User,Admin")]
     public class AlbumsController : Controller
     {
         private readonly AppDBContext _context;

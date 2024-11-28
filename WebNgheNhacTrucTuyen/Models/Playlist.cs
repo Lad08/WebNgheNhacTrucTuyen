@@ -14,6 +14,7 @@ namespace WebNgheNhacTrucTuyen.Models
 
         public bool IsFavoritePlaylist { get; set; } = false;
 
+
         public string UserId { get; set; } // Người tạo playlist
         public virtual Users User { get; set; } // Navigation property
 

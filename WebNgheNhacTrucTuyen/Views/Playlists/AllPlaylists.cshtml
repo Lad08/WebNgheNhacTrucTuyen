@@ -1,0 +1,54 @@
+﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Playlist>
+
+@{
+    ViewData["Title"] = "Tất cả Playlist";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Tên Playlist</th>
+            <th>Người Tạo</th>
+            <th>Hình Ảnh</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int count = 1;
+            foreach (var playlist in Model)
+            {
+                <tr>
+                    <td>@count</td>
+                    <td>@playlist.P_Name</td>
+                    <td>@playlist.User?.U_FullName</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(playlist.P_Image))
+                        {
+                            <img src="@playlist.P_Image" alt="Ảnh bìa" style="width: 100px; height: auto;" />
+                        }
+                        else
+                        {
+                            <em>Chưa có ảnh</em>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href="@Url.Action("Details", "Playlists", new { id = playlist.P_Id })">Chi tiết</a>
+                    </td>
+                </tr>
+                count++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">Không có playlist nào.</td>
+            </tr>
+        }
+    </tbody>
+</table>

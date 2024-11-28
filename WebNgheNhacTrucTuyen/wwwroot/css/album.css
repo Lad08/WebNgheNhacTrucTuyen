@@ -417,6 +417,10 @@ input:focus {
     color: #333;
 }
 
+.artist:hover{
+    color: #f50;
+}
+
 .music-name {
     font-size: 16px;
     color: #333;
@@ -499,4 +503,113 @@ input:focus {
 
 .song-row:hover .play-button {
     opacity: 1; /* Hiện nút Play */
+}
+
+
+.icon-container {
+    width: 48px;
+    font-size: 36px;
+    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 10px; /* Khoảng cách giữa các phần tử */
+}
+
+.dropdown-toggle::after {
+    display: none; /* Ẩn mũi tên */
+}
+
+.dot3-button {
+    background-color: #f50;
+    color: #fff;
+    width: 40px;
+    border: none;
+}
+
+.album-name {
+    text-decoration: none;
+    color: #333;
+}
+
+.album-name:hover {
+    color: #f50;
+}
+
+.playlist-name {
+    text-decoration: none;
+    color: #333;
+}
+
+.playlist-name:hover {
+    color: #f50;
+}
+
+.p-create{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 128px;
+    border-radius: 8px;
+    height: 32px;
+    color: #fff;
+    margin-left: 8px;
+    background-color: #f50;
+    text-decoration: none;
+}
+
+.p-create:hover {
+    color: #333;
+}
+
+.form-container {
+    width: 60%;
+    border-radius: 8px;
+    margin-top: 28px;
+    height: 450px;
+}
+
+.center-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.select-item {
+    display: block;
+    font-size: 18px;
+    width: 50%;
+    height: 40px;
+    border-radius: 8px;
+    margin-left: 6px;
+}
+
+.label-size {
+    font-size: 18px;
+}
+
+.input-size {
+    width: 100%;
+    height: 40px;
+    margin-left: 6px;
+}
+
+.align-div {
+    margin: 10px 6px;
+}
+
+.upload-button {
+    border: none;
+    margin: 10px 0 0 6px;
+    border-radius: 30px;
+    background-color: #999;
+    font-size: 24px;
+    text-align: center;
+    color: #333;
+}
+
+.title-item {
+    display: block;
+    font-size: 18px;
+    width: 50%;
+    height: 64px;
+    margin: 30px 0 10px 6px;
 }

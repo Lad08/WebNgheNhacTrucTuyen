@@ -67,6 +67,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSong(int id)

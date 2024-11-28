@@ -6,7 +6,7 @@ using WebNgheNhacTrucTuyen.Models;
 
 namespace WebNgheNhacTrucTuyen.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, User")]
     public class GenresController : Controller
     {
 

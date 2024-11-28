@@ -3,58 +3,110 @@
     Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
-<h2>Chi tiết Playlist: @Model.P_Name</h2>
+<div class="music-content">
 
-<p>Người tạo: @Model.User.UserName</p>
-
-<h3>Danh sách bài hát</h3>
-
-@if (Model.PlaylistSongs.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Tên bài hát</th>
-                <th>Ca sĩ</th>
-                <th>Thể loại</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.PlaylistSongs.Count; i++)
+    <div class="header-container">
+        <div>
+            @if (!string.IsNullOrEmpty(Model.P_Image))
             {
-                var song = Model.PlaylistSongs.ElementAt(i).Song;
-                <tr>
-                    <td>@(i + 1)</td>
-                    <td>@song.S_Title</td>
-                    <td>@song.Artist.ART_Name</td>
-                    <td>@song.Genre.G_Name</td>
-                    <td>
-                        <!-- Nút xóa bài hát khỏi playlist -->
-                        <form asp-action="RemoveSongFromPlaylist" method="post" style="display:inline;">
-                            <input type="hidden" name="playlistId" value="@Model.P_Id" />
-                            <input type="hidden" name="songId" value="@song.S_Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                        </form>
-                    </td>
-                </tr>
+                <img class="img-item" src="@Model.P_Image" alt="Ảnh bìa playlist" />
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Playlist này chưa có bài hát nào.</p>
-}
+            else
+            {
+                <p><em>Playlist này chưa có hình ảnh.</em></p>
+            }
+        </div>  
 
-<a asp-action="Index" class="btn btn-primary">Quay lại danh sách Playlist</a>
+        <div class="Title-album">
 
-<div>
-    <button class="btn toggle-favorite-playlist" data-id="@Model.P_Id"
-            style="background-color: transparent; border: none; outline: none;">
-        <i class="@(Model.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")"
-           style="color: @(Model.IsFavoritePlaylist ? "red" : "gray"); font-size: 24px;">
-        </i>
-    </button>
+            <p>Playlist</p>
+            <h2>Chi tiết Playlist: @Model.P_Name</h2>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a class="artist">@Model.User.U_FullName</a>
+                <span style="margin-top: 8px;"> • @Model.PlaylistSongs.Count() bài hát</span>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+    <div>
+        <button class="toggle-favorite-playlist heart-button1" data-id="@Model.P_Id">
+            <i class="@(Model.IsFavoritePlaylist ? "fa-solid fa-heart" : "fa-regular fa-heart")">
+            </i>
+        </button>
+    </div>
+
+    <div>
+        <h3>Danh sách bài hát</h3>
+
+        @if (Model.PlaylistSongs.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên bài hát</th>
+                        <th>Ca sĩ</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.PlaylistSongs.Count; i++)
+                    {
+                        var song = Model.PlaylistSongs.ElementAt(i).Song;
+                        <tr class="song-row" data-id="@song.S_Id">
+
+                            <td>
+                                <div class="stt-wrapper">
+                                    <span class="stt">@(i + 1)</span>
+                                    <button class="play-button" data-id="@song.S_Id" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                                
+                            </td>
+
+                            <td>
+                                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                            </td>
+                            <td>
+                                <a asp-controller="Artists" asp-action="Details" asp-route-id="@song.Artist.ART_Id" class="artist">@song.Artist.ART_Name</a>
+                            </td>
+
+                            <td>
+                                <!-- Nút xóa bài hát khỏi playlist -->
+                                <form asp-action="RemoveSongFromPlaylist" method="post" style="display:inline;">
+                                    <input type="hidden" name="playlistId" value="@Model.P_Id" />
+                                    <input type="hidden" name="songId" value="@song.S_Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                </form>
+                            </td>
+
+                            <td style="border-top: 1px solid #333; text-align: center;">
+                                <button class="heart-button" type="button" onclick="toggleFavorite(@song.S_Id, this)">
+                                    <i class="@(song.S_IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Playlist này chưa có bài hát nào.</p>
+        }
+    </div>
+
+
 </div>
+<audio id="audioPlayer" preload="auto"></audio>
+
+
+
+
+

@@ -165,12 +165,21 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             var artist = await _context.Artists
                 .Include(a => a.Songs) // Bao gồm danh sách bài hát
+                .Include(a => a.Albums) // Bao gồm danh sách album
                 .FirstOrDefaultAsync(a => a.ART_Id == id);
 
             if (artist == null)
             {
                 return NotFound();
             }
+
+            // Lấy 6 bài hát mới upload
+            artist.Songs = artist.Songs
+                .OrderByDescending(s => s.S_UploadDate) // Giả sử `UploadDate` là thuộc tính ngày upload
+                .ToList();
+
+            // Lấy 6 album đầu tiên
+            artist.Albums = artist.Albums.ToList();
 
             return View(artist);
         }

@@ -33,7 +33,6 @@ body {
 
 /* Icon styles */
 .header-icon {
-    
     display: flex;
     width: 60px;
     height: 46px;
@@ -54,15 +53,14 @@ body {
     padding: 0;
 }
 
-.a-style {  
+.a-style {
     color: #fff;
     font-size: 20px;
-
 }
 
-.a-style:hover {
-    color: #f50;
-}
+    .a-style:hover {
+        color: #f50;
+    }
 
 .li-border {
     display: flex;
@@ -112,11 +110,11 @@ input:focus {
 }
 
 .search-icon {
-    width: 32px; 
+    width: 32px;
     height: 32px;
     border: none;
     padding: 0;
-    background-color: #E5E5E5; 
+    background-color: #E5E5E5;
     cursor: pointer;
 }
 
@@ -193,7 +191,6 @@ input:focus {
 
 /* End of Header */
 
-
 /* Start of main content */
 
 .main-content {
@@ -207,137 +204,62 @@ input:focus {
     width: 99%;
     border: 3px solid #cfcdc8;
     border-radius: 8px;
-    max-height: 650px;
+    height: 650px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.heading-title {
+/* Menu bar Section*/
+
+.page-container {
     display: flex;
-    align-items: center;
+}
+
+.sidebar-title {
     font-size: 32px;
-    width: 100%;
     padding-bottom: 8px;
     margin-bottom: 20px;
-    border-bottom: 1px solid #cfcdc8;
+    border-bottom: 1px solid #cfcdc8
 }
 
-.trending-selection {
-    margin-bottom: 24px;
+.sidebar {
+    width: 300px;
+    background-color: #fff;
+    padding-top: 56px;
 }
 
-.show-all {
-    display: flex;
-    font-size: 16px;
-    color: #333;
-    text-decoration: none;
-}
-
-.section-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-
-}
-
-.ul-main {
+.menu {
+    width: 250px;
+    position: fixed;
+    height: 650px;
     list-style: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
+    border: 3px solid #cfcdc8;
+    border-radius: 8px;
 }
 
-.music-section {
-    margin-left: 8px;
-    width: 100%;
-    height: auto;
+    .menu ul {
+        padding: 0;
+    }
 
-}
-/* Music Section */
-.trendingtrack-title {
-    font-size: 24px;
-    text-align: center;
-    padding-top: 20px;
-    margin-bottom: 30px;
-}
+    .menu li {
+        margin: 10px 0;
+    }
 
-.item-img {
-    width: 156px;
-    height: 156px;
+    .menu a {
+        color: #333;
+        text-decoration: none;
+        font-size: 16px;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
 
-}
-
-.music-name {
-    font-size: 14px;
-    line-height: 1.4;
-    color: #333;
-    text-decoration: none;
-}
-
-.artist {
-    font-size: 12px;
-    line-height: 1.4;
-    color: #999999;
-    text-decoration: none;
-}
-
-.padding-row {
-    padding-left: 12px;
-}
-
-/* Item Section */
-
-.item-container {
-    padding-left: 0;
-    list-style-type: none; /* Bỏ dấu đầu dòng */
-    display: flex;
-    margin-bottom: 20px; /* Khoảng cách giữa các danh sách */
-}
-
-.music-card {
-    width: auto;
-    height: auto;
-    margin-right: 32px;
-}
-
-.img-container {
-    position: relative;
-    overflow: hidden;
-    padding-left: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.play-button {
-    position: absolute;
-    background-color: transparent;
-    color: #f50;
-    font-size: 24px;
-    border: none;
-    cursor: pointer;
-    opacity: 0; /* Ẩn nút ban đầu */
-    transition: opacity 0.3s ease-in-out; /* Tạo hiệu ứng chuyển đổi mượt mà */
-}
-
-.img-container:hover .play-button {
-    opacity: 1; /* Hiển thị nút khi di chuột vào container */
-}
-
-.heart-button {
-    position: absolute;
-    bottom: 0;
-    right: 15%;
-    color: #f50;
-    background-color: transparent;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-    opacity: 0; /* Ẩn nút ban đầu */
-    transition: opacity 0.3s ease-in-out; /* Tạo hiệu ứng chuyển đổi mượt mà */
-}
-
-.img-container:hover .heart-button {
-    opacity: 1; /* Hiển thị nút khi di chuột vào container */
-}
+        .menu a:hover {
+            background-color: #f50;
+        }
 
 /* play control section */
 .play-controll {
@@ -351,7 +273,6 @@ input:focus {
     background-color: #f2f2f2;
     border-top: 1px solid #cecece;
     height: 48px;
-    
 }
 
 .playControls_elements {
@@ -426,9 +347,10 @@ input:focus {
     border: none;
     padding: 0;
 }
-.control_repeat.active {
-    color: blue; /* Màu nền khi nút được nhấn */
-}
+
+    .control_repeat.active {
+        color: blue; /* Màu nền khi nút được nhấn */
+    }
 
 .volume-control {
     border: none;
@@ -466,151 +388,129 @@ input:focus {
     margin-left: 8px;
 }
 
-/* Menu bar Section*/
+/* Cover Image Section */
 
-.page-container {
+.header-container {
     display: flex;
-
+    align-items: flex-start;
+    width: 100%;
+    height: 156px;
+    border-bottom: 3px solid #cfcdc8;
 }
 
-.sidebar-title {
+.img-item {
+    margin: 8px 0 0 8px;
+    width: 128px;
+    height: 128px;
+}
+
+.Title-album {
+    margin: 8px 0 0 8px;
+}
+
+.artist {
+    margin-top: 8px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #333;
+}
+
+    .artist:hover {
+        color: #f50;
+    }
+
+.music-name {
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+}
+
+/* button section */
+
+.heart-button {
+    color: #f50;
+    background-color: transparent;
+    font-size: 16px;
+    border: none;
+}
+
+.heart-button1 {
+    color: #f50;
+    background-color: transparent;
+    font-size: 36px;
+    border: none;
+}
+
+.play-button {
+    background-color: transparent;
+    color: #f50;
     font-size: 32px;
-    padding-bottom: 8px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #cfcdc8
+    border: none;
+    cursor: pointer;
 }
 
-.sidebar {
-    width: 300px;
-    background-color: #fff;
-    padding-top: 56px;
-}
 
-.menu {
-    width: 250px;
-    position: fixed;
-    height: 650px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border: 3px solid #cfcdc8;
-    border-radius: 8px;
-}
-
-.menu ul {
-    padding: 0;
-}
-
-.menu li {
-    margin: 10px 0;
-
-}
-
-.menu a {
-    color: #333;
-    text-decoration: none;
-    font-size: 16px;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.menu a:hover {
-    background-color: #f50;
-}
-
-/* Artist Section */
-.img-artist {
-    width: 140px; /* Kích thước chiều rộng */
-    height: 140px; /* Kích thước chiều cao (phải bằng width để tạo hình tròn) */
-    border-radius: 50%; /* Làm tròn toàn bộ cạnh */
-    overflow: hidden; /* Đảm bảo phần dư của ảnh không hiển thị */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Đường viền xung quanh (tuỳ chỉnh nếu cần) */
-    background-color: #000; /* Màu nền (nếu ảnh không phủ hết) */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.img-artist img {
-    width: 100%; /* Đảm bảo ảnh phủ toàn bộ container */
-    height: 100%;
-    object-fit: cover; /* Cắt và căn ảnh vừa khít */
-}
-
-.artist-card {
-    width: 160px; /* Kích thước chiều rộng */
-    height: 160px;
-    margin-bottom: 20px;
-
-}
-
-.artist-name {
-    margin-top: 8px;
-    font-size: 16px;
-    text-decoration: none;
-    color: #333;
-}
-
-.artist-name:hover {
-    color: #f50;
-}
-
-/* Play list Section */
-
-.playlist-name {
-    margin-top: 8px;
-    font-size: 16px;
-    text-decoration: none;
-    color: #333;
-}
-
-.playlist-name:hover {
-    color: #f50;
-}
-
-.playlist-card {
-    width: auto;
-    height: auto;
-    margin-right: 32px; 
-}
-
-.playlist-img {
+.stt-wrapper {
     position: relative;
-    overflow: hidden;
-    padding-left: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
 }
 
-.playlist-section {
-    margin-left: 8px;
-    width: 100%;
-    height: auto;
+.stt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease; /* Thêm hiệu ứng mượt mà */
+    opacity: 1;
 }
 
-/* Album Section */
-.album-card {
-    width: auto;
-    height: auto;
-    margin-right: 32px;
+.stt-wrapper:hover .stt {
+    opacity: 0; /* Ẩn STT khi di chuột */
 }
 
-.album-name {
-    margin-top: 8px;
-    font-size: 16px;
-    text-decoration: none;
-    color: #333;
+/* Hiệu ứng hover */
+.song-row:hover {
+    background-color: #f5f5f5; /* Màu nền khi di chuột */
+    cursor: pointer;
 }
 
-.album-name:hover {
-    color: #f50;
+/* Tô đậm khi click */
+.song-row.active {
+    background-color: #d1ecf1; /* Màu nền khi được chọn */
 }
 
-.album-section {
-    margin-left: 8px;
-    width: 100%;
-    height: auto;
+    /* Để đảm bảo hiệu ứng hover không ghi đè khi hàng đã active */
+    .song-row.active:hover {
+        background-color: #c1e4ec;
+    }
+
+.song-row:hover .stt {
+    opacity: 0; /* Ẩn STT */
+}
+
+.song-row:hover .play-button {
+    opacity: 1; /* Hiện nút Play */
+}
+
+
+.icon-container {
+    width: 48px;
+    font-size: 36px;
+    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 10px; /* Khoảng cách giữa các phần tử */
+}
+
+.dropdown-toggle::after {
+    display: none; /* Ẩn mũi tên */
+}
+
+.dot3-button {
+    background-color: #f50;
+    color: #fff;
+    width: 40px;
+    border: none;
 }

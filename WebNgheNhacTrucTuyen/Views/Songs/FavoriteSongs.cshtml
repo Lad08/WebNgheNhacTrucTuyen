@@ -2,47 +2,69 @@
 
 @{
     ViewData["Title"] = "Thư viện";
-    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
-<div class="container">
-    <h1 class="heading-title">Thư viện Bài hát</h1>
+<div class="music-content">
+
+    <div class="header-container">
+        <div>
+            <img class="img-item" src="~/images//home/liked_song.png" alt="Ảnh bìa yêu thích" />
+        </div>
+        <h1 class="Title-album">Bài hát yêu thích</h1>
+    </div>
 
     <div class="music-section">
-        <h2 class="seclection-title1">Bài hát yêu thích</h2>
-        <ul class="item-container songList">
-            @if (Model != null && Model.Any(s => s.S_IsFavorite))
-            {
-                foreach (var song in Model.Where(s => s.S_IsFavorite))
-                {
-                    <li class="music-card">
-                        <div>
-                            <div class="img-container">
-                                <img class="item-img" src="@Url.Content(song.S_CoverImagePath)" />
-                                <button class="play-button" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
-                                    <i class="fas fa-play"></i>
-                                </button>
+        <h3>Danh sách bài hát yêu thích</h3>
+
+        @if (Model != null && Model.Any(s => s.S_IsFavorite))
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên bài hát</th>
+                        <th>Tên nghệ sĩ</th>
+                        <th style="text-align: center;">Yêu thích</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var song in Model.Where(s => s.S_IsFavorite))
+                    {
+                        <tr class="song-row" data-id="@song.S_Id">
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                    <button class="play-button" data-id="@song.S_Id" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                            </td>
+                            <td>
+                                <a asp-controller="Artists" asp-action="Details" asp-route-id="@song.Artist.ART_Id" class="artist">@song.Artist.ART_Name</a>
+                            </td>
+                            <td style="text-align: center;">
                                 <button class="heart-button" type="button" onclick="toggleFavorite(@song.S_Id, this)">
                                     <i class="@(song.S_IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
                                 </button>
-                            </div>
-                            <div>
-                                <a asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
-                            </div>
-                            <div>
-                                <a class="artist">@song.Artist.ART_Name</a>
-                            </div>
-
-                        </div>
-                    </li>
-                }
-            }
-            else
-            {
-                <li>Không có bài hát yêu thích nào.</li>
-            }
-        </ul>
-        
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Không có bài hát yêu thích nào.</p>
+        }
     </div>
+</div>
 
 <audio id="audioPlayer" preload="auto"></audio>

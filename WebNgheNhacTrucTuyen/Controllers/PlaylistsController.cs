@@ -59,8 +59,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Đặt đường dẫn ảnh mặc định
-            string imagePath = "/images/playlist-img/default-playlist.jpg";
+            string? imagePath = null;
 
             if (playlistImage != null && playlistImage.Length > 0)
             {
@@ -70,7 +69,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                     Directory.CreateDirectory(uploadsFolder);
                 }
 
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + playlistImage.FileName;
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(playlistImage.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
@@ -85,7 +84,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             {
                 P_Name = playlistName,
                 UserId = user.Id,
-                P_Image = imagePath
+                P_Image = imagePath // Có thể null nếu không có ảnh
             };
 
             _context.Playlists.Add(playlist);
@@ -94,6 +93,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             TempData["Message"] = "Playlist đã được tạo thành công.";
             return RedirectToAction(nameof(Index));
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -136,6 +136,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
         public async Task<IActionResult> AddSongToPlaylist()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -148,7 +149,9 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 .Where(p => p.UserId == user.Id)
                 .ToListAsync();
 
-            var songs = await _context.Songs.ToListAsync();
+            var songs = await _context.Songs
+                .Include(s => s.Artist) // Đảm bảo tải thông tin nghệ sĩ
+                .ToListAsync();
 
             var model = new AddSongToPlaylistViewModel
             {
@@ -162,13 +165,14 @@ namespace WebNgheNhacTrucTuyen.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var playlist = await _context.Playlists
-                    .Include(p => p.PlaylistSongs)
-                        .ThenInclude(ps => ps.Song)
-                            .ThenInclude(s => s.Artist) // Include thông tin nghệ sĩ
-                    .Include(p => p.PlaylistSongs)
-                        .ThenInclude(ps => ps.Song)
-                            .ThenInclude(s => s.Genre) // Include thông tin thể loại
-                    .FirstOrDefaultAsync(p => p.P_Id == id);
+                .Include(p => p.User) // Include thông tin người dùng tạo playlist
+                .Include(p => p.PlaylistSongs)
+                    .ThenInclude(ps => ps.Song)
+                        .ThenInclude(s => s.Artist) // Include thông tin nghệ sĩ
+                .Include(p => p.PlaylistSongs)
+                    .ThenInclude(ps => ps.Song)
+                        .ThenInclude(s => s.Genre) // Include thông tin thể loại
+                .FirstOrDefaultAsync(p => p.P_Id == id);
 
             if (playlist == null)
             {
@@ -215,6 +219,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
             return View(model);
         }
 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UpdatePlaylistViewModel model)
@@ -232,7 +238,6 @@ namespace WebNgheNhacTrucTuyen.Controllers
 
             playlist.P_Name = model.Name;
 
-            // Xử lý ảnh
             if (model.Image != null && model.Image.Length > 0)
             {
                 var uploadsFolder = Path.Combine("wwwroot/images/playlist_img");
@@ -241,7 +246,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                     Directory.CreateDirectory(uploadsFolder);
                 }
 
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(model.Image.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
@@ -249,6 +254,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
                     await model.Image.CopyToAsync(stream);
                 }
 
+                // Cập nhật đường dẫn ảnh mới
                 playlist.P_Image = $"/images/playlist_img/{uniqueFileName}";
             }
 
@@ -258,6 +264,7 @@ namespace WebNgheNhacTrucTuyen.Controllers
             TempData["Message"] = "Playlist đã được cập nhật.";
             return RedirectToAction(nameof(Index));
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -311,6 +318,15 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 .ToListAsync();
 
             return View(favoritePlaylists);
+        }
+
+        public async Task<IActionResult> AllPlaylists()
+        {
+            var playlists = await _context.Playlists
+                .Include(p => p.User) // Include thông tin người tạo
+                .ToListAsync();
+
+            return View(playlists);
         }
 
 

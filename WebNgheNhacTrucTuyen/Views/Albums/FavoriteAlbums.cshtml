@@ -1,25 +1,60 @@
 ﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Album>
 
-<h2>Danh sách album yêu thích</h2>
-
-@if (!Model.Any())
-{
-    <p>Bạn chưa thích album nào.</p>
+@{
+    ViewData["Title"] = "Album yêu thích";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
-else
-{
-    <div class="album-list">
-        @foreach (var album in Model)
+
+<div class="music-content">
+
+    <div class="header-container">
+        <div>
+            <img class="img-item" src="~/images//home/liked_song.png" alt="Ảnh bìa yêu thích" />
+        </div>
+        <h1 class="Title-album">Album yêu thích</h1>
+    </div>
+
+    <div class="music-section">
+        <h3 style="margin-left: 12px;">Danh sách album yêu thích</h3>
+
+        @if (Model != null && Model.Any(a => a.IsFavoriteAlbum))
         {
-            <div class="album-item">
-                <h3>@album.A_Name</h3>
-                <p>@album.A_Description</p>
-                @if (!string.IsNullOrEmpty(album.A_CoverImagePath))
-                {
-                    <img src="@album.A_CoverImagePath" alt="@album.A_Name" style="width: 200px; height: auto;" />
-                }
-                <p>Ngày tạo: @album.A_CreatedDate.ToString("dd/MM/yyyy")</p>
-            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên album</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var album in Model.Where(a => a.IsFavoriteAlbum))
+                    {
+                        <tr class="album-row" data-id="@album.A_Id">
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Albums" asp-action="Details" asp-route-id="@album.A_Id" class="album-name">@album.A_Name</a>
+                            </td>
+                            <td>
+                                @album.A_Description
+                            </td>
+                            <td style="border-top: 1px solid #333;"></td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Không có album yêu thích nào.</p>
         }
     </div>
-}
+</div>

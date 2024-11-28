@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebNgheNhac</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/songdetails.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -74,7 +74,6 @@
                             <li><a asp-controller="Playlists" asp-action="Index">Playlists</a></li>
                             <li><a asp-controller="Albums" asp-action="favoritealbums">Favorites Albums</a></li>
                             <li><a asp-controller="Playlists" asp-action="FavoritePlaylists">Playlist yêu thích</a></li>
-                            <li><a asp-controller="Genres" asp-action="Index">Genres</a></li>
 
                         </ul>
                     </nav>
@@ -97,7 +96,7 @@
                     <button id="playPauseButton" class="skipControl_play"></button>
                     <button class="skipControl_next"></button>
 
-                   
+
                     <div class="playControl_repeat">
                         <button id="repeatButton" class="control_repeat">
                             <i class="fa-solid fa-repeat"></i>
@@ -128,7 +127,6 @@
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/favo.js" asp-append-version="true"></script>
         @await RenderSectionAsync("Scripts", required: false)
 
     </div>
