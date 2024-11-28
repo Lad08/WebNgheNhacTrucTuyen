@@ -1,8 +1,16 @@
-﻿<table class="table">
+﻿@{
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
+<h1>Danh sách thể loại</h1>
+
+<a asp-action="Create" class="btn btn-primary">Thêm thể loại</a>
+
+<table class="table">
     <thead>
         <tr>
-            <th>Genre ID</th>
-            <th>Genre Name</th>
+            <th>ID thể loại </th>
+            <th>Tên thể loại</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -26,4 +34,3 @@
         }
     </tbody>
 </table>
-<a asp-action="Create">Add New Genre</a>

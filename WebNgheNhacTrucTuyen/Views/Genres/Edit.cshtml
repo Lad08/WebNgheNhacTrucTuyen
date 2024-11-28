@@ -1,11 +1,16 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Genres
 
+@{
+    
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
 <h2>Edit Genre</h2>
 
 <form asp-action="Edit">
     <input type="hidden" asp-for="G_Id" />
-    <div class="form-group">
-        <label asp-for="G_Name" class="control-label"></label>
+    <div class="form-group" style="width: 70%; margin-bottom:20px;">
+        <label asp-for="G_Name" class="control-label">Thể loại</label>
         <input asp-for="G_Name" class="form-control" />
         <span asp-validation-for="G_Name" class="text-danger"></span>
     </div>

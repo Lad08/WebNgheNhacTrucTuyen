@@ -1,34 +1,45 @@
 ﻿@model WebNgheNhacTrucTuyen.ViewModels.AlbumEditViewModel
 
-<h2>Chỉnh sửa Album</h2>
+@{
+    ViewData["Title"] = "Chỉnh sửa Album";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
+
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="Name" class="control-label">Tên Album</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
+
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="Description" class="control-label">Mô tả</label>
         <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <div class="form-group">
+
+    <div class="form-group" style="width: 70%;">
         <label>Ảnh bìa hiện tại:</label>
         @if (!string.IsNullOrEmpty(Model.ExistingCoverImagePath))
         {
-            <div>
+            <div class="mb-2">
                 <img src="@Model.ExistingCoverImagePath" alt="Cover Image" style="max-width: 200px;" />
             </div>
         }
     </div>
-    <div class="form-group">
+
+    <div class="form-group" style="width: 70%;">
         <label asp-for="CoverImage" class="control-label">Ảnh bìa mới (nếu có):</label>
         <input asp-for="CoverImage" type="file" class="form-control" />
         <span asp-validation-for="CoverImage" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Cập nhật</button>
-    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+
+    <button type="submit" class="btn btn-primary mt-3">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Hủy</a>
 </form>
 
 @section Scripts {

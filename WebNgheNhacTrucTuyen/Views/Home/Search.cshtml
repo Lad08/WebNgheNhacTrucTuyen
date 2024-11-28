@@ -1,36 +1,102 @@
 ﻿@model WebNgheNhacTrucTuyen.ViewModels.SearchViewModel
 
-<h2>Kết quả tìm kiếm cho: "@Model.Query"</h2>
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
 
-@if (Model.Songs != null && Model.Songs.Any())
-{
-    <h3>Bài hát</h3>
-    <ul>
-        @foreach (var song in Model.Songs)
-        {
-            <li>
-                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id">
-                    @song.S_Title
-                </a> - Nghệ sĩ: @song.Artist.ART_Name
-            </li>
-        }
-    </ul>
-}
-else if (Model.Artists != null && Model.Artists.Any())
-{
-    <h3>Nghệ sĩ</h3>
-    <ul>
-        @foreach (var artist in Model.Artists)
-        {
-            <li>
-                <a asp-controller="Artists" asp-action="Details" asp-route-id="@artist.ART_Id">
-                    @artist.ART_Name
-                </a>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>Không tìm thấy kết quả nào.</p>
-}
+<div class="music-content">
+    
+    <h2>Kết quả tìm kiếm cho: "@Model.Query"</h2>
+
+    @if (Model.Songs != null && Model.Songs.Any())
+    {
+        
+        <div class="music-section">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên bài hát</th>
+                        <th>Nghệ sĩ</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var song in Model.Songs)
+                    {
+                        <tr>
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="playlist-name">
+                                    @song.S_Title
+                                </a>
+                            </td>
+                            <td>@song.Artist.ART_Name</td>
+                            <td>
+                                <div class="playlist-actions">
+                                    <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="btn btn-primary">Xem</a>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (Model.Artists != null && Model.Artists.Any())
+    {
+        <h3>Nghệ sĩ</h3>
+        <div class="music-section">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên nghệ sĩ</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var artist in Model.Artists)
+                    {
+                        <tr>
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Artists" asp-action="Details" asp-route-id="@artist.ART_Id" class="playlist-name">
+                                    @artist.ART_Name
+                                </a>
+                            </td>
+                            <td>
+                                <div class="playlist-actions">
+                                    <a asp-controller="Artists" asp-action="Details" asp-route-id="@artist.ART_Id" class="btn btn-primary">Xem</a>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if ((Model.Songs == null || !Model.Songs.Any()) && (Model.Artists == null || !Model.Artists.Any()))
+    {
+        <p>Không tìm thấy kết quả nào.</p>
+    }
+</div>

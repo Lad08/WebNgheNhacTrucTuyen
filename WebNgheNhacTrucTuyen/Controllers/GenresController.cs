@@ -133,7 +133,8 @@ namespace WebNgheNhacTrucTuyen.Controllers
             }
 
             var genre = await _context.Genres
-                .Include(g => g.Songs) // Include để lấy cả danh sách bài hát thuộc thể loại này
+                .Include(g => g.Songs) // Lấy danh sách bài hát
+                    .ThenInclude(s => s.Artist) // Lấy thông tin nghệ sĩ cho từng bài hát
                 .FirstOrDefaultAsync(m => m.G_Id == id);
 
             if (genre == null)
@@ -141,8 +142,12 @@ namespace WebNgheNhacTrucTuyen.Controllers
                 return NotFound();
             }
 
+            // Sắp xếp danh sách bài hát theo tiêu đề (nếu cần)
+            genre.Songs = genre.Songs.OrderBy(s => s.S_Title).ToList();
+
             return View(genre);
         }
+
 
     }
 }

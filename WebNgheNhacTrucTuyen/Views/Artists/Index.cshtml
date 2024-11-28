@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<WebNgheNhacTrucTuyen.Models.Artists>
 
+@{
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
 <h1>Danh sách nghệ sĩ</h1>
 
 <a asp-action="Create" class="btn btn-primary">Thêm mới</a>
@@ -7,6 +11,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>ID Nghệ sĩ</th>
             <th>Hình ảnh</th>
             <th>Tên nghệ sĩ</th>
             <th>Hành động</th>
@@ -16,21 +21,20 @@
         @foreach (var artist in Model)
         {
             <tr>
+                <td>@artist.ART_Id</td>
                 <td>
-                    <img src="/images/artists/@artist.ART_Image" alt="@artist.ART_Name" style="width: 100px; height: auto;" />
+                    <img src="/images/artists/@artist.ART_Image" alt="@artist.ART_Name" style="width: 64px; height: auto;" />
                 </td>
                 <td>@artist.ART_Name</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@artist.ART_Id" class="btn btn-info">Chi tiết</a>
-                    <a asp-action="Edit" asp-route-id="@artist.ART_Id" class="btn btn-warning">Sửa</a>
-
+                    <a asp-action="Edit" asp-route-id="@artist.ART_Id" class="btn btn-primary">Sửa</a>
                     <form asp-action="Delete" asp-controller="Artists" method="post" style="display: inline;">
                         <input type="hidden" name="id" value="@artist.ART_Id" />
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa artist này?');">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa nghệ sĩ này?');">
                             Xóa
                         </button>
                     </form>
-
+                    <a asp-action="Details" asp-route-id="@artist.ART_Id" class="btn btn-info">Chi tiết</a>
                 </td>
             </tr>
         }

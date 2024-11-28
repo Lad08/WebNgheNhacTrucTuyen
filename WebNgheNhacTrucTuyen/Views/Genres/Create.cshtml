@@ -1,14 +1,18 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Genres
 
-<h2>Add Genre</h2>
+@{
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
+<h2>Thêm thể loại</h2>
 
 <form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="G_Name"></label>
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="G_Name">Tên thể loại</label>
         <input asp-for="G_Name" class="form-control" />
         <span asp-validation-for="G_Name" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Add Genre</button>
+    <button type="submit" class="btn btn-primary" style="margin: 20px 0;">Thêm thể loại</button>
 </form>
 
-<a asp-action="Index">Back to List</a>
+<a asp-action="Index" class="btn btn-secondary">Trở về danh sách thể loại</a>

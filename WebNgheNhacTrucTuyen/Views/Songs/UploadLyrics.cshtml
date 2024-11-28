@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Upload Lyrics";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
 <h2>Upload Lyrics</h2>
@@ -9,12 +10,12 @@
 <form asp-action="UploadLyrics" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="SongId" />
 
-    <div class="form-group">
+    <div class="form-group" style="width: 70%;">
         <label for="File">Upload file lyrics (.txt)</label>
         <input type="file" asp-for="File" class="form-control" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="width: 70%;">
         <label for="Content">Hoặc nhập nội dung lyrics</label>
         <textarea asp-for="Content" class="form-control" rows="5" placeholder="Nhập nội dung..."></textarea>
     </div>

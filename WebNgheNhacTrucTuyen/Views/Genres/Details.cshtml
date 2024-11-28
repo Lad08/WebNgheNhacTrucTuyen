@@ -1,30 +1,67 @@
 ﻿@model WebNgheNhacTrucTuyen.Models.Genres
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết thể loại";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
-<h2>Details</h2>
+<div class="music-content">
 
-<div>
-    <h3>Thể loại: @Model.G_Name</h3>
-</div>
+    <div class="header-container">
+        <h1 class="Title-album">Thể loại: @Model.G_Name</h1>
+    </div>
 
-@if (Model.Songs.Any())
-{
-    <h4>Danh sách bài hát:</h4>
-    <ul>
-        @foreach (var song in Model.Songs)
+    <div class="music-section">
+        <h3>Danh sách bài hát</h3>
+
+        @if (Model.Songs != null && Model.Songs.Any())
         {
-            <li>@song.S_Title (@song.Artist)</li>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên bài hát</th>
+                        <th>Tên nghệ sĩ</th>
+                        <th style="text-align: center;">Yêu thích</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var song in Model.Songs)
+                    {
+                        <tr class="song-row" data-id="@song.S_Id">
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                    <button class="play-button" data-id="@song.S_Id" data-file-path="@Url.Content(song.S_FilePath)" data-title="@song.S_Title">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.S_Id" class="music-name">@song.S_Title</a>
+                            </td>
+                            <td>
+                                <a asp-controller="Artists" asp-action="Details" asp-route-id="@song.Artist.ART_Id" class="artist">@song.Artist.ART_Name</a>
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="heart-button" type="button" onclick="toggleFavorite(@song.S_Id, this)">
+                                    <i class="@(song.S_IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
         }
-    </ul>
-}
-else
-{
-    <p>Không có bài hát nào thuộc thể loại này.</p>
-}
-
-<div>
-    <a asp-action="Index">Quay lại danh sách thể loại</a>
+        else
+        {
+            <p>Không có bài hát nào thuộc thể loại này.</p>
+        }
+    </div>
 </div>
+
+<audio id="audioPlayer" preload="auto"></audio>

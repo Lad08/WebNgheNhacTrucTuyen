@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit Lyrics";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
 }
 
 <h2>Edit Lyrics</h2>
@@ -21,12 +22,12 @@
         }
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="width: 70%;">
         <label for="File">Thay đổi file lyrics (.txt)</label>
         <input type="file" asp-for="File" class="form-control" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="width: 70%;">
         <label for="Content">Hoặc chỉnh sửa nội dung lyrics:</label>
         <textarea asp-for="Content" class="form-control" rows="5">@Model.Content</textarea>
     </div>

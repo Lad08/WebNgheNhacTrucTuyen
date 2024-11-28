@@ -1,28 +1,63 @@
 ﻿@model WebNgheNhacTrucTuyen.ViewModels.AddSongViewModel
 
-<h1>Add Songs to Album</h1>
+@{
+    ViewData["Title"] = "Thêm bài hát vào Album";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
 
-<form asp-action="AddSong" asp-controller="Albums" method="post">
-    <input type="hidden" name="albumId" value="@Model.AlbumId" />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Artist</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var song in Model.Songs)
-            {
-                <tr>
-                    <td>@song.S_Title</td>
-                    <td>@song.Artist.ART_Name</td>
-                    <td>
-                        <button type="submit" name="songId" value="@song.S_Id" class="btn btn-success">Add</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</form>
+<div class="music-content">
+    <h1 class="Title-album">@ViewData["Title"]</h1>
+
+    <div class="music-section">
+
+        @if (Model.Songs != null && Model.Songs.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th style="padding-left: 36px;">Tên bài hát</th>
+                        <th>Ca sĩ</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (var song in Model.Songs)
+                    {
+                        <tr>
+                            <td style="text-align:center; width: 30px;">
+                                <div class="stt-wrapper">
+                                    <span class="stt">@index</span>
+                                </div>
+                            </td>
+                            <td style="padding-left: 36px;">
+                                <span class="song-title">@song.S_Title</span>
+                            </td>
+                            <td>
+                                @song.Artist.ART_Name
+                            </td>
+                            <td>
+                                <div class="song-actions">
+                                    <form asp-action="AddSong" asp-controller="Albums" method="post" style="display: inline;">
+                                        <input type="hidden" name="albumId" value="@Model.AlbumId" />
+                                        <button type="submit" name="songId" value="@song.S_Id" class="btn btn-success">
+                                            Thêm
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Không có bài hát nào.</p>
+        }
+    </div>
+</div>

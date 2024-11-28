@@ -1,55 +1,62 @@
 ﻿@model WebNgheNhacTrucTuyen.ViewModels.EditSongViewModel
 
-<h2>Edit Song</h2>
+@{
+    ViewData["Title"] = "Chỉnh sửa Bài hát";
+    Layout = "~/Views/Shared/_AlbumLayout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
 
 <form asp-action="EditSong" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="Id" />
 
-    <div class="form-group">
-        <label asp-for="Title"></label>
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="Title">Tên bài hát</label>
         <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="UploadDate"></label>
+
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="UploadDate">Ngày tải lên</label>
         <input asp-for="UploadDate" class="form-control" type="date" />
         <span asp-validation-for="UploadDate" class="text-danger"></span>
     </div>
 
-
-    <div class="form-group">
-        <label asp-for="ArtistName"></label>
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="ArtistName">Tên nghệ sĩ</label>
         <input asp-for="ArtistName" class="form-control" />
+        <span asp-validation-for="ArtistName" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="GenreId"></label>
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="GenreId">Thể loại</label>
         <select asp-for="GenreId" class="form-control" asp-items="ViewBag.Genres"></select>
+        <span asp-validation-for="GenreId" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="AlbumId"></label>
-        <select asp-for="AlbumId" class="form-control" asp-items="ViewBag.Albums">
-        </select>
+    <div class="form-group" style="width: 70%;">
+        <label asp-for="AlbumId">Album</label>
+        <select asp-for="AlbumId" class="form-control" asp-items="ViewBag.Albums"></select>
+        <span asp-validation-for="AlbumId" class="text-danger"></span>
     </div>
-    <div class="form-group">
+
+    <div class="form-group" style="width: 70%;">
         <label>Ảnh bìa hiện tại:</label>
         @if (!string.IsNullOrEmpty(Model.ExistingCoverImagePath))
         {
-            <div>
+            <div class="mb-2">
                 <img src="@Model.ExistingCoverImagePath" alt="Cover Image" style="max-width: 200px;" />
             </div>
         }
     </div>
-    <div class="form-group">
+
+    <div class="form-group" style="width: 70%;">
         <label asp-for="CoverImage" class="control-label">Ảnh bìa mới (nếu có):</label>
         <input asp-for="CoverImage" type="file" class="form-control" />
         <span asp-validation-for="CoverImage" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    
-
-
-
+    <button type="submit" class="btn btn-primary mt-3">Lưu</button>
 </form>
+
 
